@@ -1,2 +1,3 @@
 # waterbud
-# CEO - Keren Chendran
+# CEO - Keren Chandran
+# CTO - Brian So / Siddhanth Unnithan  
