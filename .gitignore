@@ -1,0 +1,11 @@
+# this file itself #
+.gitignore
+
+# Compiled sources #
+####################
+*.pyc
+*.exe
+
+# ignore swapped files
+*.swp
+*.ssh
