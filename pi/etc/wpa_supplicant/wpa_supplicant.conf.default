@@ -1,0 +1,15 @@
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+country=CA
+
+network={
+        ssid="NETWORK1"
+        psk="PASSWORD"
+        key_mgmt=WPA-PSK
+}
+
+network={
+        ssid="NETWORK2"
+        psk="PASSWORD2"
+        key_mgmt=WPA-PSK
+}
