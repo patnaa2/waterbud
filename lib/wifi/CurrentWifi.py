@@ -23,6 +23,7 @@ class CurrentWifi(object):
             if not self.ssid:
                 msg = "CRITICAL:: Not Connected To Internet"
                 raise Exception(msg)
+        return self.ssid
 
     def get_current_password(self):
         # HACK Anshuman Jun 28, 2016:
@@ -38,6 +39,7 @@ class CurrentWifi(object):
                   "/%s" %(self.ssid)
             self.password = check_output(cmd, 
                                          shell=True).split('=')[1].strip('\n')
+        return self.password
 
     def write_values_to_file(self, f):
         # f is a file-stream object 
