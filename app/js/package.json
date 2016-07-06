@@ -22,15 +22,20 @@
     "test:cover:travis": "babel-node node_modules/isparta/bin/isparta cover --root src --report lcovonly _mocha -- --require ./tools/testSetup.js \"src/**/*.spec.js\" && cat ./coverage/lcov.info | node_modules/coveralls/bin/coveralls.js",
     "test:watch": "npm run test -- --watch"
   },
-  "author": "Cory House",
+  "author": "WaterBud",
   "license": "MIT",
   "dependencies": {
-    "history": "3.0.0",
+    "bootstrap": "3.3.6",
+    "history": "2.0.2",
+    "less": "2.7.1",
+    "less-loader": "2.2.3",
     "object-assign": "4.1.0",
+    "postcss-loader": "0.9.1",
     "react": "15.0.2",
+    "react-burger-menu": "1.9.0",
     "react-dom": "15.0.2",
     "react-redux": "4.4.5",
-    "react-router": "2.4.0",
+    "react-router": "2.4.1",
     "redux": "3.5.2"
   },
   "devDependencies": {

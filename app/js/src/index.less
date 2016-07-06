@@ -1,0 +1,12 @@
+@import "~bootstrap/less/bootstrap.less";
+
+/* screen sizes */
+@desktopxl: ~"only screen and (min-width: @{screen-lg})";
+@desktop: ~"only screen and (min-width: @{screen-md}) and (max-width: @{screen-md-max})";
+@tablet: ~"only screen and (min-width: @{screen-xs}) and (max-width: @{screen-sm-max})";
+@mobile: ~"only screen and (max-width: @{screen-xs-min})";
+
+html, body, #app {
+  height: 100%;
+  width: 100%;
+}
