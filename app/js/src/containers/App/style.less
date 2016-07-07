@@ -12,6 +12,44 @@
   background: #373a47;
 }
 
+/* Morph shape necessary with bubble or elastic */
+.bm-morph-shape {
+  fill: #373a47;
+}
+
+/* General sidebar styles */
+.bm-menu {
+  background: #373a47;
+  padding: 2.5em 1.5em 0;
+  font-size: 1.15em;
+
+  a {
+    color: #b8b7ad;
+    text-decoration: none;
+
+    &:hover,
+    &:focus {
+      color: #c94e50;
+
+    }
+  }
+}
+
+/* Wrapper for item list */
+.bm-item-list {
+  color: #b8b7ad;
+  padding: 0.8em;
+}
+
+.bm-item-list a {
+  padding: 0.8em;
+
+  span {
+    margin-left: 10px;
+    font-weight: 700;
+  }
+}
+
 /* Position and sizing of clickable cross button */
 .bm-cross-button {
   height: 24px;
@@ -23,28 +61,12 @@
   background: #bdc3c7;
 }
 
-/* General sidebar styles */
-.bm-menu {
-  background: #373a47;
-  padding: 2.5em 1.5em 0;
-  font-size: 1.15em;
-}
-
-/* Morph shape necessary with bubble or elastic */
-.bm-morph-shape {
-  fill: #373a47;
-}
-
-/* Wrapper for item list */
-.bm-item-list {
-  color: #b8b7ad;
-  padding: 0.8em;
-}
-
 /* Styling of overlay */
 .bm-overlay {
   background: rgba(0, 0, 0, 0.3);
 }
+
+
 
 #outer-container {
   position: relative;
@@ -65,4 +87,19 @@
   right: 15px;
   height: 45px;
   width: 45px;
+}
+
+a {
+  color: #4e4a46;
+  text-decoration: none;
+
+  &:hover,
+  &:focus {
+    color: #c94e50;
+  }
+}
+
+.block {
+  display: block;
+  outline: none;
 }
