@@ -38,6 +38,11 @@ export default {
         test: /(\.css|\.scss)$/,
         include: path.join(__dirname, 'src'),
         loader: ExtractTextPlugin.extract('css?sourceMap!sass?sourceMap')
+      },
+      {
+        test: /(\.less)$/,
+        include: path.join(__dirname, 'src'),
+        loader: ExtractTextPlugin.extract('css?sourceMap!postcss!less?sourceMap')
       }
     ]
   }
