@@ -11,13 +11,14 @@ from uuid import getnode
 
 # HACK:: Anshuman Wed July 06, 2016
 # Not sure how we are going to be setting PYTHONPATH but just get it done
-sys.path.insert(0, '../..')
+sys.path.insert(0, '/home/anshuman/waterbud/')
 from lib.wifi.WifiConnector import WifiConnector
+
 
 class States(Enum):
     wifi_creds_pending = 1
     wifi_creds_recieved = 2
-    success = 3
+    running = 3
     failure = 4
     unknown = 10
 
@@ -41,7 +42,7 @@ class SensorState(object):
                 os.makedirs(directory)
             self.current_state = States.wifi_creds_pending
             self.update_state_file()
-        
+            return        
         # if file exists, always trust that file as a source of truth for now
         # the only time this fails is if we run into a failure before saving
         # which is an edge case --> deal with later
@@ -61,9 +62,15 @@ class SensorState(object):
         self.__dict__[item] = value
     
     def read_state_file(self):
-        with open(self.state_file, "r") as f:
-            val = f.read()
-        return States(int(val))
+        try: 
+            with open(self.state_file, "r") as f:
+                val = f.read()
+            return States(int(val))
+        # To make the update function safer, we end up calling this 
+        # method, but this leads to IOError upon initialization
+        # pass on any IOError
+        except IOError:
+            return None 
 
     def update_state_file(self):
         # Do a safe update, I am worried about a weird case when we can
@@ -81,12 +88,13 @@ class SensorState(object):
 class Sensor(object):
     LAN_SSID = "waterbud"
     LAN_PWD = "BrianSO1"
+    WLAN_DEVICE = 'wlp2s0'
 
     def __init__(self):
         self.state = SensorState()
         self.mac_address = getnode()
 
-    def wait_for_wifi_creds(self, backoff=5, max_sleep=30):
+    def wait_for_wifi_creds(self, backoff=5, max_sleep=10):
         '''
             Loop Until we see the desired. We put some backoff so 
             we don't kill the pi trying to pint (also stops from 
@@ -98,27 +106,33 @@ class Sensor(object):
         sleep = 10
         while True:
             # Find all current Wifi signals detected
-            current_signals = WifiConnector.get_wifi_signals()
+            current_signals = WifiConnector.get_wifi_signals(self.WLAN_DEVICE)
             if self.LAN_SSID in current_signals:
                 break
             time.sleep(sleep)  
             if sleep <= max_sleep:
                 sleep += backoff 
-        
+            else:
+                sleep = max_sleep
+            print "Looking for %s. Retrying in %s secs" %(self.LAN_SSID,
+                                                          sleep)
+
         # If we are here, it means a client is broadcasting
         # the SSID ie. someone has pressed "add a sensor"
         wc = WifiConnector(self.LAN_SSID, self.LAN_PWD)
         wc.connect()
     
+    def get_creds_from_client(self): 
         # Handshake protocol to exchange wifi information
         # between the client and sensor
+        pass
 
     def run(self):
-        if self.state == States.wifi_creds_pending:
+        if self.state.current_state == States.wifi_creds_pending:
             self.wait_for_wifi_creds()
-        elif self.state == States.wifi_creds_recieved:
+        elif self.state.current_state == States.wifi_creds_recieved:
             self.confirm_wifi_creds()
-        elif self.state == States.running:
+        elif self.state.current_state == States.running:
             self.send_water_data()
         else:
             msg = "CRITICAL:: Sensor in Failed State."
