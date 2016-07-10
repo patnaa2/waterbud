@@ -4,7 +4,7 @@ import FlipCard from 'react-flipcard';
 class Card extends React.Component {
   handleOnFlip(flipped) {
     if (flipped) {
-      this.refs.backButton.getDOMNode().focus();
+      //this.refs.backButton.getDOMNode().focus();
     }
   }
 
@@ -22,24 +22,15 @@ class Card extends React.Component {
         onFlip={this.handleOnFlip}
         onKeyDown={this.handleKeyDown}
       >
-        <div>
-          <div>Front</div>
-          <button type="button" onClick={this.props.showBack}>Show back</button>
-          <div><small>(manual flip)</small></div>
-        </div>
-        <div>
-          <div>Back</div>
-          <button type="button" ref="backButton" onClick={this.props.showFront}>Show front</button>
-        </div>
+        {this.props.children}
       </FlipCard>
     );
   }
 }
 
 Card.propTypes = {
-  isFlipped: React.PropTypes.bool,
-  showBack: React.PropTypes.func,
-  showFront: React.PropTypes.func
+  children: React.PropTypes.node,
+  isFlipped: React.PropTypes.bool
 };
 
 export default Card;

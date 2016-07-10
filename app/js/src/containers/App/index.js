@@ -12,6 +12,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.onMenuItemClick = this.onMenuItemClick.bind(this);
+    this.isMenuOpen = this.isMenuOpen.bind(this);
   }
 
   onMenuItemClick() {

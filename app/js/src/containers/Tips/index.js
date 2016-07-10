@@ -2,7 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as actions from '../../actions/tipsActions';
-import Card from '../../components/Card';
+import Card from '../../components/Card/tipCard';
 import './cardStyle.less';
 
 class Tips extends React.Component {
