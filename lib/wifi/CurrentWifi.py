@@ -42,7 +42,8 @@ class CurrentWifi(object):
                                          shell=True).split('=')[1].strip('\n')
         return self.password
     
-    def get_current_ip_address(self):
+    @classmethod
+    def get_current_ip_address(cls):
         '''
             This is a hacky function, since the desitnation (or server)
             is on the local network that we are connecting to.
