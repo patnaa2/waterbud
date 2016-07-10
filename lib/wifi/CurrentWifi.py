@@ -1,3 +1,4 @@
+import socket
 from subprocess import check_output 
 
 class CurrentWifi(object):
@@ -40,6 +41,24 @@ class CurrentWifi(object):
             self.password = check_output(cmd, 
                                          shell=True).split('=')[1].strip('\n')
         return self.password
+    
+    def get_current_ip_address(self):
+        '''
+            This is a hacky function, since the desitnation (or server)
+            is on the local network that we are connecting to.
+            Returns the ip address assuming you are connected to 
+            internet, else returns none
+        '''
+        try:
+            s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            s.connect(("gmail.com", 80))
+            data = s.getsockname()[0] 
+        except:
+            data = None
+        finally:
+            s.close()
+        
+        return data
 
     def write_values_to_file(self, f):
         # f is a file-stream object 

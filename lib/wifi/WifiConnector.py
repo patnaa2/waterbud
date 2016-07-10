@@ -14,14 +14,6 @@ class WifiConnector(object):
             raise Exception(msg)
         
         if not self.is_connection():
-            # check to make sure we are not connected to
-            # something else
-            if self.cw.get_current_ssid():
-                ###
-                # Insert Disconnect Logic here
-                ###
-                pass
-            
             cmd = "nmcli -w 5 device wifi connect '%s' password '%s'" \
                     %(self.ssid, self.password)
             out = subprocess.check_output(cmd, shell=True)
