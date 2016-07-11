@@ -23,6 +23,7 @@ class AddSesnor(object):
         self.wifi_creds = { "ssid" : None, 
                             "pwd" : None,
                             "dest" : None}
+        self.sensor_add_successful = False
 
     def get_current_wifi_creds(self):
         cw = CurrentWifi()
@@ -103,8 +104,9 @@ class AddSesnor(object):
             self.epic_failure(text)
             
         self.exchange_information()
+        self.sensor_add_successful = True 
         self.ap.kill_ap()
-
+        
     def epic_failure(self, text):
         print "\033[1;41m" + text + "\033[1;m" 
         # We should be doing this with a signal/event style based
@@ -114,4 +116,5 @@ class AddSesnor(object):
         sys.exit(1)
 
 if __name__ == "__main__":
-    pass
+    ad = AddSensor()
+    ad.run()

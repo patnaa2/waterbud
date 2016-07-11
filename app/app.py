@@ -39,16 +39,18 @@ class AddSensor(Resource):
         # (capped collection of object size 1)
         # and then we just make sure set the success value to false
         else:
-            db['sensor_added'].remove()
-        return {'success': val}
+            db['add_sensor'].update_one({},
+                                        {'$set': 
+                                            {'success':False}})
+        return {'success': val['success']}
     
-    def put(self):
+    def post(self):
         # add logic to add sensor
         data = {"time_inserted" : datetime.datetime.utcnow(),
                 "success" : True}
-        val_id = db['sensor_added'].insert_one(data).inserted_id
+        db['add_sensor'].insert_one(data)
         print "PUT FUNCTION called"
-        return val_id, 201
+        return 'success', 201
 
 class SensorData(Resource):
     def get(self, location, start, end):
