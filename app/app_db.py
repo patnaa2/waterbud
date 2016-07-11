@@ -19,7 +19,7 @@ app = Flask(__name__,
 api = Api(app)
 
 # Initialize db connection
-#db = pymongo.MongoClient('localhost', 27017)['waterbud']
+db = pymongo.MongoClient('localhost', 27017)['waterbud']
 
 # Homepage
 @app.route('/')
@@ -29,27 +29,26 @@ def index():
 ## API Endpoints
 class AddSensor(Resource):
     def get(self):
-        #val = db['add_sensor'].find_one({})
-        val = {"success": True}
-        #if not val:
-        #    val = False
+        val = db['add_sensor'].find_one({})
+        if not val:
+            val = False
         # HACK Anshuman July 10, 2016
         # Not sure why but I cant seem to update a variable in post
         # and then get the new variable value in get
         # we are going to do a bs hack and store the value in db
         # (capped collection of object size 1)
         # and then we just make sure set the success value to false
-        #else:
-        #    db['add_sensor'].update_one({},
-        #                                {'$set': 
-        #                                    {'success':False}})
+        else:
+            db['add_sensor'].update_one({},
+                                        {'$set': 
+                                            {'success':False}})
         return {'success': val['success']}
     
     def post(self):
         # add logic to add sensor
         data = {"time_inserted" : datetime.datetime.utcnow(),
                 "success" : True}
-        #db['add_sensor'].insert_one(data)
+        db['add_sensor'].insert_one(data)
         print "PUT FUNCTION called"
         return 'success', 201
 
