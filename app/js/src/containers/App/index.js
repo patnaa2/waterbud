@@ -42,6 +42,14 @@ class App extends React.Component {
             <i className="fa fa-lightbulb-o fa-fw" aria-hidden="true" />
             <span>Tips</span>
           </Link>
+          <Link className="block" to="/history" onClick={this.onMenuItemClick}>
+            <i className="fa fa-history fa-fw" aria-hidden="true" />
+            <span>Historical Usage</span>
+          </Link>
+          <Link className="block" to="/live" onClick={this.onMenuItemClick}>
+            <i className="fa fa-line-chart fa-fw" aria-hidden="true" />
+            <span>Live Usage</span>
+          </Link>
           <Link className="block" to="/sensors" onClick={this.onMenuItemClick}>
             <i className="fa fa-server fa-fw" aria-hidden="true" />
             <span>Sensors</span>

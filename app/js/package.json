@@ -27,6 +27,7 @@
   "dependencies": {
     "bootstrap": "3.3.6",
     "font-awesome": "4.6.3",
+    "highcharts": "4.2.5",
     "history": "2.0.2",
     "immutable": "3.8.1",
     "less": "2.7.1",
