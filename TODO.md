@@ -10,6 +10,10 @@ BACKEND FOR CLIENT
         - create network and what not from there
     Work on api endpoints on flask
     setup mongo/some db to store all this data in a clean way
+    Historical data generation
+        - create 'trapezoidal' representation of flow for each timeseries
+        generated
+        - convert all (timestamp, flow) tuples into dictionaries
 
 FRONTEND FOR CLIENT
 [ ] HighCharts Integration
