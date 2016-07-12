@@ -34,27 +34,57 @@ class App extends React.Component {
           isOpen={this.props.misc.get('isOpen')}
           onStateChange={this.isMenuOpen}
         >
-          <Link className="block" to="/" onClick={this.onMenuItemClick}>
+          <Link
+            activeClassName="active"
+            className="block"
+            to="/"
+            onClick={this.onMenuItemClick}
+          >
             <i className="fa fa-home fa-fw" aria-hidden="true" />
             <span>Home</span>
           </Link>
-          <Link className="block" to="/tips" onClick={this.onMenuItemClick}>
+          <Link
+            activeClassName="active"
+            className="block"
+            to="/tips"
+            onClick={this.onMenuItemClick}
+          >
             <i className="fa fa-lightbulb-o fa-fw" aria-hidden="true" />
             <span>Tips</span>
           </Link>
-          <Link className="block" to="/history" onClick={this.onMenuItemClick}>
+          <Link
+            activeClassName="active"
+            className="block"
+            to="/history"
+            onClick={this.onMenuItemClick}
+          >
             <i className="fa fa-history fa-fw" aria-hidden="true" />
             <span>Historical Usage</span>
           </Link>
-          <Link className="block" to="/live" onClick={this.onMenuItemClick}>
+          <Link
+            activeClassName="active"
+            className="block"
+            to="/live"
+            onClick={this.onMenuItemClick}
+          >
             <i className="fa fa-line-chart fa-fw" aria-hidden="true" />
             <span>Live Usage</span>
           </Link>
-          <Link className="block" to="/sensors" onClick={this.onMenuItemClick}>
+          <Link
+            activeClassName="active"
+            className="block"
+            to="/sensors"
+            onClick={this.onMenuItemClick}
+          >
             <i className="fa fa-server fa-fw" aria-hidden="true" />
             <span>Sensors</span>
           </Link>
-          <Link className="block" to="/settings" onClick={this.onMenuItemClick}>
+          <Link
+            activeClassName="active"
+            className="block"
+            to="/settings"
+            onClick={this.onMenuItemClick}
+          >
             <i className="fa fa-cog fa-fw" aria-hidden="true" />
             <span>Settings</span>
           </Link>

@@ -2,6 +2,12 @@ import React from 'react';
 import FlipCard from 'react-flipcard';
 
 class Card extends React.Component {
+  constructor() {
+    super();
+    this.handleOnFlip = this.handleOnFlip.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
+  }
+
   handleOnFlip(flipped) {
     if (flipped) {
       //this.refs.backButton.getDOMNode().focus();

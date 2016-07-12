@@ -1,22 +1,39 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import FlipCard from './index.js';
 
 const SensorCard = (props) => {
-  const {benefit, description, image, showBack, showFront, ...others} = props;
-  console.log(benefit, description, image);
+  const {
+    image,
+    installDate,
+    location,
+    name,
+    showBack,
+    showFront,
+    ...others
+  } = props;
   return (
-    <FlipCard {...others}>
+    <FlipCard {...others} showFront={showFront}>
       <div>
-        <div>Front</div>
         <button type="button" onClick={showBack}>Show back</button>
-        <div><small>(manual flip)</small></div>
+        <img src={image}/>
+        <div>{name}</div>
       </div>
       <div>
-        <div>Back</div>
+        <div>{installDate}</div>
+        <div>{location}</div>
         <button type="button" onClick={showFront}>Show front</button>
       </div>
     </FlipCard>
   );
+};
+
+SensorCard.propTypes = {
+  image: PropTypes.string,
+  installDate: PropTypes.string,
+  location: PropTypes.string,
+  name: PropTypes.string,
+  showBack: PropTypes.func,
+  showFront: PropTypes.func
 };
 
 export default SensorCard;

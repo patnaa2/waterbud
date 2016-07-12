@@ -8,8 +8,12 @@ export function checkAddSensor() {
   return {type: types.ADD_SENSOR, status};
 }
 
-export function updateSensor(data) {
-  return {type: types.UPDATE_SENSOR, data};
+export function updateSensor(key, value) {
+  return {type: types.UPDATE_SENSOR, key, value};
+}
+
+export function saveSensor() {
+  return {type: types.SAVE_SENSOR};
 }
 
 export function removeSensor(id) {
@@ -24,3 +28,6 @@ export function flipSensorCard(index, status) {
   return {type: types.FLIP_SENSOR_CARD, index, status};
 }
 
+export function loadSensor(index) {
+  return {type: types.LOAD_SENSOR, index};
+}

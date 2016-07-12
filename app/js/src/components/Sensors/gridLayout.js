@@ -25,7 +25,8 @@ class GridLayout extends React.Component {
               isFlipped={element.get('isFlipped')}
               showBack={this.showBack.bind(this, index)}
               showFront={this.showFront.bind(this, index)}
-              text={element.get('text')}
+              name={element.get('name')}
+              location={element.get('location')}
             />
           </div>
         )}

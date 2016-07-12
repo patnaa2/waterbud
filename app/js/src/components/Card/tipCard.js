@@ -5,7 +5,7 @@ const TipCard = (props) => {
   const {benefit, description, image, showBack, showFront, ...others} = props;
   console.log(benefit, description, image);
   return (
-    <FlipCard {...others}>
+    <FlipCard {...others} showFront={showFront}>
       <div>
         <div>Front</div>
         <button type="button" onClick={showBack}>Show back</button>

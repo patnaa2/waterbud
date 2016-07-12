@@ -9,13 +9,28 @@ import * as constants from '../../constants/viewConstants';
 import './style.less';
 
 class Sensors extends React.Component {
+  constructor(props) {
+    super(props);
+    this.navigation = this.navigation.bind(this);
+  }
+  navigation(index, e) {
+    e.preventDefault();
+    this.props.actions.loadSensor(index);
+    this.props.history.push('/sensor/' + index);
+  }
   render() {
     return (
       <div>
         <div className="buttonGroup">
           <span className="fa fa-2x fa-th" />
           <span className="fa fa-2x fa-list" />
-          <button type="button" className="btn btn-success">Add Sensor</button>
+          <button
+            type="button"
+            className="btn btn-success"
+            onClick={this.navigation.bind(this, 0)}
+          >
+          Add Sensor
+          </button>
         </div>
         {
           this.props.sensors.get('viewMode') === constants.CARD ?
