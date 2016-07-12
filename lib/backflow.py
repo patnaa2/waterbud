@@ -1,5 +1,14 @@
 """
     Backflow data generation.
+
+    Location Structure
+    ------------------
+    - occurences: {tuple}
+        upper and lower bound of event occurences per day
+    - timings: {list of tuples}
+        sets of time intervals during which an event would take place
+    - duration: {tuple}
+        amount of time taken for a single event (seconds)
 """
 from __future__ import division
 import datetime as dt
@@ -9,146 +18,190 @@ import json
 import numpy as np
 
 
+# location data store
+locations = {
+    "restroom":{
+        "occurences": (8,12),
+        "timings": [(7,9), (12,15), (18,21)],
+        "duration": (30,60)
+    },
+    "kitchen":{
+        "occurences":(10,15),
+        "timings": [(7,23)],
+        "duration": (30,60),
+    },
+    "garden":{
+        "occurences": (0, 1),
+        "timings": [(18,21)],
+        "duration": (1800, 2700)
+    }
+}
+
+
+# HELPERS
+def gen_time_occurences(timings, occurences):
+    """
+        Map occurences to time intervals per location. The sum of occurences
+        per time interval should correspond to the number of occurences
+        listed in the location data store.
+
+        Parameters
+        ----------
+        timings : {list}
+            list of time intervals
+
+        occurences : {int}
+            total number of occurences for a given location
+    """
+    to = []
+    occ = occurences
+
+    for idx, interval in enumerate(timings):
+        if idx == len(timings) - 1 or occ == 0 or occ == 1:
+            to.append(occ)
+            continue
+        gen = np.random.randint(1, occ)
+        to.append(gen)
+        occ -= gen
+
+    return zip(timings, to)
+
+
+def gen_timeseries(to_map, duration):
+    """
+        Generate data points (seconds) based on the number of occurences
+        for a given time interval. A single data point corresponds to the
+        total number of seconds from 0 (i.e. 12AM on a given day).
+
+        Parameters
+        ----------
+        to_map : {list of tuples}
+            time-occurence mapping obtained from gen_time_occurences().
+            each tuple should have the following format
+            (time_interval, occurences)
+
+        duration : {tuple}
+            tuple denoting the upper and lower bounds for a single event
+            duration (i.e. specified duration bounds are used for all 
+            occurences)
+    """
+    ts = []
+
+    # create points between lower and upper t based on # of occurences
+    for interval, occ in to_map:
+        if occ == 0:
+            continue
+
+        difference = (interval[1] - interval[0])*60*60
+        lower_stamp = 0
+        tstamps = []
+
+        for num in xrange(0, occ):
+            stamp = np.random.randint(lower_stamp, difference)
+            tstamps.append(interval[0]*60*60 + stamp)
+            lower_stamp = stamp
+
+        # generate duration
+        dur = np.random.randint(duration[0], duration[1])
+
+        # convert interval from hours to seconds (convenience)
+        conv_interval = map(lambda x: x*60*60, interval)
+
+        range_storage = []
+
+        # generate range of timestamp data points based on generated duration
+        for idx, stamp in enumerate(tstamps):
+            # handle last timestamp with duration greater than upper bound
+            if idx == len(tstamps) - 1 and stamp + dur >= conv_interval[1]:
+                range_storage.append(np.arange(stamp, conv_interval[1], 1))
+                continue
+            elif idx < len(tstamps) -1 and stamp + dur >= tstamps[idx+1]:
+                range_storage.append(np.arange(stamp, tstamps[idx+1], 1))
+                continue
+
+            range_storage.append(np.arange(stamp, stamp+dur, 1))
+
+        ts.append((interval,range_storage))
+
+    return ts
+
+
+def convert_seconds(ts_map, **kwargs):
+    """
+        Convert numeric seconds in passed timeseries to datetime string
+        representation.
+
+        Parameters
+        ----------
+        ts_map : {list of tuples}
+            list of tuples corresponding to an event interval and a list of
+            occurence timestamps.
+
+        Keyword Arguments
+        -----------------
+        year, month, day : {int}
+            corresponds to year, month, and day of base timestamp
+    """
+    conv_ts = []
+
+    for interval, ts in ts_map:
+        base = dt.datetime(kwargs["year"], kwargs["month"], kwargs["day"], 
+                           interval[0])
+
+        # compute delta for each point
+        delta = [[dt.timedelta(seconds=val-interval[0]*60*60) 
+                  for val in series] for series in ts] 
+
+        # add delta to base and create datetime points
+        modified_base = [[base + dlt for dlt in series] for series in delta]
+
+        # strftime conversion
+        modified_base = [[pt.strftime("%Y-%m-%d %H:%M:%S") for pt in series]
+                         for series in modified_base]
+
+        conv_ts.append(modified_base)
+
+    return conv_ts
+
+
 def single_day(year, month, day):
     """
-        Generates restroom, kitchen, garden consumption data on a per second
-        basis, for a specified day.
+        Generates location consumption data on a per second basis, for a 
+        specified day.
 
         Parameters
         ----------
         year : {int}
-
         month : {int}
-
         day : {int}
     """
     # fixed instantaneous consumption (ml)
     rate = 21 
 
-    # occurences
-    restroom = (8, 12)
-    kitchen = (10, 15)
-    garden = (0,1)
+    result = {}
 
-    # timings
-    restroom_t = [(7, 9), (12, 15), (18,21)]
-    kitchen_t = [(7, 23)]
-    garden_t = [(18, 21)]
+    for location, data in locations.iteritems():
+        occ = data["occurences"]
+        timings = data["timings"]
+        dur = data["duration"]
 
-    # duration (number of 'second' data points)
-    restroom_d = (30,60) 
-    kitchen_d = (30,60)
-    garden_d = (1800, 2700)
+        # generate occurences
+        occurences = np.random.randint(occ[0], occ[1]+1)
 
-    # iterate over timings and generate random occurences
-    restroom_o = np.random.randint(restroom[0], restroom[1]+1)
-    kitchen_o = np.random.randint(kitchen[0], kitchen[1]+1)
-    garden_o = np.random.randint(garden[0], garden[1]+1)
+        # map occurences to time intervals
+        to_map = gen_time_occurences(timings, occurences)
 
-    # generate occurences for each time interval
-    def gen_time_occurences(timings, occurences):
-        to = []
-        occ = occurences
+        # generate timeseries data
+        ts_map = gen_timeseries(to_map, dur)
 
-        for idx, interval in enumerate(timings):
-            if idx == len(timings) - 1 or occ == 0 or occ == 1:
-                to.append(occ)
-                continue
-            gen = np.random.randint(1, occ)
-            to.append(gen)
-            occ -= gen
+        # convert timeseries data
+        conv_ts = convert_seconds(ts_map, year=year, month=month, day=day)
 
-        return zip(timings, to)
+        # double flattening of converted timeseries to generate single list
+        flat = sum([sum(arr, []) for arr in conv_ts], [])
 
-    # time-occurence mapping
-    restroom_to = gen_time_occurences(restroom_t, restroom_o)
-    kitchen_to = gen_time_occurences(kitchen_t, kitchen_o)
-    garden_to = gen_time_occurences(garden_t, garden_o)
-
-    # generate timeseries data points
-    # each data point corresponds to the number of seconds from 0
-    def gen_timeseries(to_map, duration):
-        ts = []
-        # create points between lower and upper t based on # of occurences
-        for mapping in to_map:
-            interval, occ = mapping
-
-            if occ == 0:
-                continue
-
-            difference = (interval[1] - interval[0])*60*60
-            lower_stamp = 0
-            tstamps = []
-
-            for num in xrange(0, occ):
-                stamp = np.random.randint(lower_stamp, difference)
-                tstamps.append(interval[0]*60*60 + stamp)
-                lower_stamp = stamp
-
-            # obtained timestamps for a given interval
-            # generate duration
-            dur = np.random.randint(duration[0], duration[1])
-
-            # convert interval from hours to seconds (convenience)
-            conv_interval = map(lambda x: x*60*60, interval)
-
-            range_storage = []
-
-            for idx, stamp in enumerate(tstamps):
-                # handle last timestamp with duration greater than upper bound
-                if idx == len(tstamps) - 1 and stamp + dur >= conv_interval[1]:
-                    range_storage.append(np.arange(stamp, conv_interval[1], 1))
-                    continue
-                elif idx < len(tstamps) -1 and stamp + dur >= tstamps[idx+1]:
-                    range_storage.append(np.arange(stamp, tstamps[idx+1], 1))
-                    continue
-
-                range_storage.append(np.arange(stamp, stamp+dur, 1))
-
-            ts.append((interval,range_storage))
-
-        return ts
-
-    # timeseries retrieval (integer data points - seconds)
-    restroom_ts = gen_timeseries(restroom_to, restroom_d)
-    kitchen_ts = gen_timeseries(kitchen_to, kitchen_d)
-    garden_ts = gen_timeseries(garden_to, garden_d)
-
-    # convert seconds data into timestamps
-    def convert_seconds(ts_map):
-        conv_ts = []
-
-        for interval, ts in ts_map:
-            # generate base
-            base = dt.datetime(year, month, day, interval[0])
-            # compute delta for each point
-            delta = [[dt.timedelta(seconds=val-interval[0]*60*60) 
-                      for val in series] for series in ts] 
-
-            # add delta to base and create datetime points
-            modified_base = [[base + dlt for dlt in series] for series in delta]
-
-            # strftime conversion - uncomment if necessary
-            modified_base = [[pt.strftime("%Y-%m-%d %H:%M:%S") for pt in series]
-                             for series in modified_base]
-
-            conv_ts.append(modified_base)
-
-        return conv_ts
-
-    # converted timeseries
-    restroom_cts = convert_seconds(restroom_ts)
-    kitchen_cts = convert_seconds(kitchen_ts)
-    garden_cts = convert_seconds(garden_ts)
-
-    # flatten list twice and generate single list of timestamps
-    restroom_flat = sum([sum(arr, []) for arr in restroom_cts], [])
-    kitchen_flat = sum([sum(arr, []) for arr in kitchen_cts], [])
-    garden_flat = sum([sum(arr, []) for arr in garden_cts], [])
-
-    result = {"restroom": [(stamp, rate) for stamp in restroom_flat],
-              "kitchen": [(stamp, rate) for stamp in kitchen_flat],
-              "garden": [(stamp, rate) for stamp in garden_flat]}
+        # map rate to each timestamp
+        result[location] = [(stamp, rate) for stamp in flat]
 
     return result
 
@@ -179,4 +232,4 @@ def generate(n):
 
 
 if __name__ == '__main__':
-    generate(1000)
+    print generate(1000)
