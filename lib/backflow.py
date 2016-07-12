@@ -4,11 +4,10 @@
 from __future__ import division
 import datetime as dt
 import random
+import json
 
 import numpy as np
-import pandas as pd
 
-import pdb
 
 def single_day(year, month, day):
     """
@@ -50,8 +49,9 @@ def single_day(year, month, day):
     def gen_time_occurences(timings, occurences):
         to = []
         occ = occurences
+
         for idx, interval in enumerate(timings):
-            if idx == len(timings) - 1 or occ == 0:
+            if idx == len(timings) - 1 or occ == 0 or occ == 1:
                 to.append(occ)
                 continue
             gen = np.random.randint(1, occ)
@@ -114,8 +114,6 @@ def single_day(year, month, day):
     kitchen_ts = gen_timeseries(kitchen_to, kitchen_d)
     garden_ts = gen_timeseries(garden_to, garden_d)
 
-    pdb.set_trace()
-
     # convert seconds data into timestamps
     def convert_seconds(ts_map):
         conv_ts = []
@@ -131,7 +129,7 @@ def single_day(year, month, day):
             modified_base = [[base + dlt for dlt in series] for series in delta]
 
             # strftime conversion - uncomment if necessary
-            modified_base = [[pt.strftime("%Y-%M-%d %H:%m:%S") for pt in series]
+            modified_base = [[pt.strftime("%Y-%m-%d %H:%M:%S") for pt in series]
                              for series in modified_base]
 
             conv_ts.append(modified_base)
@@ -143,14 +141,24 @@ def single_day(year, month, day):
     kitchen_cts = convert_seconds(kitchen_ts)
     garden_cts = convert_seconds(garden_ts)
 
-    return None
+    # flatten list twice and generate single list of timestamps
+    restroom_flat = sum([sum(arr, []) for arr in restroom_cts], [])
+    kitchen_flat = sum([sum(arr, []) for arr in kitchen_cts], [])
+    garden_flat = sum([sum(arr, []) for arr in garden_cts], [])
+
+    result = {"restroom": [(stamp, rate) for stamp in restroom_flat],
+              "kitchen": [(stamp, rate) for stamp in kitchen_flat],
+              "garden": [(stamp, rate) for stamp in garden_flat]}
+
+    return json.dumps(result)
 
 
 def generate():
     """
-        Generate data for previous month.
+        TODO: Generate data for previous month.
     """
     return None
+
 
 if __name__ == '__main__':
     single_day(2016, 07, 01)
