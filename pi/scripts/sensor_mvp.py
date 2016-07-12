@@ -11,11 +11,25 @@ class Sensor(object):
     def __init__(self, debug=False):
         self.count = 0
         self.old_time = int(time.time() * 1000)
-        self._ws = websocket.create_connection("ws://localhost:8888/ws")
+        self._ws = None 
         self.debug = debug
 
         self.init_GPIO()
-         
+    
+    def init_ws(self, sleep=2):
+        # Hack Anshuman July 12, 2016 
+        # We are relying on init.d to get the two scripts up and running (ideally)
+        # just in case the web socket isn't ready, be stuck in a loop until 
+        # we can get the web socket connection
+        while True:
+            try:
+                self._ws = websocket.create_connection("ws://localhost:8888/ws") 
+                break
+            except:
+                print "Unable to connect to websocket. Trying again in %ssecs"\
+                        %(secs)
+                time.sleep(sleep)
+
     def init_GPIO(self):
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(FLOW_SENSOR, GPIO.IN, pull_up_down = GPIO.PUD_UP)
