@@ -164,6 +164,7 @@ def convert_seconds(ts_map, **kwargs):
     return conv_ts
 
 
+# PRIMARY METHODS
 def single_day(year, month, day):
     """
         Generates location consumption data on a per second basis, for a 
