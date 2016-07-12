@@ -150,15 +150,33 @@ def single_day(year, month, day):
               "kitchen": [(stamp, rate) for stamp in kitchen_flat],
               "garden": [(stamp, rate) for stamp in garden_flat]}
 
-    return json.dumps(result)
+    return result
 
 
-def generate():
+def generate(n):
     """
-        TODO: Generate data for previous month.
+        Generate data for previous n days.
+        
+        Parameters
+        ----------
+        n : {int}
+            number of days for which historical data will be generated. upper
+            bound is one day prior to date of instantiation.
     """
-    return None
+    init_day = dt.date.today() - dt.timedelta(days=1)
+
+    # fixed number of days for which we want historical data => n
+    init_day -= dt.timedelta(days=n)
+
+    dates = []
+
+    for num in xrange(1, n+1):
+        dates.append(init_day + dt.timedelta(days=num))
+
+    data = [single_day(date.year, date.month, date.day) for date in dates]
+
+    return json.dumps({"data": data})
 
 
 if __name__ == '__main__':
-    single_day(2016, 07, 01)
+    generate(1000)
