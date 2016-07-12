@@ -1,5 +1,6 @@
 import websocket 
 import time
+import sys
 
 ws = websocket.create_connection("ws://localhost:8888/ws")
 
