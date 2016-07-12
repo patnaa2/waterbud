@@ -65,4 +65,4 @@ api.add_resource(AddSensor, '/add_sensor')
 api.add_resource(SensorData, '/data/<location>/<start>/<end>')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
