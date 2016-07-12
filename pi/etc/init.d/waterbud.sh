@@ -9,8 +9,8 @@
 ### END INIT INFO
 
 DIR=/home/pi/waterbud/pi/scripts/
-DAEMON=$DIR/sensor_websocket.py
-DAEMON_NAME=sensor_websocket
+DAEMON=$DIR/sensor_mvp.py
+DAEMON_NAME=sensor
 
 # Add any command line options for your daemon here
 DAEMON_OPTS=""
