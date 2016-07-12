@@ -3,6 +3,8 @@ import tornado.websocket
 import tornado.ioloop
 import tornado.web
 
+LOCAL_HOST = ["127.0.0.1", "::1"]
+
 class WSModHandler(tornado.websocket.WebSocketHandler):
     wc_clients = [] 
 
@@ -19,7 +21,9 @@ class WSModHandler(tornado.websocket.WebSocketHandler):
         print 'Incoming message: %s' %(message)
         
         # only write if the data was updated locally 
-        if self.request.remote_ip == "127.0.0.1":
+        # pi's current remote_ip is beign picked up 
+        # as ::1
+        if self.request.remote_ip in LOCAL_HOST:
             for w in self.wc_clients:
                 w.write_message("Message : %s" %(message))
 
