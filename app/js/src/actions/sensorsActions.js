@@ -42,8 +42,8 @@ export function loadSensor(index) {
   return {type: types.LOAD_SENSOR, index};
 }
 
-export function receiveLiveData(data) {
-  return {type: types.RECEIVED_LIVE_DATA, data};
+export function receiveLiveData(time, flow_ml) {
+  return {type: types.RECEIVED_LIVE_DATA, time, flow_ml};
 }
 
 export function resetLiveData() {

@@ -40,7 +40,10 @@ const initialState = Immutable.fromJS({
   editSensor: newSensor,
   isAddingSensor: false,
   historicalData: [],
-  liveData: [],
+  liveData: {
+    time: [],
+    flow_ml: []
+  },
   timeStamp: null,
   viewMode: CARD,
   loading: false
@@ -81,7 +84,12 @@ export default function tipReducer(state = initialState, action) {
       return state.setIn(['editSensor', action.key], action.value);
 
     case RECEIVED_LIVE_DATA:
-      return state.update('liveData', (data) => data.push(Immutable.fromJS(action.data)));
+      if (state.getIn(['liveData', 'time']).size < 60) {
+        return state.updateIn(['liveData', 'time'], (data) => data.push(Immutable.fromJS(action.time.toString())))
+                    .updateIn(['liveData', 'flow_ml'], (data) => data.push(Immutable.fromJS(action.flow_ml.toString())));
+      }
+      return state.updateIn(['liveData', 'time'], (data) => data.shift().push(Immutable.fromJS(action.time.toString())))
+                  .updateIn(['liveData', 'flow_ml'], (data) => data.shift().push(Immutable.fromJS(action.flow_ml.toString())));
 
     case LOADING_HISTORICAL_DATA:
       return state.set('loading', action.status);

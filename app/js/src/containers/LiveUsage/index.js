@@ -1,72 +1,56 @@
 import React, {PropTypes} from 'react';
-import Highmaps from 'highcharts/modules/map';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-import Chart from '../../components/Chart';
+const Line = require('react-chartjs').Line;
 
 import * as actions from '../../actions/sensorsActions';
 
 class LiveUsage extends React.Component {
   componentWillMount() {
     /*eslint-disable*/
-    this.socket = new WebSocket("ws://192.168.0.19:8888/ws");
+    this.socket = new WebSocket("ws://localhost:8888/ws");
     this.socket.onopen = () => {
       this.socket.send('message');
     };
     this.socket.onmessage = (evt) => {
       console.log('evt', evt.data);
       const data = JSON.parse(evt.data);
-      this.props.actions.receiveLiveData([data.timestamp]);
+      this.props.actions.receiveLiveData(data.time, data.flow_ml);
     };
   }
 
   componentWillUnmount() {
-    this.socket = null;
+    this.socket.close();
     this.props.actions.resetLiveData();
   }
 
   render() {
+    const chartData = {
+      labels: this.props.liveData.get('time').toJS(),
+      showTable: false,
+      datasets: [
+        {
+          label: 'My First dataset',
+          fillColor: 'rgba(220,220,220,0.5)',
+          strokeColor: 'rgba(220,220,220,0.8)',
+          highlightFill: 'rgba(220,220,220,0.75)',
+          highlightStroke: 'rgba(220,220,220,1)',
+          data: this.props.liveData.get('flow_ml').toJS()
+        }
+      ]
+    };
+
     if(this.props.liveData.size === 0) {
       if (this.props.loading) {
         return <div>LOADING DATA!!!</div>;
       }
       return <div>NO DATA!</div>;
     }
-    const options = {
-      rangeSelector: {
-        selected: 0
-      },
-      title: {
-        text: 'Water Consumption'
-      },
-      tooltip: {
-        style: {
-          width: '200px'
-        },
-        valueDecimals: 4,
-        shared: true
-      },
-      yAxis: {
-        title: {
-          text: 'Water Consumed (L)'
-        }
-      },
-      series: [{
-        name: 'Water Consumed (L)',
-        data: this.props.liveData,
-        id: 'dataseries'
-      }]
-    };
     return (
       <div>
         <div>Live Usage</div>
-        <Chart
-          container="stockChart"
-          type="stockChart"
-          options={options}
-          modules={[Highmaps]}
-        />
+        <Line data={chartData} width={window.innerWidth * 0.95} height="250"/>
       </div>
     );
   }
