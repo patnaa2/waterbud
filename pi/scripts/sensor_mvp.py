@@ -44,6 +44,7 @@ class Sensor(object):
         while True:
             try:
                 current_time = int(time.time() * 1000)
+                current_dt = int(datetime.datetime())
                 if current_time - self.old_time > 1000:
                     flow_rate = ((1000.0 / (current_time - self.old_time)) * self.count) / self.CALIBRATION_FACTOR
                     flow_ml = (flow_rate / 60) * 1000
@@ -53,7 +54,7 @@ class Sensor(object):
                             print "Rate: %s" %(flow_rate)
                             print "Flow ml: %s" %(flow_ml)
                             continue
-                        self._ws.send("timestamp: %s, flowrate: %s" %(current_time, 
+                        self._ws.send("timestamp: %s, flowrate: %s" %(current_dt, 
                                                                       flow_ml)
                     self.old_time = int(time.time() * 1000)
             except KeyboardInterrupt:
