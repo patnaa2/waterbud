@@ -1,6 +1,7 @@
 import argparse
 import datetime
 import pymongo
+import json
 import sys
 import time
 import websocket
@@ -9,15 +10,14 @@ class MongoFiller(object):
     MONGO_LOCATION = "127.0.0.1:27017"
 
     def __init__(self, ws_ip, ws_port):
-        self.ws_ip = ws_ip
-        self.ws_port = ws_port
+        self.ws_location = "ws://%s:%s/ws" %(ws_ip, ws_port)
         self.location = None
         self._ws = None
         self._db = None
         
         # Try connecting to db, if failure (break)
         self.connect_to_db()
-
+        self.find_sensor_location()
         # Block until we get a persistent connection to websocket
         self.init_ws()
 
@@ -42,11 +42,10 @@ class MongoFiller(object):
         '''
         while True:
             try:
-                self._ws = websocket.create_connection("ws:://%s:%s/ws" 
-                                                        %(self.ws_ip,
-                                                          self.port))
+                self._ws = websocket.create_connection(self.ws_location)
+                break
             except:
-                print "Unable to connect to websocket."
+                print "Unable to connect to websocket %s." %(self.ws_location)
                 print "Trying again in %s secs" %(sleep)
                 time.sleep(sleep)
 
@@ -66,13 +65,17 @@ class MongoFiller(object):
         while True:
             try:
                 data = self._ws.recv()
-                #
-                # Insert in processing steps
-                #
-                # No need to worry about validating data here for MVP
-                # to ensure we don't have duplicate dates, we will have a 
-                # unique index on the timestamp field
+                data = json.loads(data)
+                data['time'] = datetime.datetime.strptime(data['time'],
+                                                          "%Y-%m-%d %H:%M:%S")
                 self._db[self.location].insert_one(data)
+            except KeyError:
+                msg = "Expecting a time field, with appropraite string format"
+                self.epic_failure(msg)
+            except TypeError:
+                import pdb ; pdb.set_trace()
+                msg = "Invalid data format"
+                self.epic_failure(msg)
             except KeyboardInterrupt:
                 try:
                     self._ws.close()
