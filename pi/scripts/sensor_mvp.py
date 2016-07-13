@@ -54,8 +54,9 @@ class Sensor(object):
                         if self.debug:
                             print "Rate: %s" %(flow_rate)
                             print "Flow ml: %s" %(flow_ml)
-                        self._ws.send("timestamp: %s, flowrate: %s" %(current_dt, 
-                                                                      flow_ml))
+                        self._ws.send("{ data: {timestamp: %s,
+                                                flowrate: %s }}" %(current_dt, 
+                                                                   flow_ml))
                     time.sleep(0.1)
                     self.old_time = int(time.time() * 1000)
                     self.count = 0
