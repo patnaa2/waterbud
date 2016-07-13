@@ -1,5 +1,6 @@
 import RPi.GPIO as GPIO
 import datetime
+import json
 import websocket 
 import sys
 import time
@@ -54,9 +55,9 @@ class Sensor(object):
                         if self.debug:
                             print "Rate: %s" %(flow_rate)
                             print "Flow ml: %s" %(flow_ml)
-                        self._ws.send("{ data: {timestamp: %s,
-                                                flowrate: %s }}" %(current_dt, 
-                                                                   flow_ml))
+                        data = { "timestamp": current_dt, 
+                                 "flow_ml": flow_ml}
+                        self._ws.send(json.dumps(data))
                     time.sleep(0.1)
                     self.old_time = int(time.time() * 1000)
                     self.count = 0
