@@ -21,7 +21,7 @@ class Sensor extends React.Component {
 
   onSubmit(e) {
     e.preventDefault();
-    this.props.actions.saveSensor();
+    this.props.actions.saveSensor(this.props.editSensor.get('id'), this.props.editSensor.get('location'));
     this.props.history.push('/sensors');
   }
 

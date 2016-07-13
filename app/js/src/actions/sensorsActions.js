@@ -12,8 +12,18 @@ export function updateSensor(key, value) {
   return {type: types.UPDATE_SENSOR, key, value};
 }
 
-export function saveSensor() {
-  return {type: types.SAVE_SENSOR};
+export function saveSensor(id, location) {
+  return (dispatch) => {
+    if (id >= 3) {
+      fetch('http://localhost:5000/add_sensor?location=' + location, {
+        method: 'POST'
+      }).then(() => {
+        dispatch({type: types.SAVE_SENSOR});
+      });
+    } else {
+      dispatch({type: types.SAVE_SENSOR});
+    }
+  };
 }
 
 export function removeSensor(id) {
