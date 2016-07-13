@@ -1,8 +1,10 @@
 from flask import Flask, render_template
-from flask_restful import Resource, Api
+from flask_restful import Resource, Api, reqparse
 import datetime
 import os
 import pymongo
+
+WEBSOCKET = '127.0.0.1:8888'
 
 ## Override default template directory
 template_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)),
@@ -27,42 +29,60 @@ def index():
     return render_template('index.html')
 
 ## API Endpoints
-class AddSensor(Resource):
+class WSLocation(Resource):
     def get(self):
-        #val = db['add_sensor'].find_one({})
-        val = {"success": True}
-        #if not val:
-        #    val = False
-        # HACK Anshuman July 10, 2016
+        return {'ws_location': WEBSOCKET}
+
+class AddSensor(Resource):
+    add_sensor_parser = reqparse.RequestParser()
+    add_sensor_parser.add_argument('location')
+    valid_locations = ["bathroom sink", "kitchen sink", "shower", "garden"]
+        
+    def get(self):
+        # HACK Anshuman July 12, 2016
         # Not sure why but I cant seem to update a variable in post
         # and then get the new variable value in get
         # we are going to do a bs hack and store the value in db
         # (capped collection of object size 1)
-        # and then we just make sure set the success value to false
-        #else:
-        #    db['add_sensor'].update_one({},
-        #                                {'$set': 
-        #                                    {'success':False}})
-        return {'success': val['success']}
-    
+        # since for MVP we are not showing auto-discovery, have this
+        # return a location, if not return null
+        try:
+            val = db['add_sensor'].find_one({}).get('location', None)
+        except:
+            val = 'testing'
+ 
+        if not val:
+            val = ''
+
+        return val, 200
+
     def post(self):
-        # add logic to add sensor
-        data = {"time_inserted" : datetime.datetime.utcnow(),
-                "success" : True}
-        #db['add_sensor'].insert_one(data)
-        print "PUT FUNCTION called"
-        return 'success', 201
+        # add logic to add sensor --> Mocked for MVP
+        args = self.add_sensor_parser.parse_args()
+        location = args['location']
+	return location, 201
 
-class SensorData(Resource):
+    
+    def delete(self):
+        # we can't delete from a capped collection in mongo
+        # we are just going to set the location in the current document to None
+        try:
+            data = db['add_sensor'].find_one({})
+            location = data.get('location', None)
+        except:
+            location = Testing
+	return location, 200
+
+class SensorData(Resource):                                                                           
     def get(self, location, start, end):
-        return {'location': location,
-                'start': start,
-                'end': end}
+	return {'location': location,
+		'start': start,
+		'end': end}
 
-
-## Add all API endpoints after declaring them
+# Add all API endpoints after declaring them
 api.add_resource(AddSensor, '/add_sensor')
 api.add_resource(SensorData, '/data/<location>/<start>/<end>')
+api.add_resource(WSLocation, '/ws')
 
 if __name__ == '__main__':
     app.run()
