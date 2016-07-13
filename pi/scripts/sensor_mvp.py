@@ -14,6 +14,7 @@ class Sensor(object):
         self._ws = None 
         self.debug = debug
 
+        self.init_ws()
         self.init_GPIO()
     
     def init_ws(self, sleep=2):
