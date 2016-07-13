@@ -1,12 +1,16 @@
 import {
-  ADD_SENSOR,
+  // ADD_SENSOR,
   // INITIALIZE_ADD_SENSOR,
   FLIP_SENSOR_CARD,
   LOAD_SENSOR,
   REMOVE_SENSOR,
-  RESET,
+  RESET_HISTORICAL_DATA,
   VIEW_MODE,
   UPDATE_SENSOR,
+  RECEIVED_LIVE_DATA,
+  LOADING_HISTORICAL_DATA,
+  RECEIVED_HISTORICAL_DATA,
+  RESET_LIVE_DATA,
   SAVE_SENSOR
 } from '../constants/actionTypes';
 import {CARD} from '../constants/viewConstants';
@@ -35,8 +39,11 @@ const initialState = Immutable.fromJS({
   ],
   editSensor: newSensor,
   isAddingSensor: false,
+  historicalData: [],
+  liveData: [],
   timeStamp: null,
-  viewMode: CARD
+  viewMode: CARD,
+  loading: false
 });
 
 export default function tipReducer(state = initialState, action) {
@@ -49,8 +56,8 @@ export default function tipReducer(state = initialState, action) {
     //               .set('timeStamp', null)
     //               .update('sensors', (list) => list.push(Immutable.fromJS(action.data)));
 
-    case ADD_SENSOR:
-      return state.update('sensors', (list) => list.push(state.get('editSensor')));
+    // case ADD_SENSOR:
+    //   return state.update('sensors', (list) => list.push(state.get('editSensor')));
 
     case SAVE_SENSOR:
       return state.setIn(['sensors', state.getIn(['editSensor', 'id']) - 1], state.get('editSensor'));
@@ -73,8 +80,20 @@ export default function tipReducer(state = initialState, action) {
     case UPDATE_SENSOR:
       return state.setIn(['editSensor', action.key], action.value);
 
-    case RESET:
-      return initialState;
+    case RECEIVED_LIVE_DATA:
+      return state.update('liveData', (data) => data.push(Immutable.fromJS(action.data)));
+
+    case LOADING_HISTORICAL_DATA:
+      return state.set('loading', action.status);
+
+    case RECEIVED_HISTORICAL_DATA:
+      return state.set('loading', false).set('historicalData', Immutable.fromJS(action.data));
+
+    case RESET_LIVE_DATA:
+      return state.set('liveData', Immutable.fromJS([]));
+
+    case RESET_HISTORICAL_DATA:
+      return state.set('historicalData', Immutable.fromJS([]));
 
     default:
       return state;

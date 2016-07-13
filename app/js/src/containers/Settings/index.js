@@ -1,9 +1,17 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 
-const Settings = () => {
-  return (
-    <div>Settings</div>
-  );
+class Settings extends React.Component {
+  render() {
+    return (
+      <div>
+        Settings
+      </div>
+    );
+  }
+}
+
+Settings.propTypes = {
+  action: PropTypes.object
 };
 
 export default Settings;

@@ -23,6 +23,7 @@ class Card extends React.Component {
   render() {
     return (
       <FlipCard
+        className={this.props.className}
         disabled={true}
         flipped={this.props.isFlipped}
         onFlip={this.handleOnFlip}

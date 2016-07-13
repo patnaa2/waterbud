@@ -29,6 +29,7 @@ class Tips extends React.Component {
               isFlipped={element.get('isFlipped')}
               showBack={this.showBack.bind(this, index)}
               showFront={this.showFront.bind(this, index)}
+              location={element.get('location')}
               text={element.get('text')}
             />
           </div>

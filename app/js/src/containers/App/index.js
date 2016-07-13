@@ -6,6 +6,7 @@ import {Link} from 'react-router';
 
 import './style.less';
 import profile from '../../assets/profile_pic.jpg';
+import logo from '../../assets/waterbud_logo.png';
 import * as actions from '../../actions/miscActions';
 
 class App extends React.Component {
@@ -21,6 +22,29 @@ class App extends React.Component {
 
   isMenuOpen(state) {
     this.props.actions.menuClick(state.isOpen);
+  }
+
+  pageHeader() {
+    switch (this.props.location.pathname) {
+      case '/sensors':
+        return 'SENSORS';
+
+      case '/live':
+        return 'LIVE USAGE';
+
+      case '/history':
+        return 'HISTORICAL USAGE';
+
+      case '/tips':
+        return 'TIPS';
+
+      case '/settings':
+        return 'SETTINGS';
+
+      case '/':
+      default:
+        return 'HOME';
+    }
   }
 
   render() {
@@ -46,20 +70,11 @@ class App extends React.Component {
           <Link
             activeClassName="active"
             className="block"
-            to="/tips"
+            to="/sensors"
             onClick={this.onMenuItemClick}
           >
-            <i className="fa fa-lightbulb-o fa-fw" aria-hidden="true" />
-            <span>Tips</span>
-          </Link>
-          <Link
-            activeClassName="active"
-            className="block"
-            to="/history"
-            onClick={this.onMenuItemClick}
-          >
-            <i className="fa fa-history fa-fw" aria-hidden="true" />
-            <span>Historical Usage</span>
+            <i className="fa fa-server fa-fw" aria-hidden="true" />
+            <span>Sensors</span>
           </Link>
           <Link
             activeClassName="active"
@@ -73,11 +88,20 @@ class App extends React.Component {
           <Link
             activeClassName="active"
             className="block"
-            to="/sensors"
+            to="/history"
             onClick={this.onMenuItemClick}
           >
-            <i className="fa fa-server fa-fw" aria-hidden="true" />
-            <span>Sensors</span>
+            <i className="fa fa-history fa-fw" aria-hidden="true" />
+            <span>Historical Usage</span>
+          </Link>
+          <Link
+            activeClassName="active"
+            className="block"
+            to="/tips"
+            onClick={this.onMenuItemClick}
+          >
+            <i className="fa fa-lightbulb-o fa-fw" aria-hidden="true" />
+            <span>Tips</span>
           </Link>
           <Link
             activeClassName="active"
@@ -89,7 +113,11 @@ class App extends React.Component {
             <span>Settings</span>
           </Link>
         </Menu>
-        <img src={profile} className="img-circle profile" alt="Profile Picture" />
+        <section style={{position: 'relative'}}>
+          <img src={logo} className="logo" alt="Waterbud Logo" />
+          <span className="pageHeader">{this.pageHeader()}</span>
+          <img src={profile} className="img-circle profile" alt="Profile Picture" />
+        </section>
         <main id="page-wrap">
           {this.props.children}
         </main>

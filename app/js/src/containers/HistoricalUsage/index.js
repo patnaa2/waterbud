@@ -1,11 +1,25 @@
-import React from 'react';
-import Chart from '../../components/Chart';
+import React, {PropTypes} from 'react';
 import Highmaps from 'highcharts/modules/map';
-import data from './data';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+
+import Chart from '../../components/Chart';
+
+import * as actions from '../../actions/sensorsActions';
 
 class HistoricalUsage extends React.Component {
   componentWillMount() {
-    this.options  = {
+    this.props.actions.fetchHistoricalData();
+  }
+
+  render() {
+    if(this.props.historicalData.size === 0) {
+      if (this.props.loading) {
+        return <div>LOADING DATA!!!</div>;
+      }
+      return <div>NO DATA!</div>;
+    }
+    const options = {
       rangeSelector: {
         selected: 0
       },
@@ -26,20 +40,17 @@ class HistoricalUsage extends React.Component {
       },
       series: [{
         name: 'Water Consumed (L)',
-        data: data,
+        data: this.props.historicalData,
         id: 'dataseries'
       }]
     };
-  }
-
-  render() {
     return (
       <div>
         <div>Historical Usage</div>
         <Chart
           container="stockChart"
           type="stockChart"
-          options={this.options}
+          options={options}
           modules={[Highmaps]}
         />
       </div>
@@ -47,4 +58,26 @@ class HistoricalUsage extends React.Component {
   }
 }
 
-export default HistoricalUsage;
+HistoricalUsage.propTypes = {
+  actions: PropTypes.object,
+  historicalData: PropTypes.object,
+  loading: PropTypes.bool
+};
+
+function mapStateToProps(state) {
+  return {
+    historicalData: state.sensors.get('historicalData'),
+    loading: state.sensors.get('loading')
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators(actions, dispatch)
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(HistoricalUsage);
