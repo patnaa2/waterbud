@@ -1,5 +1,6 @@
 from flask import Flask, render_template
 from flask_restful import Resource, Api, reqparse
+from flask.ext.cors import CORS, cross_origin
 import datetime
 import os
 import pymongo
@@ -19,12 +20,15 @@ app = Flask(__name__,
             template_folder=template_dir,
             static_url_path=static)
 api = Api(app)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 # Initialize db connection
 #db = pymongo.MongoClient('localhost', 27017)['waterbud']
 
 # Homepage
 @app.route('/')
+@cross_origin()
 def index():
     return render_template('index.html')
 
