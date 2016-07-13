@@ -23,17 +23,26 @@ locations = {
     "restroom":{
         "occurences": (8,12),
         "timings": [(7,9), (12,15), (18,21)],
-        "duration": (30,60)
+        "duration": (30,60),
+        "rate": 21
     },
     "kitchen":{
         "occurences":(10,15),
         "timings": [(7,23)],
         "duration": (30,60),
+        "rate": 21
     },
     "garden":{
         "occurences": (0, 1),
         "timings": [(18,21)],
-        "duration": (1800, 2700)
+        "duration": (1800, 2700), 
+        "rate":21
+    },
+    "shower":{
+        "occurences": (0, 1), 
+        "timings": [(7,9), (18,20)],
+        "duration": (1020, 1080),
+        "rate": 21
     }
 }
 
@@ -57,10 +66,10 @@ def gen_time_occurences(timings, occurences):
     occ = occurences
 
     for idx, interval in enumerate(timings):
-        if idx == len(timings) - 1 or occ == 0 or occ == 1:
+        if idx == len(timings) - 1 or occ == 0:
             to.append(occ)
             continue
-        gen = np.random.randint(1, occ)
+        gen = np.random.randint(0, occ)
         to.append(gen)
         occ -= gen
 
@@ -176,9 +185,6 @@ def single_day(year, month, day):
         month : {int}
         day : {int}
     """
-    # fixed instantaneous consumption (ml)
-    rate = 21 
-
     result = {}
 
     for location, data in locations.iteritems():
@@ -202,7 +208,7 @@ def single_day(year, month, day):
         flat = sum([sum(arr, []) for arr in conv_ts], [])
 
         # map rate to each timestamp
-        result[location] = [(stamp, rate) for stamp in flat]
+        result[location] = [(stamp, data["rate"]) for stamp in flat]
 
     return result
 
@@ -233,4 +239,4 @@ def generate(n):
 
 
 if __name__ == '__main__':
-    print generate(1000)
+    generate(1000)
