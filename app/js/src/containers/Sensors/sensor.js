@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
 import * as actions from '../../actions/sensorsActions';
+import * as SensorLocation from '../../constants/sensorLocations';
 
 class Sensor extends React.Component {
   constructor(props) {
@@ -47,9 +48,10 @@ class Sensor extends React.Component {
             value={this.props.editSensor.get('location')}
             onChange={this.onTextChange.bind(this, 'location')}
           >
-            <option value="Garden">Garden</option>
-            <option value="Kitchen">Kitchen</option>
-            <option value="Washroom">Washroom</option>
+            <option value={SensorLocation.BATHROOM_SINK}>Bathroom Sink</option>
+            <option value={SensorLocation.GARDEN}>Garden</option>
+            <option value={SensorLocation.KITCHEN_SINK}>Kitchen Sink</option>
+            <option value={SensorLocation.SHOWER}>Shower</option>
           </select>
         </div>
         <button

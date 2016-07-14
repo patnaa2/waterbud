@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
 import FlipCard from './index.js';
+import {retreiveFriendlyLocationName} from '../../helpers/sensorHelpers';
 
 const SensorCard = (props) => {
   const {
@@ -20,7 +21,7 @@ const SensorCard = (props) => {
       </div>
       <div>
         <div>{installDate}</div>
-        <div>{location}</div>
+        <div>{retreiveFriendlyLocationName(location)}</div>
         <button type="button" onClick={showFront}>Show front</button>
       </div>
     </FlipCard>

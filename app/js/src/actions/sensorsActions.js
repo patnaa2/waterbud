@@ -1,20 +1,12 @@
 import * as types from '../constants/actionTypes';
 
-// export function addSensor(status) {
-//   return {type: types.INITIALIZE_ADD_SENSOR, status};
-// }
-
-// export function checkAddSensor() {
-//   return {type: types.ADD_SENSOR, status};
-// }
-
 export function updateSensor(key, value) {
   return {type: types.UPDATE_SENSOR, key, value};
 }
 
 export function saveSensor(id, location) {
   return (dispatch) => {
-    if (id >= 3) {
+    if (!id) {
       fetch('http://localhost:5000/add_sensor?location=' + location, {
         method: 'POST'
       }).then(() => {

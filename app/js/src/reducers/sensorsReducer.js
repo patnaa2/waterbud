@@ -1,6 +1,4 @@
 import {
-  // ADD_SENSOR,
-  // INITIALIZE_ADD_SENSOR,
   FLIP_SENSOR_CARD,
   LOAD_SENSOR,
   REMOVE_SENSOR,
@@ -16,23 +14,26 @@ import {
 import {CARD} from '../constants/viewConstants';
 import Immutable from 'immutable';
 
+import * as SensorLocation from '../constants/sensorLocations';
+
+
 const newSensor = Immutable.fromJS({
-  id: 3,
+  id: 0,
   name: '',
-  location: 'Kitchen',
+  location: SensorLocation.BATHROOM_SINK,
   isFlipped: false
 });
 
 const initialState = Immutable.fromJS({
   sensors: [
     {
-      location: 'Kitchen',
-      name: 'Sink',
+      location: SensorLocation.KITCHEN_SINK,
+      name: 'Kitchen Sink',
       id: 1,
       isFlipped: false
     }, {
-      location: 'Washroom',
-      name: 'Shower',
+      location: SensorLocation.BATHROOM_SINK,
+      name: 'Master Bedroom Sink',
       id: 2,
       isFlipped: false
     }
@@ -42,7 +43,9 @@ const initialState = Immutable.fromJS({
   historicalData: [],
   liveData: {
     time: [],
-    flow_ml: []
+    flow_ml: [],
+    zeros: [],
+    total_flow_ml: []
   },
   timeStamp: null,
   viewMode: CARD,
@@ -51,20 +54,10 @@ const initialState = Immutable.fromJS({
 
 export default function tipReducer(state = initialState, action) {
   switch (action.type) {
-    // case INITIALIZE_ADD_SENSOR:
-    //   return state.update('isAddingSensor', action.status);
-
-    // case ADD_SENSOR:
-    //   return state.set('isAddingSensor', false)
-    //               .set('timeStamp', null)
-    //               .update('sensors', (list) => list.push(Immutable.fromJS(action.data)));
-
-    // case ADD_SENSOR:
-    //   return state.update('sensors', (list) => list.push(state.get('editSensor')));
-
-    case SAVE_SENSOR:
-      return state.setIn(['sensors', state.getIn(['editSensor', 'id']) - 1], state.get('editSensor'));
-
+    case SAVE_SENSOR: {
+      const id = (state.getIn(['editSensor', 'id']) === 0) ? state.get('sensors').size : state.getIn(['editSensor', 'id']) - 1;
+      return state.setIn(['sensors', id], state.get('editSensor'));
+    }
     case REMOVE_SENSOR:
       return state.update('sensors', (list) => list.delete(list.findIndex((item) => item.id === action.id)));
 
@@ -85,11 +78,15 @@ export default function tipReducer(state = initialState, action) {
 
     case RECEIVED_LIVE_DATA:
       if (state.getIn(['liveData', 'time']).size < 60) {
-        return state.updateIn(['liveData', 'time'], (data) => data.push(Immutable.fromJS(action.time.toString())))
-                    .updateIn(['liveData', 'flow_ml'], (data) => data.push(Immutable.fromJS(action.flow_ml.toString())));
+        return state.updateIn(['liveData', 'time'], (data) => data.push(action.time.toString()))
+                    .updateIn(['liveData', 'flow_ml'], (data) => data.push(action.flow_ml.toString()))
+                    .updateIn(['liveData', 'zeros'], (data) => data.push('0'))
+                    .updateIn(['liveData', 'total_flow_ml'], (value) => value + action.flow_ml);
       }
-      return state.updateIn(['liveData', 'time'], (data) => data.shift().push(Immutable.fromJS(action.time.toString())))
-                  .updateIn(['liveData', 'flow_ml'], (data) => data.shift().push(Immutable.fromJS(action.flow_ml.toString())));
+      return state.updateIn(['liveData', 'time'], (data) => data.shift().push(action.time.toString()))
+                  .updateIn(['liveData', 'flow_ml'], (data) => data.shift().push(action.flow_ml.toString()))
+                  .updateIn(['liveData', 'zeros'], (data) => data.push('0'))
+                  .updateIn(['liveData', 'total_flow_ml'], (value) => value + action.flow_ml);
 
     case LOADING_HISTORICAL_DATA:
       return state.set('loading', action.status);
@@ -98,7 +95,11 @@ export default function tipReducer(state = initialState, action) {
       return state.set('loading', false).set('historicalData', Immutable.fromJS(action.data));
 
     case RESET_LIVE_DATA:
-      return state.set('liveData', Immutable.fromJS([]));
+      return state.set('liveData', Immutable.fromJS({
+        time: [],
+        flow_ml: [],
+        total_flow_ml: []
+      }));
 
     case RESET_HISTORICAL_DATA:
       return state.set('historicalData', Immutable.fromJS([]));

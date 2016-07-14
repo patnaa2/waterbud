@@ -1,13 +1,14 @@
 import { FLIP_TIP_CARD, RESET } from '../constants/actionTypes';
 import Immutable from 'immutable';
+import * as SensorLocation from '../constants/sensorLocations';
 
 const initialState = Immutable.fromJS([
   {
-    location: 'Kitchen',
+    location: SensorLocation.KITCHEN_SINK,
     text: 'Hello',
     isFlipped: false
   }, {
-    location: 'Washroom',
+    location: SensorLocation.BATHROOM_SINK,
     text: 'Sup?',
     isFlipped: false
   }
