@@ -9,6 +9,17 @@ import profile from '../../assets/profile_pic.jpg';
 import logo from '../../assets/waterbud_logo.png';
 import * as actions from '../../actions/miscActions';
 
+
+/****************************************
+
+NOTE: Notification number is disabled with false flag in condition
+
+TODO: Setup ajax call on ComponentWillUnmount for LiveUsage to get notification
+TODO: Show notification number if variable in misc store is set true
+TODO: Setup click event to open notification in modal window?? Needs Clarification
+
+****************************************/
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -116,6 +127,10 @@ class App extends React.Component {
         <section style={{position: 'relative'}}>
           <img src={logo} className="logo" alt="Waterbud Logo" />
           <span className="pageHeader">{this.pageHeader()}</span>
+          <div className="notification">
+            <span className="fa fa-2x fa-bell-o" />
+            {false && <div className="fa fa-circle circle"><span className="number">1</span></div>}
+          </div>
           <img src={profile} className="img-circle profile" alt="Profile Picture" />
         </section>
         <main id="page-wrap">
