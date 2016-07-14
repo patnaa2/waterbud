@@ -8,7 +8,9 @@
     - timings: {list of tuples}
         sets of time intervals during which an event would take place
     - duration: {tuple}
-        amount of time taken for a single event (seconds)
+        amount of time taken for a single event (minutes)
+    - rate: {float}
+        ml value for consumption on a per-minute basis
 """
 from __future__ import division
 import datetime as dt
@@ -20,29 +22,29 @@ import numpy as np
 
 # location data store
 locations = {
-    "restroom":{
+    "bathroom_sink":{
         "occurences": (8,12),
         "timings": [(7,9), (12,15), (18,21)],
-        "duration": (30,60),
-        "rate": 21
+        "duration": (1, 3),
+        "rate": 4540
     },
-    "kitchen":{
+    "kitchen_sink":{
         "occurences":(10,15),
         "timings": [(7,23)],
-        "duration": (30,60),
-        "rate": 21
+        "duration": (1, 5),
+        "rate": 4540
     },
     "garden":{
         "occurences": (0, 1),
         "timings": [(18,21)],
-        "duration": (1800, 2700), 
+        "duration": (30, 90), 
         "rate":21
     },
     "shower":{
         "occurences": (0, 1), 
         "timings": [(7,9), (18,20)],
-        "duration": (1020, 1080),
-        "rate": 21
+        "duration": (17, 18),
+        "rate": 5658 # 1.75 gpm (6.6 lpm)
     }
 }
 
@@ -78,9 +80,9 @@ def gen_time_occurences(timings, occurences):
 
 def gen_timeseries(to_map, duration):
     """
-        Generate data points (seconds) based on the number of occurences
+        Generate data points (minutes) based on the number of occurences
         for a given time interval. A single data point corresponds to the
-        total number of seconds from 0 (i.e. 12AM on a given day).
+        total number of minutes from 0 (i.e. 12AM on a given day).
 
         Parameters
         ----------
@@ -101,20 +103,40 @@ def gen_timeseries(to_map, duration):
         if occ == 0:
             continue
 
-        difference = (interval[1] - interval[0])*60*60
+        difference = (interval[1] - interval[0])*60
         lower_stamp = 0
         tstamps = []
 
         for num in xrange(0, occ):
-            stamp = np.random.randint(lower_stamp, difference)
-            tstamps.append(interval[0]*60*60 + stamp)
+            stamp = np.random.randint(lower_stamp, difference+1)
+            tstamps.append(interval[0]*60 + stamp)
             lower_stamp = stamp
 
-        # generate duration
-        dur = np.random.randint(duration[0], duration[1])
+        # required: handle duplicate timestamps
+        num_duplicates = len(tstamps) - len(set(tstamps))
 
-        # convert interval from hours to seconds (convenience)
-        conv_interval = map(lambda x: x*60*60, interval)
+        # continuously generate timestamps
+        while num_duplicates > 0:
+            additional_occurences = []
+            distance = 1
+            while len(additional_occurences) < num_duplicates:
+                additional_occurences += \
+                [stamp+distance for stamp in set(tstamps)]
+                additional_occurences = \
+                    [occ for occ in additional_occurences if occ not in tstamps]
+                distance += 1
+            tstamps = list(set(tstamps)) + \
+                additional_occurences[:num_duplicates]
+            num_duplicates = len(tstamps) - len(set(tstamps))
+
+        # sort tstamps
+        tstamps.sort()
+
+        # generate duration
+        dur = np.random.randint(duration[0], duration[1]+1)
+
+        # convert interval from hours to minutes (convenience)
+        conv_interval = map(lambda x: x*60, interval)
 
         range_storage = []
 
@@ -122,12 +144,11 @@ def gen_timeseries(to_map, duration):
         for idx, stamp in enumerate(tstamps):
             # handle last timestamp with duration greater than upper bound
             if idx == len(tstamps) - 1 and stamp + dur >= conv_interval[1]:
-                range_storage.append(np.arange(stamp, conv_interval[1], 1))
+                range_storage.append(np.arange(stamp, conv_interval[1]+1, 1))
                 continue
-            elif idx < len(tstamps) -1 and stamp + dur >= tstamps[idx+1]:
+            elif idx < len(tstamps) - 1 and stamp + dur >= tstamps[idx+1]:
                 range_storage.append(np.arange(stamp, tstamps[idx+1], 1))
                 continue
-
             range_storage.append(np.arange(stamp, stamp+dur, 1))
 
         ts.append((interval,range_storage))
@@ -135,9 +156,9 @@ def gen_timeseries(to_map, duration):
     return ts
 
 
-def convert_seconds(ts_map, **kwargs):
+def convert_minutes(ts_map, **kwargs):
     """
-        Convert numeric seconds in passed timeseries to datetime string
+        Convert numeric minutes in passed timeseries to datetime string
         representation.
 
         Parameters
@@ -158,7 +179,7 @@ def convert_seconds(ts_map, **kwargs):
                            interval[0])
 
         # compute delta for each point
-        delta = [[dt.timedelta(seconds=val-interval[0]*60*60) 
+        delta = [[dt.timedelta(minutes=val-interval[0]*60) 
                   for val in series] for series in ts] 
 
         # add delta to base and create datetime points
@@ -176,7 +197,7 @@ def convert_seconds(ts_map, **kwargs):
 # PRIMARY METHODS
 def single_day(year, month, day):
     """
-        Generates location consumption data on a per second basis, for a 
+        Generates location consumption data on a per minute basis, for a 
         specified day.
 
         Parameters
@@ -195,14 +216,19 @@ def single_day(year, month, day):
         # generate occurences
         occurences = np.random.randint(occ[0], occ[1]+1)
 
+        # never allow 0 occurences - set to upper bound
+        occurences = occ[1] if occurences == 0 else occurences
+
         # map occurences to time intervals
         to_map = gen_time_occurences(timings, occurences)
+
+        # pdb.set_trace()
 
         # generate timeseries data
         ts_map = gen_timeseries(to_map, dur)
 
         # convert timeseries data
-        conv_ts = convert_seconds(ts_map, year=year, month=month, day=day)
+        conv_ts = convert_minutes(ts_map, year=year, month=month, day=day)
 
         # double flattening of converted timeseries to generate single list
         flat = sum([sum(arr, []) for arr in conv_ts], [])
@@ -239,4 +265,4 @@ def generate(n):
 
 
 if __name__ == '__main__':
-    generate(1000)
+    generate(100)
