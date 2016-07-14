@@ -1,8 +1,9 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-
 const Line = require('react-chartjs').Line;
+
+import RelativeGraph from '../../components/RelativeGraph';
 
 import * as actions from '../../actions/sensorsActions';
 
@@ -10,9 +11,6 @@ class LiveUsage extends React.Component {
   componentWillMount() {
     /*eslint-disable*/
     this.socket = new WebSocket("ws://localhost:8888/ws");
-    this.socket.onopen = () => {
-      this.socket.send('message');
-    };
     this.socket.onmessage = (evt) => {
       console.log('evt', evt.data);
       const data = JSON.parse(evt.data);
@@ -49,8 +47,8 @@ class LiveUsage extends React.Component {
     }
     return (
       <div>
-        <div>Live Usage</div>
-        <Line data={chartData} width={window.innerWidth * 0.95} height="250"/>
+        <Line data={chartData} width={window.innerWidth * 0.95} height="360"/>
+        <RelativeGraph consumed={this.props.liveData.get('total_flow_ml')} />
       </div>
     );
   }

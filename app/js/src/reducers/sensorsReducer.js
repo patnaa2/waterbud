@@ -45,7 +45,7 @@ const initialState = Immutable.fromJS({
     time: [],
     flow_ml: [],
     zeros: [],
-    total_flow_ml: []
+    total_flow_ml: 0
   },
   timeStamp: null,
   viewMode: CARD,
@@ -98,7 +98,8 @@ export default function tipReducer(state = initialState, action) {
       return state.set('liveData', Immutable.fromJS({
         time: [],
         flow_ml: [],
-        total_flow_ml: []
+        zeros: [],
+        total_flow_ml: 0
       }));
 
     case RESET_HISTORICAL_DATA:
