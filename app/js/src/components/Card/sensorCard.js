@@ -4,10 +4,12 @@ import * as Helper from '../../helpers/sensorHelpers';
 
 const SensorCard = (props) => {
   const {
+    consumed,
     installDate,
     location,
-    consumed,
     name,
+    onEdit,
+    onRemove,
     showBack,
     showFront,
     ...others
@@ -41,12 +43,14 @@ const SensorCard = (props) => {
             <button
               className="btn btn-danger"
               type="button"
+              onClick={onRemove}
             >
               Delete
             </button>
             <button
               className="btn btn-success"
               type="button"
+              onClick={onEdit}
             >
               Edit
             </button>
@@ -63,6 +67,8 @@ SensorCard.propTypes = {
   installDate: PropTypes.string,
   location: PropTypes.string,
   name: PropTypes.string,
+  onEdit: PropTypes.func,
+  onRemove: PropTypes.func,
   showBack: PropTypes.func,
   showFront: PropTypes.func
 };

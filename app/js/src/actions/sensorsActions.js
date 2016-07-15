@@ -42,6 +42,10 @@ export function resetLiveData() {
   return {type: types.RESET_LIVE_DATA};
 }
 
+export function closeModal() {
+  return {type: types.CLOSE_MODAL};
+}
+
 export function fetchHistoricalData() {
   return dispatch => {
     dispatch({type: types.LOADING_HISTORICAL_DATA, status: true});

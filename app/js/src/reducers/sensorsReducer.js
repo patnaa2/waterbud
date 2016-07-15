@@ -9,7 +9,8 @@ import {
   LOADING_HISTORICAL_DATA,
   RECEIVED_HISTORICAL_DATA,
   RESET_LIVE_DATA,
-  SAVE_SENSOR
+  SAVE_SENSOR,
+  CLOSE_MODAL
 } from '../constants/actionTypes';
 import {CARD} from '../constants/viewConstants';
 import Immutable from 'immutable';
@@ -21,6 +22,7 @@ const newSensor = Immutable.fromJS({
   id: 0,
   name: '',
   location: SensorLocation.BATHROOM_SINK,
+  installDate: 'July 20, 2016',
   isFlipped: false
 });
 
@@ -41,6 +43,7 @@ const initialState = Immutable.fromJS({
     }
   ],
   editSensor: newSensor,
+  editView: false,
   isAddingSensor: false,
   historicalData: [],
   liveData: {
@@ -57,11 +60,18 @@ const initialState = Immutable.fromJS({
 export default function tipReducer(state = initialState, action) {
   switch (action.type) {
     case SAVE_SENSOR: {
-      const id = (state.getIn(['editSensor', 'id']) === 0) ? state.get('sensors').size : state.getIn(['editSensor', 'id']) - 1;
-      return state.setIn(['sensors', id], state.get('editSensor'));
+      if (state.getIn(['editSensor', 'id']) === 0) {
+        return state.setIn(['sensors', state.get('sensors').size],
+                            state.get('editSensor')
+                                 .set('id', state.get('sensors').size + 1)
+                                 .set('isFlipped', false))
+                    .set('editView', false);
+      }
+      const index = state.get('sensors').findIndex((item) => item.get('id') === state.getIn(['editSensor', 'id']));
+      return state.setIn(['sensors', index], state.get('editSensor').set('isFlipped', false)).set('editView', false);
     }
     case REMOVE_SENSOR:
-      return state.update('sensors', (list) => list.delete(list.findIndex((item) => item.id === action.id)));
+      return state.update('sensors', (list) => list.delete(list.findIndex((item) => item.get('id') === action.id)));
 
     case VIEW_MODE:
       return state.set('viewMode', action.viewMode);
@@ -71,12 +81,15 @@ export default function tipReducer(state = initialState, action) {
 
     case LOAD_SENSOR:
       if (action.index === 0) {
-        return state.set('editSensor', newSensor);
+        return state.set('editSensor', newSensor).set('editView', true);
       }
-      return state.set('editSensor', state.getIn(['sensors', action.index -1]));
+      return state.set('editSensor', state.getIn(['sensors', state.get('sensors').findIndex((item) => item.get('id') === action.index)])).set('editView', true);
 
     case UPDATE_SENSOR:
       return state.setIn(['editSensor', action.key], action.value);
+
+    case CLOSE_MODAL:
+      return state.set('editView', false);
 
     case RECEIVED_LIVE_DATA:
       if (state.getIn(['liveData', 'time']).size < 60) {

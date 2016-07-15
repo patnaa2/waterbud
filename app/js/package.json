@@ -42,6 +42,7 @@
     "react-chartjs": "0.7.3",
     "react-dom": "15.0.2",
     "react-flipcard": "0.2.1",
+    "react-modal": "1.4.0",
     "react-redux": "4.4.5",
     "react-router": "2.4.1",
     "react-select": "1.0.0-beta13",
