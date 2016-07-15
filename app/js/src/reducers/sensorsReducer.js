@@ -27,14 +27,16 @@ const newSensor = Immutable.fromJS({
 const initialState = Immutable.fromJS({
   sensors: [
     {
-      location: SensorLocation.KITCHEN_SINK,
-      name: 'Kitchen Sink',
       id: 1,
+      name: 'Kitchen Sink',
+      location: SensorLocation.KITCHEN_SINK,
+      installDate: 'June 27, 2016',
       isFlipped: false
     }, {
-      location: SensorLocation.BATHROOM_SINK,
-      name: 'Master Bedroom Sink',
       id: 2,
+      name: 'Master Bedroom Sink',
+      location: SensorLocation.BATHROOM_SINK,
+      installDate: 'May 05, 2016',
       isFlipped: false
     }
   ],

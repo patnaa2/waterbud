@@ -1,5 +1,6 @@
 import React from 'react';
 import FlipCard from 'react-flipcard';
+import './style.less';
 
 class Card extends React.Component {
   constructor() {

@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as actions from '../../actions/tipsActions';
 import Card from '../../components/Card/tipCard';
-import './cardStyle.less';
+import './style.less';
 
 class Tips extends React.Component {
   constructor(props) {

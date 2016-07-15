@@ -39,12 +39,12 @@ class LiveUsage extends React.Component {
       ]
     };
 
-    if(this.props.liveData.size === 0) {
-      if (this.props.loading) {
-        return <div>LOADING DATA!!!</div>;
-      }
-      return <div>NO DATA!</div>;
-    }
+    // if(this.props.liveData.size === 0) {
+    //   if (this.props.loading) {
+    //     return <div>LOADING DATA!!!</div>;
+    //   }
+    //   return <div>NO DATA!</div>;
+    // }
     return (
       <div>
         <Line data={chartData} width={window.innerWidth * 0.95} height="360"/>

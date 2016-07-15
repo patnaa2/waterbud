@@ -1,12 +1,12 @@
 import React, {PropTypes} from 'react';
 import FlipCard from './index.js';
-import {retreiveFriendlyLocationName} from '../../helpers/sensorHelpers';
+import * as Helper from '../../helpers/sensorHelpers';
 
 const SensorCard = (props) => {
   const {
-    image,
     installDate,
     location,
+    consumed,
     name,
     showBack,
     showFront,
@@ -14,21 +14,51 @@ const SensorCard = (props) => {
   } = props;
   return (
     <FlipCard {...others} showFront={showFront}>
-      <div>
-        <button type="button" onClick={showBack}>Show back</button>
-        <img src={image}/>
-        <div>{name}</div>
+      <div className={Helper.retrieveClassName(location)} >
+        <button
+          className="btn btn-default flipBtn"
+          type="button"
+          onClick={showBack}
+        >
+          <span className="fa fa-reply" />
+        </button>
+        <span className="location">{Helper.retreiveFriendlyLocationName(location)}</span>
+        <img className="image" src={Helper.retrieveImage(location)}/>
+        <span className="name">{name}</span>
       </div>
       <div>
-        <div>{installDate}</div>
-        <div>{retreiveFriendlyLocationName(location)}</div>
-        <button type="button" onClick={showFront}>Show front</button>
+        <button
+          className="btn btn-default flipBtn"
+          type="button"
+          onClick={showFront}
+        >
+          <span className="fa fa-reply" />
+        </button>
+        <div className="back_container">
+          <div className="back_row spacing">Install Date: {installDate}</div>
+          <div className="back_row spacing">Total Consumed: {consumed}mL</div>
+          <div className="back_row spacing actions">
+            <button
+              className="btn btn-danger"
+              type="button"
+            >
+              Delete
+            </button>
+            <button
+              className="btn btn-success"
+              type="button"
+            >
+              Edit
+            </button>
+          </div>
+        </div>
       </div>
     </FlipCard>
   );
 };
 
 SensorCard.propTypes = {
+  consumed: PropTypes.number,
   image: PropTypes.string,
   installDate: PropTypes.string,
   location: PropTypes.string,

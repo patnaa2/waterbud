@@ -27,6 +27,7 @@ class GridLayout extends React.Component {
               showFront={this.showFront.bind(this, index)}
               name={element.get('name')}
               location={element.get('location')}
+              installDate={element.get('installDate')}
             />
           </div>
         )}

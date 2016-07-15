@@ -11,17 +11,47 @@
   height: 300px;
 }
 
+// Applies Height, Size and border colour to all cards
 .ReactFlipCard__Front,
 .ReactFlipCard__Back {
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  padding: 25px;
+  > div:first-child {
+    height: 100%;
+    padding: 25px;
+  }
 }
 
+//Applies specific background colours for cards
 .ReactFlipCard__Front {
-  background-color: #eee;
+  & .kitchen_sink {
+    background-color: #cef;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+  }
+  & .bathroom_sink {
+    background-color: #cef;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+  }
+  & .garden {
+    background-color: #cef;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+  }
+  & .shower {
+    background-color: #cef;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+  }
 }
 
 .ReactFlipCard__Back {
   background-color: #cef;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+}
+
+.flipBtn {
+  position: absolute;
+  top: 0px;
+  right: 0px;
 }

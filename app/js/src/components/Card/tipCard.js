@@ -1,14 +1,15 @@
 import React from 'react';
 import FlipCard from './index.js';
-import {retreiveFriendlyLocationName} from '../../helpers/sensorHelpers';
+import {retreiveFriendlyLocationName, retrieveClassName} from '../../helpers/sensorHelpers';
 
 const TipCard = (props) => {
   const {benefit, description, image, location, showBack, showFront, ...others} = props;
   console.log(benefit, description, image);
   return (
     <FlipCard {...others} showFront={showFront}>
-      <div className={retreiveFriendlyLocationName(location)}>
+      <div className={retrieveClassName(location)}>
         <div>Front</div>
+        <span>{retreiveFriendlyLocationName(location)}</span>
         <button type="button" onClick={showBack}>Show back</button>
         <div><small>(manual flip)</small></div>
       </div>
