@@ -55,7 +55,7 @@ class Sensor(object):
                         if self.debug:
                             print "Rate: %s" %(flow_rate)
                             print "Flow ml: %s" %(flow_ml)
-                        data = { "timestamp": current_dt.strftime("%Y-%m-%d %H:%M:%S"), 
+                        data = { "timestamp": current_dt.strftime("%H:%M:%S"), 
                                  "flow_ml": flow_ml}
                         self._ws.send(json.dumps(data))
                     time.sleep(0.1)
