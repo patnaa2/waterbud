@@ -8,8 +8,7 @@ const round = (value) => Math.round(value * 100) / 100;
 
 const RelativeGraph = (props) => {
   return (
-    <div className="well">
-      <div className="container-fluid">
+    <div className="well center-block">
         <div className="row bottom_spacing total">Total Consumed: {round(props.consumed)}</div>
         <div className="row bottom_spacing">
           <div className="col-xs-5 col-xs-offset-1">
@@ -35,7 +34,6 @@ const RelativeGraph = (props) => {
             <span> x {round(props.consumed / 2000)} </span>
           </div>
         </div>
-      </div>
     </div>
   );
 };

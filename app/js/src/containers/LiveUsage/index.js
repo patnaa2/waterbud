@@ -39,14 +39,8 @@ class LiveUsage extends React.Component {
       ]
     };
 
-    // if(this.props.liveData.size === 0) {
-    //   if (this.props.loading) {
-    //     return <div>LOADING DATA!!!</div>;
-    //   }
-    //   return <div>NO DATA!</div>;
-    // }
     return (
-      <div>
+      <div className="center-block">
         <Line data={chartData} width={window.innerWidth * 0.95} height="360"/>
         <RelativeGraph consumed={this.props.liveData.get('total_flow_ml')} />
       </div>
