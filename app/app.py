@@ -84,7 +84,7 @@ class AddSensor(Resource):
 
 	return json.dumps(data), 203
 
-class MonthlySensorData(Resource):
+class DailySensorData(Resource):
     '''
         Returns total consumption per day over specified time range
         for a specified sensor location inclusively
@@ -110,7 +110,7 @@ class MonthlySensorData(Resource):
 
 	return json.dumps(data), 200 
 
-class DailySensorData(Resource):
+class HourlySensorData(Resource):
     '''
         Returns total consumption per hour for a specified time range
         for a specified sensor location inclusively
@@ -176,8 +176,8 @@ class Threshold(Resource):
 # Add all API endpoints after declaring them
 api.add_resource(WSLocation, '/ws')
 api.add_resource(AddSensor, '/add_sensor')
-api.add_resource(MonthlySensorData, '/data/monthly')
 api.add_resource(DailySensorData, '/data/daily')
+api.add_resource(HourlySensorData, '/data/hourly')
 api.add_resource(Threshold, '/threshold')
 
 if __name__ == '__main__':
