@@ -20,7 +20,7 @@ static = "/js/dist"
 
 app = Flask(__name__,
             template_folder=template_dir,
-            static_url_path=static)
+            static_folder=template_dir)
 cors = CORS(app)
 api = Api(app)
 

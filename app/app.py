@@ -13,14 +13,9 @@ WEBSOCKET = '127.0.0.1:8888'
 template_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                             'js', 'dist')
 
-## Specify Static folder location
-## Hardcoded path for now since its just going to be an extension
-## of this folder
-static = "/js/dist"
-
 app = Flask(__name__,
             template_folder=template_dir,
-            static_url_path=static)
+            static_folder=template_dir)
 api = Api(app)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
