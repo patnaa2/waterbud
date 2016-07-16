@@ -1,7 +1,9 @@
 from flask import Flask, render_template
+from flask_cors import CORS, cross_origin
 from flask_restful import Resource, Api, reqparse
-from flask.ext.cors import CORS, cross_origin
+from numpy import random as npy_rand 
 import datetime
+import json
 import os
 import pymongo
 
@@ -33,6 +35,7 @@ def index():
     return render_template('index.html')
 
 ## API Endpoints
+LOCATIONS = ["bathroom sink", "kitchen sink", "shower", "garden"]
 class WSLocation(Resource):
     def get(self):
         return {'ws_location': WEBSOCKET}
@@ -40,7 +43,6 @@ class WSLocation(Resource):
 class AddSensor(Resource):
     add_sensor_parser = reqparse.RequestParser()
     add_sensor_parser.add_argument('location')
-    valid_locations = ["bathroom sink", "kitchen sink", "shower", "garden"]
         
     def get(self):
         # HACK Anshuman July 12, 2016
@@ -56,15 +58,17 @@ class AddSensor(Resource):
             val = 'testing'
  
         if not val:
-            val = ''
+            data = {"val": "testing"}
 
-        return val, 200
+        return json.dumps(data), 200
 
     def post(self):
         # add logic to add sensor --> Mocked for MVP
         args = self.add_sensor_parser.parse_args()
         location = args['location']
-	return location, 201
+        data = {"location" : location}
+
+	return json.dumps(data), 201
 
     
     def delete(self):
@@ -74,19 +78,107 @@ class AddSensor(Resource):
             data = db['add_sensor'].find_one({})
             location = data.get('location', None)
         except:
-            location = Testing
-	return location, 200
+            location = "Testing"
+    
+        data = {"location": location}
 
-class SensorData(Resource):                                                                           
-    def get(self, location, start, end):
-	return {'location': location,
-		'start': start,
-		'end': end}
+	return json.dumps(data), 203
+
+class MonthlySensorData(Resource):
+    '''
+        Returns total consumption per day over specified time range
+        for a specified sensor location inclusively
+
+        enter time in string format - %Y-%d-%d ie. 2016-07-16
+    '''
+    monthly_parser = reqparse.RequestParser()
+    monthly_parser.add_argument('location')
+    monthly_parser.add_argument('start')
+    monthly_parser.add_argument('end')
+
+    def get(self):
+        args = self.monthly_parser.parse_args()
+        location = args['location']
+        start = datetime.datetime.strptime(args['start'], "%Y-%m-%d")
+        end = datetime.datetime.strptime(args['end'], "%Y-%m-%d")
+        
+        ## mock 
+        days = (end - start).days + 1 # 1 to be inclusive
+        data = [ [ str(start + datetime.timedelta(days=i)), 
+                   npy_rand.randint(500, 750) ] for i in xrange(days)]
+        data = {"data": data}
+
+	return json.dumps(data), 200 
+
+class DailySensorData(Resource):
+    '''
+        Returns total consumption per hour for a specified time range
+        for a specified sensor location inclusively
+
+        enter time in string format - %Y-%m-%d %H ie. 2016-07-16
+    '''
+    daily_parser = reqparse.RequestParser()
+    daily_parser.add_argument('location')
+    daily_parser.add_argument('start')
+    daily_parser.add_argument('end')
+
+    def get(self):
+        args = self.daily_parser.parse_args()
+        location = args['location']
+        start = datetime.datetime.strptime(args['start'], "%Y-%m-%d %H")
+        end = datetime.datetime.strptime(args['end'], "%Y-%m-%d %H")
+        
+        ## mock 
+        hours = int((end - start).total_seconds() / 3600) + 1 # +1 to be inclusive
+        data = [ [ str(start + datetime.timedelta(seconds=i*3600)), 
+                   npy_rand.randint(20, 33) ] for i in xrange(hours)]
+        data = {"data": data}
+
+        return json.dumps(data), 200 
+
+class Threshold(Resource):
+    '''
+        Post - set a threshold for a location
+        Get - returns a message when the amount of water consumed
+              is past a certain percentage
+    '''
+    threshold_parser = reqparse.RequestParser()
+    threshold_parser.add_argument('val', type=int)
+    threshold_parser.add_argument('location')
+
+    def get(self):
+        args = self.threshold_parser.parse_args()
+        loc = args['location']
+        mock_val = 190
+        # boolean to show whether to show limit or not
+        display_limit = 1
+        
+        mock_msg = "WARNING: It's only %s of %b, and you have spent 76% of your"\
+                   " total monthly budget. You're on track to spend $210(110%"\
+                   " of allocated budget."
+
+        data = {"location" : loc,
+                "val" : mock_val,
+                "display_limit" : 1,
+                "msg": mock_msg} 
+
+        return json.dumps(data), 200
+
+    def post(self):
+        args = self.threshold_parser.parse_args()
+        val = args['val']
+        loc = args['location']
+        data = {"val" : val,
+                "location": loc}
+        
+        return json.dumps(data), 201
 
 # Add all API endpoints after declaring them
-api.add_resource(AddSensor, '/add_sensor')
-api.add_resource(SensorData, '/data/<location>/<start>/<end>')
 api.add_resource(WSLocation, '/ws')
+api.add_resource(AddSensor, '/add_sensor')
+api.add_resource(MonthlySensorData, '/data/monthly')
+api.add_resource(DailySensorData, '/data/daily')
+api.add_resource(Threshold, '/threshold')
 
 if __name__ == '__main__':
     app.run()

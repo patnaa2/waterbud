@@ -1,5 +1,6 @@
 from flask import Flask, render_template
 from flask_restful import Api
+from flask_cors import CORS, cross_origin
 import os
 import sys
 
@@ -20,10 +21,12 @@ static = "/js/dist"
 app = Flask(__name__,
             template_folder=template_dir,
             static_url_path=static)
+cors = CORS(app)
 api = Api(app)
 
 # Homepage
 @app.route('/')
+@cross_origin()
 def index():
     return render_template('index.html')
 

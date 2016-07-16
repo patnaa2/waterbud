@@ -1,4 +1,6 @@
 from flask_restful import Resource, reqparse
+from pymongo.errors import DuplicateKeyError
+import json
 import datetime
 import os
 import pymongo
@@ -83,7 +85,12 @@ class Threshold(Resource):
         if not loc:
             loc = db['add_sensor'].find_one({}).get('location', None)
 
-        val = db['thresholds'].find_one({"location":loc})['threshold']
+        # current spending 
+        # 0 - no
+        # 1 - yes
+        desired = db['thresholds'].find_one({"location":loc})['limit']
+        current = db['monthly_summary'].find_one({})['dollar_spent']
+        return val, 200
 
     def post(self):
         # add logic to add sensor --> Mocked for MVP
@@ -95,9 +102,22 @@ class Threshold(Resource):
             loc = db['thresholds'].find_one({}).get('location', None)
         data = {"location" : loc,
                 "limit" : val}
-        db['threshold'].insert_one(data)
+        if not val:
+            val = 150
 
-        return location, 201
+        try:
+            db['thresholds'].insert_one(data)
+        except DuplicateKeyError:
+            # thresholds collection has a unique index on location
+            # if same location is specified we need to do an update
+            db['thresholds'].update_one({"location":loc}, 
+                                        {
+                                            "$set":{
+                                                "limit": val
+                                            },
+                                        })
+
+        return "%s: %s" %(loc, val), 201
 
 API_MAPPINGS = {WSLocation : "/ws_location",
 		AddSensor : "/add_sensor",

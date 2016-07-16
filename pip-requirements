@@ -6,3 +6,4 @@ pymongo==3.2.2
 tornado==4.3
 websocket-client==0.37.0
 flask_cors==2.1.2
+numpy==1.11.1
