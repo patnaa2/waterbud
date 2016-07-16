@@ -15,7 +15,7 @@ export default {
   target: 'web', // necessary per https://webpack.github.io/docs/testing.html#compile-and-test
   output: {
     path: `${__dirname}/dist`,
-    publicPath: '/js/dist/',
+    publicPath: '/dist/',
     filename: 'bundle.js'
   },
   plugins: [
