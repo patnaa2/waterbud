@@ -13,6 +13,7 @@
         ml value for consumption on a per-minute basis
 """
 from __future__ import division
+from itertools import groupby
 import datetime as dt
 import random
 import json
@@ -48,6 +49,8 @@ locations = {
     }
 }
 
+# make db connection global
+db = pymongo.MongoClient('localhost', 27017)['test']
 
 # HELPERS
 def gen_time_occurences(timings, occurences):
@@ -262,18 +265,53 @@ def generate(n):
     data = [single_day(date.year, date.month, date.day) for date in dates]
     
     # upload to db
-    db = pymongo.MongoClient('localhost', 27017)['waterbud']
     n = len(data)
     for i in xrange(n):
         day = data[i]
         print "Processing Day %s / %s" %(i, n) 
         for sensor, gen_data in day.iteritems():
-            gen_data = [{"timestamp": x[0], "flow_ml" : x[1]} for x in gen_data]
-            db['%s_by_minute' %(sensor)].insert_many(gen_data)
-
+            fill_minute_coll(gen_data, sensor, i)
+            fill_hourly_coll(gen_data, sensor, i)
+        
     print "Finished processing data"
-    return json.dumps({"data": data})
 
+
+def fill_minute_coll(data, location, i):
+    '''
+        inserts data into minute table
+        take in fake data per minute for one day
+    '''
+    data = [{"timestamp": x[0], "flow_ml" : x[1]} for x in data]
+    db['%s_by_minute' %(location)].insert_many(data)
+
+def fill_hourly_coll(data, location, i):
+    '''
+        inserts data into hourly table
+        take in fake data per minute for one day
+    '''
+    # another shitty hack to keep track of the date to keep the groupby logic
+    # clean --> store the current date and then rebuild the timestamp from 
+    # there, remove minute/second resolution here
+    current_date = data[0][0]
+    
+    data = [(current_date.replace(hour=k, minute=0, second=0), 
+                sum(x[1] for x in v)) 
+            for k, v in groupby(data, key=lambda x: x[0].hour)]
+
+    # Hack: Anshuman 07/17:: hourly has all the required data for daily table
+    # so call it here to fill the daily_collection table
+    db_data = [{"timestamp": x[0], "flow_ml": x[1]} for x in data]
+    db['%s_by_hour' %(location)].insert_many(db_data)
+    fill_daily_coll(data, location)
+
+def fill_daily_coll(data, location):
+    '''
+        inserts data into a daily table
+        take in fake data per hour for one day 
+    '''
+    # just sum all the data points, gauranteed to only get one data point
+    data = {"timestamp" : data[0][0].replace(hour=0), "flow_ml": sum(x[1] for x in data)}
+    db['%s_by_day' %(location)].insert_one(data)
 
 if __name__ == '__main__':
-    generate(100)
+    generate(2)
