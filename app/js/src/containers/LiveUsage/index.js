@@ -6,7 +6,7 @@ const Line = require('react-chartjs').Line;
 import RelativeGraph from '../../components/RelativeGraph';
 
 import * as actions from '../../actions/sensorsActions';
-import './style.less'
+import './style.less';
 
 class LiveUsage extends React.Component {
   componentWillMount() {

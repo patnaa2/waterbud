@@ -1,9 +1,37 @@
 import React, {PropTypes} from 'react';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+
+import * as actions from '../../actions/miscActions';
+import './style.less';
 
 class Settings extends React.Component {
+  constructor(props) {
+    super(props);
+    this.updateThreshold = this.updateThreshold.bind(this);
+    this.saveSettings = this.saveSettings.bind(this);
+  }
+
+  saveSettings() {
+    this.props.actions.saveSettings(this.props.threshold);
+  }
+
+  updateThreshold(e) {
+    this.props.actions.updateThreshold(e.target.value);
+  }
+
   render() {
     return (
       <div className="container-fluid">
+        <div className="row center-block setting-actions">
+          <button
+            type="button"
+            className="btn btn-success"
+            onClick={this.saveSettings}
+          >
+            Save
+          </button>
+        </div>
         <div className="row center-block">
           <div className="col-md-6 well">
             <h4>User Info</h4>
@@ -23,10 +51,17 @@ class Settings extends React.Component {
           <div className="col-md-6 well">
             <h4>Application Settings</h4>
             <div className="row">
-              <form className="form-inline">
+              <form className="form">
                 <div className="form-group">
-                  <label forHtml="exampleInputName2">Threshold: </label>
-                  <input type="text" className="form-control" id="exampleInputName2" placeholder="Jane Doe" />
+                  <label forHtml="threshold">Threshold: </label>
+                  <input
+                    id="threshold"
+                    type="number"
+                    className="form-control"
+                    min="0"
+                    value={this.props.threshold}
+                    onChange={this.updateThreshold}
+                  />
                 </div>
               </form>
             </div>
@@ -38,7 +73,23 @@ class Settings extends React.Component {
 }
 
 Settings.propTypes = {
-  action: PropTypes.object
+  actions: PropTypes.object,
+  threshold: PropTypes.number
 };
 
-export default Settings;
+function mapStateToProps(state) {
+  return {
+    threshold: state.misc.get('threshold')
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators(actions, dispatch)
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Settings);

@@ -4,6 +4,8 @@ export const FLIP_TIP_CARD = 'FLIP_TIP_CARD';
 //MISC
 export const MENU_CLICK = 'MENU_CLICK';
 export const RESET = 'RESET';
+export const UPDATE_THRESHOLD = 'UPDATE_THRESHOLD';
+export const SAVE_SETTINGS = 'SAVE_SETTINGS';
 
 //SENSORS
 export const REMOVE_SENSOR = 'REMOVE_SENSOR';
