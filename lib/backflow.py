@@ -18,7 +18,7 @@ import random
 import json
 
 import numpy as np
-
+import pymongo
 
 # location data store
 locations = {
@@ -186,7 +186,7 @@ def convert_minutes(ts_map, **kwargs):
         modified_base = [[base + dlt for dlt in series] for series in delta]
 
         # strftime conversion
-        modified_base = [[pt.strftime("%Y-%m-%d %H:%M:%S") for pt in series]
+        modified_base = [[pt for pt in series]
                          for series in modified_base]
 
         conv_ts.append(modified_base)
@@ -260,7 +260,18 @@ def generate(n):
         dates.append(init_day + dt.timedelta(days=num))
 
     data = [single_day(date.year, date.month, date.day) for date in dates]
+    
+    # upload to db
+    db = pymongo.MongoClient('localhost', 27017)['waterbud']
+    n = len(data)
+    for i in xrange(n):
+        day = data[i]
+        print "Processing Day %s / %s" %(i, n) 
+        for sensor, gen_data in day.iteritems():
+            gen_data = [{"timestamp": x[0], "flow_ml" : x[1]} for x in gen_data]
+            db['%s_by_minute' %(sensor)].insert_many(gen_data)
 
+    print "Finished processing data"
     return json.dumps({"data": data})
 
 
