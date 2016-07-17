@@ -44,3 +44,15 @@ export function retrieveImage(location) {
       return shower;
   }
 }
+
+export function retrieveGeneralLocation(location) {
+  switch (location) {
+    case SensorLocation.BATHROOM_SINK:
+    case SensorLocation.SHOWER:
+      return 'Bathroom';
+    case SensorLocation.GARDEN:
+      return 'Garden';
+    case SensorLocation.KITCHEN_SINK:
+      return 'Kitchen';
+  }
+}

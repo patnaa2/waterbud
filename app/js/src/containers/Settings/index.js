@@ -50,21 +50,19 @@ class Settings extends React.Component {
           </div>
           <div className="col-md-6 well">
             <h4>Application Settings</h4>
-            <div className="row">
-              <form className="form">
-                <div className="form-group">
-                  <label forHtml="threshold">Threshold: </label>
-                  <input
-                    id="threshold"
-                    type="number"
-                    className="form-control"
-                    min="0"
-                    value={this.props.threshold}
-                    onChange={this.updateThreshold}
-                  />
-                </div>
-              </form>
-            </div>
+            <form className="form">
+              <div className="form-group">
+                <label forHtml="threshold">Threshold: </label>
+                <input
+                  id="threshold"
+                  type="number"
+                  className="form-control"
+                  min="0"
+                  value={this.props.threshold}
+                  onChange={this.updateThreshold}
+                />
+              </div>
+            </form>
           </div>
         </div>
       </div>

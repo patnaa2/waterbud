@@ -10,7 +10,8 @@ import {
   RECEIVED_HISTORICAL_DATA,
   RESET_LIVE_DATA,
   SAVE_SENSOR,
-  CLOSE_MODAL
+  CLOSE_MODAL,
+  FILTER_SENSORS
 } from '../constants/actionTypes';
 import {CARD} from '../constants/viewConstants';
 import Immutable from 'immutable';
@@ -44,6 +45,7 @@ const initialState = Immutable.fromJS({
   ],
   editSensor: newSensor,
   editView: false,
+  filter: [],
   isAddingSensor: false,
   historicalData: [],
   liveData: {
@@ -90,6 +92,9 @@ export default function tipReducer(state = initialState, action) {
 
     case CLOSE_MODAL:
       return state.set('editView', false);
+
+    case FILTER_SENSORS:
+      return state.set('filter', Immutable.fromJS(!action.value ? [] : action.value.split(',')));
 
     case RECEIVED_LIVE_DATA:
       if (state.getIn(['liveData', 'time']).size < 30) {

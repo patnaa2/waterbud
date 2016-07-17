@@ -16,7 +16,7 @@ const SensorCard = (props) => {
   } = props;
   return (
     <FlipCard {...others} showFront={showFront}>
-      <div className={Helper.retrieveClassName(location)} >
+      <div className={Helper.retrieveGeneralLocation(location).toLowerCase()} >
         <button
           className="btn btn-default flipBtn"
           type="button"
@@ -24,11 +24,11 @@ const SensorCard = (props) => {
         >
           <span className="fa fa-reply" />
         </button>
-        <span className="location">{Helper.retreiveFriendlyLocationName(location)}</span>
+        <span className="location">{Helper.retrieveGeneralLocation(location)}</span>
         <img className="image" src={Helper.retrieveImage(location)}/>
         <span className="name">{name}</span>
       </div>
-      <div>
+      <div className={Helper.retrieveGeneralLocation(location).toLowerCase()}>
         <button
           className="btn btn-default flipBtn"
           type="button"

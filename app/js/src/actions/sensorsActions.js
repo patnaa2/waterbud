@@ -62,3 +62,8 @@ export function fetchHistoricalData() {
       });
   };
 }
+
+export function filterSensors(val) {
+  const value = (val === null) ? "" : val;
+  return {type: types.FILTER_SENSORS, value};
+}

@@ -3,10 +3,12 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
 import GridLayout from '../../components/Sensors/gridLayout';
+import RoomSelect from '../../components/RoomSelect';
 import AddSensor from '../../components/Sensors/addSensor';
 
 import * as actions from '../../actions/sensorsActions';
 import * as constants from '../../constants/viewConstants';
+import * as Helper from '../../helpers/roomHelpers';
 import './style.less';
 
 class Sensors extends React.Component {
@@ -17,6 +19,7 @@ class Sensors extends React.Component {
     this.onTextChange = this.onTextChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.removeSensor = this.removeSensor.bind(this);
+    this.onSensorFilter = this.onSensorFilter.bind(this);
   }
 
   handleModalCloseRequest(e) {
@@ -39,15 +42,26 @@ class Sensors extends React.Component {
                                   this.props.sensors.getIn(['editSensor','location']));
   }
 
+  onSensorFilter(val) {
+    this.props.actions.filterSensors(val);
+  }
+
   removeSensor(index, e) {
     e.preventDefault();
     this.props.actions.removeSensor(index);
   }
 
   render() {
+    const sensors = Helper.filterDataByRoom(this.props.sensors.get('sensors'),
+                                         this.props.sensors.get('filter'));
     return (
-      <div>
+      <div className="center-block">
         <div className="buttonGroup">
+          <RoomSelect
+            className="room_select"
+            value={this.props.sensors.get('filter').toJS()}
+            onChange={this.onSensorFilter}
+          />
           <span className="fa fa-2x fa-th" />
           <span className="fa fa-2x fa-list" />
           <button
@@ -64,7 +78,7 @@ class Sensors extends React.Component {
             actions={this.props.actions}
             loadSensor={this.loadSensor}
             removeSensor={this.removeSensor}
-            sensors={this.props.sensors.get('sensors')}
+            sensors={sensors}
           /> :
           <div>TABLE VIEW</div>
         }
@@ -82,8 +96,7 @@ class Sensors extends React.Component {
 
 Sensors.propTypes = {
   actions: PropTypes.object,
-  sensors: PropTypes.object,
-  viewMode: PropTypes.string
+  sensors: PropTypes.object
 };
 
 function mapStateToProps(state) {

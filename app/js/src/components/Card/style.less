@@ -9,6 +9,7 @@
   box-sizing: border-box;
   width: 250px;
   height: 300px;
+  color: white;
 }
 
 // Applies Height, Size and border colour to all cards
@@ -22,32 +23,44 @@
 
 //Applies specific background colours for cards
 .ReactFlipCard__Front {
-  & .kitchen_sink {
-    background-color: #cef;
+  & .kitchen {
+    background-color: #334D5C;
     border-radius: 10px;
     border: 1px solid #ccc;
   }
-  & .bathroom_sink {
-    background-color: #cef;
+  & .bathroom {
+    background-color: #45B29D;
     border-radius: 10px;
     border: 1px solid #ccc;
   }
   & .garden {
-    background-color: #cef;
+    background-color: #E27A3F;
     border-radius: 10px;
     border: 1px solid #ccc;
   }
-  & .shower {
+  /*& .shower {
     background-color: #cef;
     border-radius: 10px;
     border: 1px solid #ccc;
-  }
+  }*/
 }
 
 .ReactFlipCard__Back {
-  background-color: #cef;
-  border-radius: 10px;
-  border: 1px solid #ccc;
+  & .kitchen {
+    background-color: #334D5C;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+  }
+  & .bathroom {
+    background-color: #45B29D;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+  }
+  & .garden {
+    background-color: #E27A3F;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+  }
 }
 
 .flipBtn {
