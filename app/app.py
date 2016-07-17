@@ -164,17 +164,19 @@ class Notifications(Resource):
         mock_msg_new = []
         mock_msg_recent = []
 
-        mock_msg_new.append("07/16 14:16:12 -- It's only %s of %b, and you have spent 76% of your"\
-                   " total monthly budget. You're on track to spend $210(110%"\
-                   " of allocated budget.")
-        mock_msg_new.append("07/16 14:10:12 -- CRITICAL Leak detected in kitchen sink.")
+        mock_msg_new.append({"date": "07/16 14:16:12",
+                             "msg":"It's only %s of %b, and you have spent 76% of your"\
+                                   " total monthly budget. You're on track to spend $210(110%"\
+                                   " of allocated budget."})
+        mock_msg_new.append({"date": "07/16 14:10:12",
+                             "msg" : "CRITICAL Leak detected in kitchen sink."})
         
-        mock_msg_recent.append("07/15 14:16:12 -- It's only July 15, and you have spent 74% of your"\
-                   " total monthly budget. You're on track to spend $220(120%"\                                                                  
-                   " of allocated budget.")
-	mock_msg_recent.append("07/14 14:16:12 -- It's only July 14, and you have spent 72% of your"\
-		   " total monthly budget. You're on track to spend $205(108%"\
-		   " of allocated budget.")
+        mock_msg_recent.append({"date": "07/15 14:16:12",
+                                "msg": "It's only July 15, and you have spent 74% of your"\
+                                       " of allocated budget."})
+        mock_msg_recent.append({"date": "07/15 14:16:12",
+                                "msg": "It's only July 14, and you have spent 72% of your"\
+                                       " of allocated budget."})
 
         data = {"notifications" : 2,
                 "new_msgs" : mock_msg_new,
