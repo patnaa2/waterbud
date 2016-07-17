@@ -6,6 +6,7 @@ const Line = require('react-chartjs').Line;
 import RelativeGraph from '../../components/RelativeGraph';
 
 import * as actions from '../../actions/sensorsActions';
+import './style.less'
 
 class LiveUsage extends React.Component {
   componentWillMount() {
@@ -30,10 +31,10 @@ class LiveUsage extends React.Component {
       datasets: [
         {
           label: 'My First dataset',
-          fillColor: 'rgba(220,220,220,0.5)',
-          strokeColor: 'rgba(220,220,220,0.8)',
-          highlightFill: 'rgba(220,220,220,0.75)',
-          highlightStroke: 'rgba(220,220,220,1)',
+          fillColor: 'rgba(52,152,219,0.5)',
+          strokeColor: 'rgba(52,152,219,0.8)',
+          highlightFill: 'rgba(52,152,219,0.75)',
+          highlightStroke: 'rgba(52,152,219,1)',
           data: this.props.liveData.get('flow_ml').toJS()
         }
       ]
@@ -41,7 +42,10 @@ class LiveUsage extends React.Component {
 
     return (
       <div className="center-block">
-        <Line data={chartData} width={window.innerWidth * 0.95} height="360"/>
+        <h2 className="header">Water Consumed (mL) over Time</h2>
+        <h4 className="y_axis">Water Consumed (mL)</h4>
+        <Line className="center-block" data={chartData} width={window.innerWidth * 0.96} height="450"/>
+        <h4 className="x_axis">Time</h4>
         <RelativeGraph consumed={this.props.liveData.get('total_flow_ml')} />
       </div>
     );

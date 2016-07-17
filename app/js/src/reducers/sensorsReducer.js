@@ -92,7 +92,7 @@ export default function tipReducer(state = initialState, action) {
       return state.set('editView', false);
 
     case RECEIVED_LIVE_DATA:
-      if (state.getIn(['liveData', 'time']).size < 60) {
+      if (state.getIn(['liveData', 'time']).size < 30) {
         return state.updateIn(['liveData', 'time'], (data) => data.push(action.time.toString()))
                     .updateIn(['liveData', 'flow_ml'], (data) => data.push(action.flow_ml.toString()))
                     .updateIn(['liveData', 'zeros'], (data) => data.push('0'))
