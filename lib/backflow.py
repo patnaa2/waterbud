@@ -50,7 +50,7 @@ locations = {
 }
 
 # make db connection global
-db = pymongo.MongoClient('localhost', 27017)['waterbud']
+db = pymongo.MongoClient('localhost', 27017)['test']
 
 # HELPERS
 def gen_time_occurences(timings, occurences):
@@ -270,13 +270,25 @@ def generate(n):
         day = data[i]
         print "Processing Day %s / %s" %(i, n) 
         for sensor, gen_data in day.iteritems():
-            fill_minute_coll(gen_data, sensor, i)
-            fill_hourly_coll(gen_data, sensor, i)
+            fill_minute_coll(gen_data, sensor)
+            fill_hourly_coll(gen_data, sensor)
+        # now we process the total tables
+        # collapse the dict into one single value of total values
+        flat_day = [ item for sublist in day.itervalues() for item in sublist ]
+        total_data = []
+        for k, v in groupby(flat_day, 
+                            lambda x: x[0].minute):
+            vals = list(v)
+            total_data.append((vals[0][0], sum(x[1] for x in vals)))
+        
+        # fill total data
+        fill_minute_coll(total_data, 'total')
+        fill_hourly_coll(total_data, 'total')
         
     print "Finished processing data"
 
 
-def fill_minute_coll(data, location, i):
+def fill_minute_coll(data, location):
     '''
         inserts data into minute table
         take in fake data per minute for one day
@@ -284,7 +296,7 @@ def fill_minute_coll(data, location, i):
     data = [{"timestamp": x[0], "flow_ml" : x[1]} for x in data]
     db['%s_by_minute' %(location)].insert_many(data)
 
-def fill_hourly_coll(data, location, i):
+def fill_hourly_coll(data, location):
     '''
         inserts data into hourly table
         take in fake data per minute for one day
@@ -314,4 +326,4 @@ def fill_daily_coll(data, location):
     db['%s_by_day' %(location)].insert_one(data)
 
 if __name__ == '__main__':
-    generate(2)
+    generate(100)
