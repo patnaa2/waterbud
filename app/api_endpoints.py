@@ -10,12 +10,11 @@ db = pymongo.MongoClient('localhost', 27017)['waterbud']
 
 class WSLocation(Resource):
     def get(self):
-        return {'ws_location': WEBSOCKET}
+        return json.dumps({'ws_location': WEBSOCKET})
 
 class AddSensor(Resource):
     add_sensor_parser = reqparse.RequestParser()
     add_sensor_parser.add_argument('location')
-    valid_locations = ["bathroom sink", "kitchen sink", "shower", "garden"]
         
     def get(self):
         # HACK Anshuman July 12, 2016
@@ -39,7 +38,7 @@ class AddSensor(Resource):
         args = self.add_sensor_parser.parse_args()
         location = args['location']
         
-        data = {"time_inserted" : datetime.datetime.utcnow(),
+        data = {"time_inserted" : datetime.datetime.now(),
                 "success" : True,
                 "location": location}
         db['add_sensor'].insert_one(data)
@@ -55,17 +54,27 @@ class AddSensor(Resource):
         except:
             location = None
 
-        if location:
-            data['location'] = None 
+        if data:
             # We can't update a non-boolean field in capped collection,
             # since the size of the document cannot change, so just insert
             # a new field with location null
             # delete _id field to Avoid Duplicate Key Error 
             del data['_id']
-            db['add_sensor'].insert_one(data)
-            return location, 200
+            data['location'] = None 
         else:
-            return '', 204
+            # if someone calls a delete when there is no data
+            data = {"time_inserted": datetime.datetime.now,
+                    "success" : False,
+                    "location" : None }
+
+        if location:
+            # We can't update a non-boolean field in capped collection,
+            # since the size of the document cannot change, so just insert
+            # a new field with location null
+            db['add_sensor'].insert_one(data)
+            return json.dumps({"data": location}), 203
+        else:
+            return json.dumps({"data": "None"}), 204
 
 class SensorData(Resource):                                                                           
     def get(self, location, start, end):
@@ -85,7 +94,6 @@ class Threshold(Resource):
         if not loc:
             loc = db['add_sensor'].find_one({}).get('location', None)
 
-        # current spending 
         # 0 - no
         # 1 - yes
         desired = db['thresholds'].find_one({"location":loc})['limit']

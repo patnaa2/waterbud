@@ -33,7 +33,7 @@ def index():
 LOCATIONS = ["bathroom sink", "kitchen sink", "shower", "garden"]
 class WSLocation(Resource):
     def get(self):
-        return {'ws_location': WEBSOCKET}
+        return json.dumps({'ws_location': WEBSOCKET})
 
 class AddSensor(Resource):
     add_sensor_parser = reqparse.RequestParser()
