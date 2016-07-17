@@ -176,9 +176,7 @@ class Notifications(Resource):
 		   " total monthly budget. You're on track to spend $205(108%"\
 		   " of allocated budget.")
 
-        data = {"location" : loc,
-                "val" : mock_val,
-                "notifications" : 2,
+        data = {"notifications" : 2,
                 "new_msgs" : mock_msg_new,
                 "recent_msgs": mock_msg_recent} 
         
@@ -218,7 +216,6 @@ api.add_resource(DailySensorData, '/data/daily')
 api.add_resource(HourlySensorData, '/data/hourly')
 api.add_resource(Threshold, '/threshold')
 api.add_resource(Notifications, '/notifications')
-api.add_resource(Tips, '/tips')
 api.add_resource(Mock_Tips, '/tips')
 
 if __name__ == '__main__':
