@@ -139,34 +139,77 @@ class Threshold(Resource):
     '''
     threshold_parser = reqparse.RequestParser()
     threshold_parser.add_argument('val', type=int)
-    threshold_parser.add_argument('location')
 
     def get(self):
         args = self.threshold_parser.parse_args()
         loc = args['location']
         mock_val = 190
-        # boolean to show whether to show limit or not
-        display_limit = 1
-        
-        mock_msg = "WARNING: It's only %s of %b, and you have spent 76% of your"\
-                   " total monthly budget. You're on track to spend $210(110%"\
-                   " of allocated budget."
+        data = {"val" : val}
 
-        data = {"location" : loc,
-                "val" : mock_val,
-                "display_limit" : 1,
-                "msg": mock_msg} 
-
+        # save to db here, since we are just about to return
         return json.dumps(data), 200
 
     def post(self):
         args = self.threshold_parser.parse_args()
         val = args['val']
-        loc = args['location']
-        data = {"val" : val,
-                "location": loc}
+        data = {"val" : val}
         
         return json.dumps(data), 201
+
+class Notifications(Resource):
+
+    def get(self):
+        # boolean to show whether to show limit or not
+        display_limit = 1
+        mock_msg_new = []
+        mock_msg_recent = []
+
+        mock_msg_new.append("07/16 14:16:12 -- It's only %s of %b, and you have spent 76% of your"\
+                   " total monthly budget. You're on track to spend $210(110%"\
+                   " of allocated budget.")
+        mock_msg_new.append("07/16 14:10:12 -- CRITICAL Leak detected in kitchen sink.")
+        
+        mock_msg_recent.append("07/15 14:16:12 -- It's only July 15, and you have spent 74% of your"\
+                   " total monthly budget. You're on track to spend $220(120%"\                                                                  
+                   " of allocated budget.")
+	mock_msg_recent.append("07/14 14:16:12 -- It's only July 14, and you have spent 72% of your"\
+		   " total monthly budget. You're on track to spend $205(108%"\
+		   " of allocated budget.")
+
+        data = {"location" : loc,
+                "val" : mock_val,
+                "notifications" : 2,
+                "new_msgs" : mock_msg_new,
+                "recent_msgs": mock_msg_recent} 
+        
+        # save to db here, since we are just about to return
+        return json.dumps(data), 200
+
+    def post(self):
+        # mark all unread notifications to post 
+        data = {"notifications_read": 2}
+        return json.dumps(data), 202 
+
+class Mock_Tips(Resource):
+    def get(self):
+	new_msgs = []
+	recent_msgs = []
+
+	new_msgs.append("Garden Hose sensor was on while it was raining.")
+	new_msgs.append("Kitchen sink was in use for 3.5 minutes continuously, during lunch prep."\
+			"It is recommended to only use 500ml amount for washing vegetables."\
+			"Consider washing vegetables in a large bowl of water.")
+	
+	recent_msgs.append("Garden hose was turned on while it was raining.")
+	recent_msgs.append("After showering, the water was left running for 10 mins. If shaving, "\
+			   "try to reuse water, by blocking the sink.")
+        data = {"new":new_msgs, 
+                "recent":recent_msgs}
+        return json.dumps(data), 200
+
+    def post(self):
+        data = {"notifications_read": 2}
+        return json.dumps(data), 202 
 
 # Add all API endpoints after declaring them
 api.add_resource(WSLocation, '/ws')
@@ -174,6 +217,9 @@ api.add_resource(AddSensor, '/add_sensor')
 api.add_resource(DailySensorData, '/data/daily')
 api.add_resource(HourlySensorData, '/data/hourly')
 api.add_resource(Threshold, '/threshold')
+api.add_resource(Notifications, '/notifications')
+api.add_resource(Tips, '/tips')
+api.add_resource(Mock_Tips, '/tips')
 
 if __name__ == '__main__':
     app.run()
