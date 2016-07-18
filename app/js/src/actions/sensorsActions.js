@@ -68,12 +68,9 @@ export function fetchHourlyHistoricalData(location, start, end) {
       .then(json =>
         dispatch({
           type: types.RECEIVED_HISTORICAL_DATA,
-          data: json //FORMAT OF JSON OBJECT
+          data: JSON.parse(json).data
         })
-      ).catch(err => {
-        dispatch({type: types.LOADING_HISTORICAL_DATA, status: false});
-        throw new Error('Error retrieving Historical data', err);
-      });
+      );
   };
 }
 
@@ -88,4 +85,20 @@ export function handleStartDate(date) {
 
 export function handleEndDate(date) {
   return {type: types.UPDATE_END_DATE, date};
+}
+
+export function handleHourlyStartDate(date) {
+  return {type: types.UPDATE_HOURLY_START_DATE, date};
+}
+
+export function handleHourlyEndDate(date) {
+  return {type: types.UPDATE_HOURLY_END_DATE, date};
+}
+
+export function updateHistoricalLocation(location) {
+  return {type: types.UPDATE_HISTORICAL_LOCAITON, location};
+}
+
+export function resetHistoricalDates() {
+  return {type: types.RESET_HISTORICAL_DATES};
 }

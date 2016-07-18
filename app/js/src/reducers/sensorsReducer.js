@@ -13,7 +13,11 @@ import {
   CLOSE_MODAL,
   FILTER_SENSORS,
   UPDATE_START_DATE,
-  UPDATE_END_DATE
+  UPDATE_END_DATE,
+  RESET_HISTORICAL_DATES,
+  UPDATE_HOURLY_START_DATE,
+  UPDATE_HOURLY_END_DATE,
+  UPDATE_HISTORICAL_LOCAITON
 } from '../constants/actionTypes';
 import {CARD} from '../constants/viewConstants';
 import Immutable from 'immutable';
@@ -51,7 +55,10 @@ const initialState = Immutable.fromJS({
   isAddingSensor: false,
   historicalStart: moment().subtract(1, 'month'),
   historicalEnd: moment(),
+  historicalHourlyStart: moment().subtract(1, 'month'),
+  historicalHourlyEnd: moment(),
   historicalData: [],
+  historicalLocation: 'total',
   liveData: {
     time: [],
     flow_ml: [],
@@ -135,6 +142,22 @@ export default function tipReducer(state = initialState, action) {
 
     case UPDATE_END_DATE:
       return state.set('historicalEnd', action.date);
+
+    case UPDATE_HOURLY_START_DATE:
+      return state.set('historicalHourlyStart', action.date);
+
+    case UPDATE_HOURLY_END_DATE:
+      return state.set('historicalHourlyEnd', action.date);
+
+    case UPDATE_HISTORICAL_LOCAITON:
+      return state.set('historicalLocation', action.location);
+
+    case RESET_HISTORICAL_DATES:
+      return state.set('historicalStart', moment().subtract(1, 'month'))
+                  .set('historicalEnd', moment())
+                  .set('historicalHourlyEnd', moment().subtract(7, 'days'))
+                  .set('historicalHourlyEnd', moment())
+                  .set('historicalLocation', 'total');
 
     default:
       return state;

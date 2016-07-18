@@ -35,8 +35,11 @@ class App extends React.Component {
       case '/live':
         return 'LIVE USAGE';
 
-      case '/history':
-        return 'HISTORICAL USAGE';
+      case '/history/daily':
+        return 'HISTORICAL DAILY USAGE';
+
+      case '/history/hourly':
+        return 'HISTORICAL HOURLY USAGE';
 
       case '/tips':
         return 'TIPS';
@@ -101,11 +104,20 @@ class App extends React.Component {
           <Link
             activeClassName="active"
             className="block"
-            to="/history"
+            to="/history/daily"
             onClick={this.onMenuItemClick}
           >
             <i className="fa fa-history fa-fw" aria-hidden="true" />
-            <span>Historical Usage</span>
+            <span>Historical Daily Usage</span>
+          </Link>
+          <Link
+            activeClassName="active"
+            className="block"
+            to="/history/hourly"
+            onClick={this.onMenuItemClick}
+          >
+            <i className="fa fa-history fa-fw" aria-hidden="true" />
+            <span>Historical Hourly Usage</span>
           </Link>
           <Link
             activeClassName="active"
