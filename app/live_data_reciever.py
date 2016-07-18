@@ -9,6 +9,7 @@ import websocket
 
 class Receiever(object):
     MONGO_LOCATION = "127.0.0.1:27017"
+    DB = "test"
 
     def __init__(self, ws_ip, ws_port):
         self.ws_location = "ws://%s:%s/ws" %(ws_ip, ws_port)
@@ -56,7 +57,7 @@ class Receiever(object):
 
     def connect_to_db(self):
         try:
-            self._db = pymongo.MongoClient(self.MONGO_LOCATION)['waterbud']
+            self._db = pymongo.MongoClient(self.MONGO_LOCATION)['test']
         except:
             # treat any exception as a failure
             msg = "Unable to connect to database"
@@ -67,23 +68,31 @@ class Receiever(object):
         sys.exit(1)
 
     def run(self):
+        flow_ml = 0
+        current = datetime.datetime.now().replace(seconds=0,
+                                                  microseconds=0)
+
         while True:
             try:
                 data = self._ws.recv()
                 data = json.loads(data)
-                data['time'] = datetime.datetime.strptime(data['time'],
+                data['timestamp'] = datetime.datetime.strptime(data['time'],
                                                           "%Y-%m-%d %H:%M:%S")
                 # we are going to store directly to minute table for MVP
                 # it doesnt make any sense to store per second and
                 # have another 3 processes summarizing the data to 
                 # hourly and historical data
-                flow_ml_min = 0
-                self._db[self.location].insert_one(data)
+                if current == data['time'].minute:
+                    flow_ml += data['flow_ml']
+                    continue
+                elif flow_ml:
+                    db_data = {"timestamp": current, 
+                               "flow_ml" : flow_ml}
+                    self._db[self.location].insert_one(db_data)
             except KeyError:
                 msg = "Expecting a time field, with appropraite string format"
                 self.epic_failure(msg)
             except TypeError:
-                import pdb ; pdb.set_trace()
                 msg = "Invalid data format"
                 self.epic_failure(msg)
             except KeyboardInterrupt:

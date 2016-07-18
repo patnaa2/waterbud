@@ -8,9 +8,9 @@ class Notifications(object):
     MONGO_LOCATION = "127.0.0.1:27017"
     DB = "test"
 
-    def __init__(self, db=None, coll='notifications'):
+    def __init__(self, db=None):
         self._db = db 
-        self.coll = coll
+        self.coll = 'notifications' 
 
         # Try connecting to db, if failure (break)
         if not self._db:
