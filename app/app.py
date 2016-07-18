@@ -1,3 +1,4 @@
+from api_helpers import convert_datetime_to_epoch as dt_to_epoch
 from flask import Flask, render_template
 from flask_cors import CORS, cross_origin
 from flask_restful import Resource, Api, reqparse
@@ -99,7 +100,7 @@ class DailySensorData(Resource):
         
         ## mock 
         days = (end - start).days + 1 # 1 to be inclusive
-        data = [ [ str(start + datetime.timedelta(days=i)), 
+        data = [ [ dt_to_epoch(start + datetime.timedelta(days=i)), 
                    npy_rand.randint(500, 750) ] for i in xrange(days)]
         data = {"data": data}
 
@@ -125,7 +126,7 @@ class HourlySensorData(Resource):
         
         ## mock 
         hours = int((end - start).total_seconds() / 3600) + 1 # +1 to be inclusive
-        data = [ [ str(start + datetime.timedelta(seconds=i*3600)), 
+        data = [ [ dt_to_epoch((start + datetime.timedelta(seconds=i*3600))), 
                    npy_rand.randint(20, 33) ] for i in xrange(hours)]
         data = {"data": data}
 
