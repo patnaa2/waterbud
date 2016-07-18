@@ -41,3 +41,13 @@ export function openNotifications() {
 export function closeNotifications() {
   return {type: types.CLOSE_NOTIFICATIONS};
 }
+
+export function retrieveSocketLocation() {
+  return (dispatch) => {
+    fetch('http://localhost:5000/ws')
+      .then(response => response.json())
+      .then((json) => {
+        dispatch({type: types.RETRIEVE_SOCKET_LOCATION, data: JSON.parse(json)});
+      });
+  };
+}

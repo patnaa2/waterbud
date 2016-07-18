@@ -19,6 +19,10 @@ class App extends React.Component {
     this.closeNotifications = this.closeNotifications.bind(this);
   }
 
+  componentWillMount() {
+    this.props.actions.retrieveSocketLocation();
+  }
+
   onMenuItemClick() {
     this.props.actions.menuClick(false);
   }
@@ -35,11 +39,8 @@ class App extends React.Component {
       case '/live':
         return 'LIVE USAGE';
 
-      case '/history/daily':
-        return 'HISTORICAL DAILY USAGE';
-
-      case '/history/hourly':
-        return 'HISTORICAL HOURLY USAGE';
+      case '/history':
+        return 'HISTORICAL USAGE';
 
       case '/tips':
         return 'TIPS';
@@ -104,20 +105,11 @@ class App extends React.Component {
           <Link
             activeClassName="active"
             className="block"
-            to="/history/daily"
+            to="/history"
             onClick={this.onMenuItemClick}
           >
             <i className="fa fa-history fa-fw" aria-hidden="true" />
-            <span>Historical Daily Usage</span>
-          </Link>
-          <Link
-            activeClassName="active"
-            className="block"
-            to="/history/hourly"
-            onClick={this.onMenuItemClick}
-          >
-            <i className="fa fa-history fa-fw" aria-hidden="true" />
-            <span>Historical Hourly Usage</span>
+            <span>Historical Usage</span>
           </Link>
           <Link
             activeClassName="active"

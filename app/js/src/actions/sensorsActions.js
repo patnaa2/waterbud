@@ -87,18 +87,13 @@ export function handleEndDate(date) {
   return {type: types.UPDATE_END_DATE, date};
 }
 
-export function handleHourlyStartDate(date) {
-  return {type: types.UPDATE_HOURLY_START_DATE, date};
-}
-
-export function handleHourlyEndDate(date) {
-  return {type: types.UPDATE_HOURLY_END_DATE, date};
-}
-
 export function updateHistoricalLocation(location) {
   return {type: types.UPDATE_HISTORICAL_LOCAITON, location};
 }
 
+export function updateHistoricalResolution(resolution) {
+  return {type: types.UPDATE_HISTORICAL_RESOLUTION, resolution};
+}
 export function resetHistoricalDates() {
   return {type: types.RESET_HISTORICAL_DATES};
 }

@@ -3,8 +3,7 @@ import { Route, IndexRoute } from 'react-router';
 
 import App from './containers/App';
 import HomePage from './containers/HomePage';
-import HistoricalDailyUsage from './containers/HistoricalUsage/Daily';
-import HistoricalHourlyUsage from './containers/HistoricalUsage/Hourly';
+import HistoricalUsage from './containers/HistoricalUsage';
 import LiveUsage from './containers/LiveUsage';
 import Sensors from './containers/Sensors';
 import Settings from './containers/Settings';
@@ -14,8 +13,7 @@ import Tips from './containers/Tips';
 export default (
   <Route path="/" component={App}>
     <IndexRoute component={HomePage}/>
-    <Route path="history/hourly" component={HistoricalHourlyUsage} />
-    <Route path="history/daily" component={HistoricalDailyUsage} />
+    <Route path="history" component={HistoricalUsage} />
     <Route path="live" component={LiveUsage} />
     <Route path="sensors" component={Sensors} />
     <Route path="settings" component={Settings} />

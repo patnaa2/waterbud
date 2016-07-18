@@ -12,9 +12,8 @@ import './style.less';
 class LiveUsage extends React.Component {
   componentWillMount() {
     /*eslint-disable*/
-    this.socket = new WebSocket("ws://172.20.10.6:8888/ws");
+    this.socket = new WebSocket("ws://"+ this.props.socketLocation + "/ws");
     this.socket.onmessage = (evt) => {
-      console.log('evt', evt.data);
       const data = JSON.parse(evt.data);
       console.log('data', data, data.timestamp, data.flow_ml);
       this.props.actions.receiveLiveData(data.timestamp, data.flow_ml);
@@ -67,7 +66,8 @@ LiveUsage.propTypes = {
 function mapStateToProps(state) {
   return {
     liveData: state.sensors.get('liveData'),
-    loading: state.sensors.get('loading')
+    loading: state.sensors.get('loading'),
+    socketLocation: state.misc.get('socketLocation')
   };
 }
 

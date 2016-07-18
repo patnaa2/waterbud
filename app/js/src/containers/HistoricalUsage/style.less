@@ -1,0 +1,35 @@
+.specific_location {
+  width: 300px;
+  display: inline-block;
+}
+
+.date_controls {
+  position: absolute;
+  top: 0;
+  right: 0;
+  > div, span {
+    margin-right: 15px;
+  }
+  input {
+    text-align: center;
+  }
+}
+
+.btn-primary-outline {
+  border-color: #2e6da4;
+  &:hover {
+    border-color: #2e6da4;
+    background-color: #2e6da4;
+    color: white;
+  }
+}
+
+.toggle_controls {
+  position: absolute;
+  top: 0px;
+  left: 50%;
+  transform: translateX(-50%);
+  > .btn:first-child {
+    margin-right: 20px;
+  }
+}

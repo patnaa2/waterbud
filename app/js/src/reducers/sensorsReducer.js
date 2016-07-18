@@ -15,15 +15,15 @@ import {
   UPDATE_START_DATE,
   UPDATE_END_DATE,
   RESET_HISTORICAL_DATES,
-  UPDATE_HOURLY_START_DATE,
-  UPDATE_HOURLY_END_DATE,
-  UPDATE_HISTORICAL_LOCAITON
+  UPDATE_HISTORICAL_LOCAITON,
+  UPDATE_HISTORICAL_RESOLUTION
 } from '../constants/actionTypes';
-import {CARD} from '../constants/viewConstants';
+import * as Constants from '../constants/viewConstants';
 import Immutable from 'immutable';
 import moment from 'moment';
 
 import * as SensorLocation from '../constants/sensorLocations';
+
 
 const newSensor = Immutable.fromJS({
   id: 0,
@@ -59,6 +59,7 @@ const initialState = Immutable.fromJS({
   historicalHourlyEnd: moment(),
   historicalData: [],
   historicalLocation: 'total',
+  historicalResolution: Constants.DAILY,
   liveData: {
     time: [],
     flow_ml: [],
@@ -66,7 +67,7 @@ const initialState = Immutable.fromJS({
     total_flow_ml: 0
   },
   timeStamp: null,
-  viewMode: CARD,
+  viewMode: Constants.CARD,
   loading: false
 });
 
@@ -123,7 +124,6 @@ export default function tipReducer(state = initialState, action) {
       return state.set('loading', action.status);
 
     case RECEIVED_HISTORICAL_DATA:
-      console.log('action', action.data);
       return state.set('loading', false).set('historicalData', Immutable.fromJS(action.data));
 
     case RESET_LIVE_DATA:
@@ -135,7 +135,10 @@ export default function tipReducer(state = initialState, action) {
       }));
 
     case RESET_HISTORICAL_DATA:
-      return state.set('historicalData', Immutable.fromJS([]));
+      return state.set('historicalData', Immutable.fromJS([]))
+                  .set('historicalResolution', Constants.DAILY)
+                  .set('historicalStart', moment().subtract(1, 'month'))
+                  .set('historicalEnd', moment());
 
     case UPDATE_START_DATE:
       return state.set('historicalStart', action.date);
@@ -143,21 +146,21 @@ export default function tipReducer(state = initialState, action) {
     case UPDATE_END_DATE:
       return state.set('historicalEnd', action.date);
 
-    case UPDATE_HOURLY_START_DATE:
-      return state.set('historicalHourlyStart', action.date);
-
-    case UPDATE_HOURLY_END_DATE:
-      return state.set('historicalHourlyEnd', action.date);
-
     case UPDATE_HISTORICAL_LOCAITON:
       return state.set('historicalLocation', action.location);
+
+    case UPDATE_HISTORICAL_RESOLUTION:
+      if (action.resolution === Constants.HOURLY) {
+        return state.set('historicalResolution', action.resolution)
+                    .set('historicalEnd', moment(state.get('historicalStart')).add(7, 'days'));
+      }
+      return state.set('historicalResolution', action.resolution);
 
     case RESET_HISTORICAL_DATES:
       return state.set('historicalStart', moment().subtract(1, 'month'))
                   .set('historicalEnd', moment())
-                  .set('historicalHourlyEnd', moment().subtract(7, 'days'))
-                  .set('historicalHourlyEnd', moment())
-                  .set('historicalLocation', 'total');
+                  .set('historicalLocation', 'total')
+                  .set('historicalResolution', Constants.DAILY);
 
     default:
       return state;

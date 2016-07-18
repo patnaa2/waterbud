@@ -24,16 +24,18 @@ class Chart extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.chart.series[0].update({
-      data: nextProps.options.series[0].data
-    });
-    this.chart.series[1].update({
-      data: nextProps.options.series[0].data
-    });
-    this.chart.xAxis[0].setExtremes(
-      nextProps.options.series[0].data[0][0],
-      nextProps.options.series[0].data[nextProps.options.series[0].data.length-1][0]
-    );
+    if(JSON.stringify(nextProps.options) !== JSON.stringify(this.props.options)) {
+      this.chart.series[0].update({
+        data: nextProps.options.series[0].data
+      });
+      this.chart.series[1].update({
+        data: nextProps.options.series[0].data
+      });
+      this.chart.xAxis[0].setExtremes(
+        nextProps.options.series[0].data[0][0],
+        nextProps.options.series[0].data[nextProps.options.series[0].data.length-1][0]
+      );
+    }
   }
 
   //Destroy chart before unmount.

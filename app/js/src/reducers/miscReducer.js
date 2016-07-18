@@ -3,6 +3,7 @@ import {
   MENU_CLICK,
   OPEN_NOTIFICATIONS,
   RETRIEVE_NOTIFICATIONS,
+  RETRIEVE_SOCKET_LOCATION,
   SAVE_SETTINGS,
   UPDATE_THRESHOLD
 } from '../constants/actionTypes';
@@ -16,6 +17,7 @@ const initialState = Immutable.fromJS({
     recent_msgs: []
   },
   notificationsOpen: false,
+  socketLocation: '127.0.0.1:8888',
   threshold: 0
 });
 
@@ -46,6 +48,9 @@ export default function tipReducer(state = initialState, action) {
                   .setIn(['notifications', 'notifications'], 0)
                   .set('notificationsOpen', false);
 
+    case RETRIEVE_SOCKET_LOCATION:
+    console.log('action', action.data);
+      return state.set('socketLocation', action.data.ws_location);
 
     default:
       return state;
