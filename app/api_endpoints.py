@@ -1,3 +1,4 @@
+from __future__ import division
 from flask_restful import Resource, reqparse
 from notifications import Notifications as Alerts
 from pymongo.errors import DuplicateKeyError
@@ -72,7 +73,7 @@ class AddSensor(Resource):
             data['location'] = None 
         else:
             # if someone calls a delete when there is no data
-            data = {"time_inserted": datetime.datetime.now,
+            data = {"time_inserted": datetime.datetime.now(),
                     "success" : False,
                     "location" : None }
 
@@ -165,12 +166,12 @@ class DailySensorData(Resource):
         
         res = db['%s_by_day' %(location)].find({"timestamp" :
                                                     {"$lte" : end, "$gte" : start}})
-        data = [[x["timestamp"], x["flow_ml"]] for x in res]
+        data = [[x["timestamp"], x["flow_ml"]/1000] for x in res]
         
         data = pad_data(data, start, end, table_type="daily")
         data = [[dt_to_epoch(x[0]), x[1]] for x in data]
-
-        return json.dumps(data), 200 
+        
+        return json.dumps({"data": data}), 200 
 
 class HourlySensorData(Resource):
     '''
@@ -192,12 +193,12 @@ class HourlySensorData(Resource):
         
 	res = db['%s_by_hour' %(location)].find({"timestamp" :
 					    {"$lte" : end, "$gte" : start}})
-        data = [[x["timestamp"], x["flow_ml"]] for x in res]
+        data = [[x["timestamp"], x["flow_ml"]/1000] for x in res]
         
         data = pad_data(data, start, end, table_type="hourly")
         data = [[dt_to_epoch(x[0]), x[1]] for x in data]
 
-        return json.dumps(data), 200 
+        return json.dumps({"data": data}), 200 
 
 class Notifications(Resource):
     RECENT_LIMIT = 4

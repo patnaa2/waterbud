@@ -105,7 +105,7 @@ class DailySensorData(Resource):
         data = [ [ dt_to_epoch(start + datetime.timedelta(days=i)), 
                    npy_rand.randint(500, 750) ] for i in xrange(days)]
         data = {"data": data}
-
+        print json.dumps(data)
 	return json.dumps(data), 200 
 
 class HourlySensorData(Resource):
