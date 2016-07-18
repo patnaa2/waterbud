@@ -4,13 +4,14 @@ import json
 import datetime
 import os
 import pymongo
+import sys
 
 # HACK:: Anshuman Wed July 06, 2016
 # Not sure how we are going to be setting PYTHONPATH but just get it done
 PY_PATH = os.path.join(os.path.expanduser("~"), "waterbud")
 sys.path.insert(0, PY_PATH)
-
-from api_helpers import *
+from lib.api_helpers import convert_datetime_to_epoch as dt_to_epoch
+from lib.api_helpers import pad_data_with_zeroes as pad_data
 
 WEBSOCKET = '127.0.0.1:8888'
 db = pymongo.MongoClient('localhost', 27017)['test']
@@ -144,13 +145,13 @@ class DailySensorData(Resource):
 
         enter time in string format - %Y-%d-%d ie. 2016-07-16
     '''
-    monthly_parser = reqparse.RequestParser()
-    monthly_parser.add_argument('location')
-    monthly_parser.add_argument('start')
-    monthly_parser.add_argument('end')
+    daily_parser = reqparse.RequestParser()
+    daily_parser.add_argument('location')
+    daily_parser.add_argument('start')
+    daily_parser.add_argument('end')
 
     def get(self):
-        args = self.monthly_parser.parse_args()
+        args = self.daily_parser.parse_args()
         location = args['location']
         start = datetime.datetime.strptime(args['start'], "%Y-%m-%d")
         end = datetime.datetime.strptime(args['end'], "%Y-%m-%d")
@@ -159,8 +160,9 @@ class DailySensorData(Resource):
                                                     {"$lte" : end, "$gte" : start}})
         data = [[x["timestamp"], x["flow_ml"]] for x in res]
         
-        data = pad_data_with_zeros(data)
-        import pdb ; pdb.set_trace()
+        data = pad_data(data, start, end, table_type="daily")
+        data = [[dt_to_epoch(x[0]), x[1]] for x in data]
+
         return json.dumps(data), 200 
 
 
@@ -171,27 +173,29 @@ class HourlySensorData(Resource):
 
         enter time in string format - %Y-%m-%d %H ie. 2016-07-16
     '''
-    daily_parser = reqparse.RequestParser()
-    daily_parser.add_argument('location')
-    daily_parser.add_argument('start')
-    daily_parser.add_argument('end')
+    hourly_parser = reqparse.RequestParser()
+    hourly_parser.add_argument('location')
+    hourly_parser.add_argument('start')
+    hourly_parser.add_argument('end')
 
     def get(self):
-        args = self.daily_parser.parse_args()
+        args = self.hourly_parser.parse_args()
         location = args['location']
         start = datetime.datetime.strptime(args['start'], "%Y-%m-%d %H")
         end = datetime.datetime.strptime(args['end'], "%Y-%m-%d %H")
         
-        ## mock 
-        hours = int((end - start).total_seconds() / 3600) + 1 # +1 to be inclusive
-        data = [ [ str(start + datetime.timedelta(seconds=i*3600)), 
-                   npy_rand.randint(20, 33) ] for i in xrange(hours)]
-        data = {"data": data}
+	res = db['%s_by_hour' %(location)].find({"timestamp" :
+					    {"$lte" : end, "$gte" : start}})
+        data = [[x["timestamp"], x["flow_ml"]] for x in res]
+        
+        data = pad_data(data, start, end, table_type="hourly")
+        data = [[dt_to_epoch(x[0]), x[1]] for x in data]
 
         return json.dumps(data), 200 
-
+ 
 API_MAPPINGS = {WSLocation : "/ws_location",
 		AddSensor : "/add_sensor",
 		DailySensorData : "/data/daily",
+		HourlySensorData : "/data/hourly",
                 Threshold : "/threshold"}
 
