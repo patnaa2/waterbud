@@ -5,6 +5,9 @@
     - [ ] Historical Data 
     - [x] Thresholds
     - [x] Websockets 
+    - [x] Add new sensors
+    - [ ] Notifications
+    - [ ] Tips
 - [x] Setup mongo/some db to store all this data in a clean way
 - [ ] Generate Tips async
 - [ ] Notifications async
