@@ -5,6 +5,13 @@ import datetime
 import os
 import pymongo
 
+# HACK:: Anshuman Wed July 06, 2016
+# Not sure how we are going to be setting PYTHONPATH but just get it done
+PY_PATH = os.path.join(os.path.expanduser("~"), "waterbud")
+sys.path.insert(0, PY_PATH)
+
+from api_helpers import *
+
 WEBSOCKET = '127.0.0.1:8888'
 db = pymongo.MongoClient('localhost', 27017)['test']
 
@@ -76,12 +83,6 @@ class AddSensor(Resource):
         else:
             return json.dumps({"data": "None"}), 204
 
-class SensorData(Resource):                                                                           
-    def get(self, location, start, end):
-        return {'location': location,
-                'start': start,
-                'end': end}
-
 class Threshold(Resource):
     threshold_parser = reqparse.RequestParser()
     threshold_parser.add_argument('val', type=int)
@@ -136,8 +137,61 @@ class Threshold(Resource):
 
         return json.dumps(data), 201
 
+class DailySensorData(Resource):
+    '''
+        Returns total consumption per day over specified time range
+        for a specified sensor location inclusively
+
+        enter time in string format - %Y-%d-%d ie. 2016-07-16
+    '''
+    monthly_parser = reqparse.RequestParser()
+    monthly_parser.add_argument('location')
+    monthly_parser.add_argument('start')
+    monthly_parser.add_argument('end')
+
+    def get(self):
+        args = self.monthly_parser.parse_args()
+        location = args['location']
+        start = datetime.datetime.strptime(args['start'], "%Y-%m-%d")
+        end = datetime.datetime.strptime(args['end'], "%Y-%m-%d")
+        
+        res = db['%s_by_day' %(location)].find({"timestamp" :
+                                                    {"$lte" : end, "$gte" : start}})
+        data = [[x["timestamp"], x["flow_ml"]] for x in res]
+        
+        data = pad_data_with_zeros(data)
+        import pdb ; pdb.set_trace()
+        return json.dumps(data), 200 
+
+
+class HourlySensorData(Resource):
+    '''
+        Returns total consumption per hour for a specified time range
+        for a specified sensor location inclusively
+
+        enter time in string format - %Y-%m-%d %H ie. 2016-07-16
+    '''
+    daily_parser = reqparse.RequestParser()
+    daily_parser.add_argument('location')
+    daily_parser.add_argument('start')
+    daily_parser.add_argument('end')
+
+    def get(self):
+        args = self.daily_parser.parse_args()
+        location = args['location']
+        start = datetime.datetime.strptime(args['start'], "%Y-%m-%d %H")
+        end = datetime.datetime.strptime(args['end'], "%Y-%m-%d %H")
+        
+        ## mock 
+        hours = int((end - start).total_seconds() / 3600) + 1 # +1 to be inclusive
+        data = [ [ str(start + datetime.timedelta(seconds=i*3600)), 
+                   npy_rand.randint(20, 33) ] for i in xrange(hours)]
+        data = {"data": data}
+
+        return json.dumps(data), 200 
+
 API_MAPPINGS = {WSLocation : "/ws_location",
 		AddSensor : "/add_sensor",
-		SensorData : "/data/<location>/<start>/<end>",
+		DailySensorData : "/data/daily",
                 Threshold : "/threshold"}
 
