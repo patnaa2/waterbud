@@ -233,11 +233,46 @@ class Notifications(Resource):
                                                })
         return json.dumps({"notifications_read":ret.modified_count}), 201
 
+class Tips(Resource):
+    RECENT_LIMIT = 4
+
+    def get(self):
+        # boolean to show whether to show limit or not
+        new = []
+        recent = []
+
+        unread = db['tips'].find({"read":False})
+        read = db['tips'].find({"read":True}).sort([
+                            ("timestamp", 1)]).limit(self.RECENT_LIMIT)
+
+        new = [{"date": x["timestamp"].strftime("%Y-%m-%d %H:%M:%S"),
+                "msg" : x["msg"]} for x in unread]
+        recent = [{"date": x["timestamp"].strftime("%Y-%m-%d %H:%M:%S"),
+                "msg" : x["msg"]} for x in read]
+
+        data = {"notifications" : len(new),
+                "new_msgs" : new,
+                "recent_msgs": recent}
+
+        # save to db here, since we are just about to return
+        return json.dumps(data), 200
+
+    def post(self):
+        # mark all unread notifications to post 
+        ret = db['tips'].update_many({"read": False},
+				       {
+					   "$set": {
+					       "read": True
+					   },
+				       })
+        return json.dumps({"notifications_read":ret.modified_count}), 201
+
 
 API_MAPPINGS = {WSLocation : "/ws_location",
 		AddSensor : "/add_sensor",
 		DailySensorData : "/data/daily",
 		HourlySensorData : "/data/hourly",
                 Threshold : "/threshold",
-                Notifications: "/notifications"}
+                Notifications: "/notifications",
+		Tips: "/tips"}
 
