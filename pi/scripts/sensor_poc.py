@@ -9,7 +9,7 @@ ws = websocket.create_connection("ws://localhost:8888/ws")
 
 while True:
     try:
-        data = {"time": datetime.datetime.now().strftime("%H:%M:%S"),
+        data = {"timestamp": datetime.datetime.now().strftime("%H:%M:%S"),
                 "flow_ml": random.randint(0, 5000)}
         ws.send(json.dumps(data))
         time.sleep(1)

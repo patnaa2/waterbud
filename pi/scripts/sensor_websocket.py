@@ -17,7 +17,7 @@ class WSModHandler(tornado.websocket.WebSocketHandler):
         if self not in self.wc_clients:
             self.wc_clients.append(self)
         if self.DEBUG:
-            print "New Connection was opened"
+            print "New Connection was opened %s" %(self.request.remote_ip)
 
     def on_message(self, message):
         if self.DEBUG:

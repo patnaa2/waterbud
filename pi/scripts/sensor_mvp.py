@@ -51,13 +51,12 @@ class Sensor(object):
                     flow_rate = ((1000.0 / (current_time - self.old_time)) * self.count) / self.CALIBRATION_FACTOR
                     flow_ml = (flow_rate / 60) * 1000
 
-                    if flow_ml > 0:
-                        if self.debug:
-                            print "Rate: %s" %(flow_rate)
-                            print "Flow ml: %s" %(flow_ml)
-                        data = { "timestamp": current_dt.strftime("%H:%M:%S"), 
-                                 "flow_ml": flow_ml}
-                        self._ws.send(json.dumps(data))
+                    if self.debug:
+                        print "Rate: %s" %(flow_rate)
+                        print "Flow ml: %s" %(flow_ml)
+                    data = { "timestamp": current_dt.strftime("%H:%M:%S"), 
+                             "flow_ml": flow_ml}
+                    self._ws.send(json.dumps(data))
                     time.sleep(0.1)
                     self.old_time = int(time.time() * 1000)
                     self.count = 0
