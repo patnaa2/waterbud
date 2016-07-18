@@ -1,4 +1,5 @@
 from flask_restful import Resource, reqparse
+from notifications import Notifications as Alerts
 from pymongo.errors import DuplicateKeyError
 import json
 import datetime
@@ -96,6 +97,7 @@ class Threshold(Resource):
             month = datetime.strptime(month, "%m/%Y")
         else:
             month = datetime.datetime.now().replace(day=1, 
+                                                    hour=0,
                                                     minute=0, 
                                                     second=0,
                                                     microsecond=0)
@@ -122,9 +124,13 @@ class Threshold(Resource):
             month = datetime.strptime(month, "%m/%Y")
         else:
             month = datetime.datetime.now().replace(day=1, 
+                                                    hour=0,
                                                     minute=0, 
                                                     second=0,
                                                     microsecond=0)
+            # if its current month -> recheck usage level
+            n = Alerts()
+            n.alert_usage_level()
 
         ret = db['monthly_summary'].update_one({"month": month}, 
                                                   {
@@ -135,6 +141,7 @@ class Threshold(Resource):
         
         data = {"month": month.strftime("%m/%Y"),
                 "limit": val}
+
 
         return json.dumps(data), 201
 
@@ -165,7 +172,6 @@ class DailySensorData(Resource):
 
         return json.dumps(data), 200 
 
-
 class HourlySensorData(Resource):
     '''
         Returns total consumption per hour for a specified time range
@@ -192,10 +198,46 @@ class HourlySensorData(Resource):
         data = [[dt_to_epoch(x[0]), x[1]] for x in data]
 
         return json.dumps(data), 200 
- 
+
+class Notifications(Resource):
+    RECENT_LIMIT = 4
+
+    def get(self):
+        # boolean to show whether to show limit or not
+        new = []
+        recent = []
+        
+        unread = db['notifications'].find({"read":False})
+        read = db['notifications'].find({"read":True}).sort([
+                            ("timestamp", 1)]).limit(self.RECENT_LIMIT)
+        
+        new = [{"date": x["timestamp"].strftime("%Y-%m-%d %H:%M:%S"), 
+                "msg" : x["msg"]} for x in unread]
+        recent = [{"date": x["timestamp"].strftime("%Y-%m-%d %H:%M:%S"),
+                "msg" : x["msg"]} for x in read]
+
+        data = {"notifications" : len(new),
+                "new_msgs" : new,
+                "recent_msgs": recent} 
+        
+        # save to db here, since we are just about to return
+        return json.dumps(data), 200
+
+    def post(self):
+        # mark all unread notifications to post 
+	ret = db['notifications'].update_many({"read": False}, 
+                                               {
+                                                   "$set": {
+                                                       "read": True
+                                                   },
+                                               })
+        return json.dumps({"notifications_read":ret.modified_count}), 201
+
+
 API_MAPPINGS = {WSLocation : "/ws_location",
 		AddSensor : "/add_sensor",
 		DailySensorData : "/data/daily",
 		HourlySensorData : "/data/hourly",
-                Threshold : "/threshold"}
+                Threshold : "/threshold",
+                Notifications: "/notifications"}
 

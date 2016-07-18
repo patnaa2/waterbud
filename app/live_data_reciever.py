@@ -1,3 +1,4 @@
+from notifications import Notifications
 import argparse
 import datetime
 import pymongo
@@ -6,7 +7,7 @@ import sys
 import time
 import websocket
 
-class MongoFiller(object):
+class Receiever(object):
     MONGO_LOCATION = "127.0.0.1:27017"
 
     def __init__(self, ws_ip, ws_port):
@@ -14,9 +15,13 @@ class MongoFiller(object):
         self.location = None
         self._ws = None
         self._db = None
-        
+                     
         # Try connecting to db, if failure (break)
         self.connect_to_db()
+        
+        # encapsulate notifcations object here
+        self.notifications(db=self._db)
+
         self.find_sensor_location()
         # Block until we get a persistent connection to websocket
         self.init_ws()
@@ -68,6 +73,11 @@ class MongoFiller(object):
                 data = json.loads(data)
                 data['time'] = datetime.datetime.strptime(data['time'],
                                                           "%Y-%m-%d %H:%M:%S")
+                # we are going to store directly to minute table for MVP
+                # it doesnt make any sense to store per second and
+                # have another 3 processes summarizing the data to 
+                # hourly and historical data
+                flow_ml_min = 0
                 self._db[self.location].insert_one(data)
             except KeyError:
                 msg = "Expecting a time field, with appropraite string format"
@@ -83,7 +93,7 @@ class MongoFiller(object):
                     continue
                 print "Exiting.."
                 sys.exit(0)
-
+    
 if __name__ == '__main__':
     # setup args
     parser = argparse.ArgumentParser()

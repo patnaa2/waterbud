@@ -113,7 +113,7 @@ class HourlySensorData(Resource):
         Returns total consumption per hour for a specified time range
         for a specified sensor location inclusively
 
-        enter time in string format - %Y-%m-%d %H ie. 2016-07-16
+        enter time in string format - %Y-%m-%d %H ie. 2016-07-16 12
     '''
     daily_parser = reqparse.RequestParser()
     daily_parser.add_argument('location')
