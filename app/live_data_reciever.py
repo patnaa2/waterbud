@@ -23,23 +23,12 @@ class Receiever(object):
         # encapsulate notifcations object here
         self.notifications(db=self._db)
 
-        self.find_sensor_location()
         # Block until we get a persistent connection to websocket
         self.init_ws()
-
-    def find_sensor_location(self):
-        '''
-            Sensor location tells us which collection
-            in mongo to actually store the data to, this will be stored
-            upon adding a new sensor step
-        '''
-        # if we can't find this value, we exit
-        try:
-            val = self._db.add_sensor.find_one()
-            self.location = val['location']
-        except:
-            msg = "The sensor is configured without a location."
-            self.epic_failure(msg)
+    
+    @property
+    def sensor_location(self):
+        return db.add_sensor.find_one({}).get('location', None)
 
     def init_ws(self, sleep=2):
         '''
@@ -71,6 +60,9 @@ class Receiever(object):
         flow_ml = 0
         current = datetime.datetime.now().replace(seconds=0,
                                                   microseconds=0)
+        
+        while not sensor_location:
+            time.sleep(1)
 
         while True:
             try:
