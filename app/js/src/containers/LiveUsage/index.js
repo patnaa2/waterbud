@@ -12,7 +12,7 @@ import './style.less';
 class LiveUsage extends React.Component {
   componentWillMount() {
     /*eslint-disable*/
-    this.socket = new WebSocket("ws://localhost:8888/ws");
+    this.socket = new WebSocket("ws://172.20.10.6:8888/ws");
     this.socket.onmessage = (evt) => {
       console.log('evt', evt.data);
       const data = JSON.parse(evt.data);

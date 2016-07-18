@@ -109,12 +109,12 @@ export default function tipReducer(state = initialState, action) {
 
     case RECEIVED_LIVE_DATA:
       if (state.getIn(['liveData', 'time']).size < 30) {
-        return state.updateIn(['liveData', 'time'], (data) => data.push(action.time.toString()))
+        return state.updateIn(['liveData', 'time'], (data) => data.push(action.timestamp.toString()))
                     .updateIn(['liveData', 'flow_ml'], (data) => data.push(action.flow_ml.toString()))
                     .updateIn(['liveData', 'zeros'], (data) => data.push('0'))
                     .updateIn(['liveData', 'total_flow_ml'], (value) => value + action.flow_ml);
       }
-      return state.updateIn(['liveData', 'time'], (data) => data.shift().push(action.time.toString()))
+      return state.updateIn(['liveData', 'time'], (data) => data.shift().push(action.timestamp.toString()))
                   .updateIn(['liveData', 'flow_ml'], (data) => data.shift().push(action.flow_ml.toString()))
                   .updateIn(['liveData', 'zeros'], (data) => data.push('0'))
                   .updateIn(['liveData', 'total_flow_ml'], (value) => value + action.flow_ml);
