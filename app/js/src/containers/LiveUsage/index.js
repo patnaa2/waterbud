@@ -16,7 +16,8 @@ class LiveUsage extends React.Component {
     this.socket.onmessage = (evt) => {
       console.log('evt', evt.data);
       const data = JSON.parse(evt.data);
-      this.props.actions.receiveLiveData(data.time, data.flow_ml);
+      console.log('data', data, data.timestamp, data.flow_ml);
+      this.props.actions.receiveLiveData(data.timestamp, data.flow_ml);
     };
   }
 
