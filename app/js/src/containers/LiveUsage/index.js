@@ -6,6 +6,7 @@ const Line = require('react-chartjs').Line;
 import RelativeGraph from '../../components/RelativeGraph';
 
 import * as actions from '../../actions/sensorsActions';
+import * as miscActions from '../../actions/miscActions';
 import './style.less';
 
 class LiveUsage extends React.Component {
@@ -22,6 +23,7 @@ class LiveUsage extends React.Component {
   componentWillUnmount() {
     this.socket.close();
     this.props.actions.resetLiveData();
+    this.props.actions.retrieveNotifications();
   }
 
   render() {
@@ -39,6 +41,8 @@ class LiveUsage extends React.Component {
         }
       ]
     };
+
+    console.log('props', this.props, this.props.actions);
 
     return (
       <div className="center-block">
@@ -68,7 +72,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(actions, dispatch)
+    actions: bindActionCreators(Object.assign({}, actions, miscActions), dispatch)
   };
 }
 

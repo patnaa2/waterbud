@@ -17,3 +17,27 @@ export function saveSettings(threshold) {
     });
   };
 }
+
+export function retrieveNotifications() {
+  return (dispatch) => {
+    fetch('http://localhost:5000/notifications')
+      .then(response => response.json())
+      .then((json) => {
+        dispatch({type: types.RETRIEVE_NOTIFICATIONS, notifications: JSON.parse(json)});
+      });
+  };
+}
+
+export function openNotifications() {
+  return (dispatch) => {
+    fetch('http://localhost:5000/notifications', {
+      method: 'POST'
+    }).then(() => {
+      dispatch({type: types.OPEN_NOTIFICATIONS});
+    });
+  };
+}
+
+export function closeNotifications() {
+  return {type: types.CLOSE_NOTIFICATIONS};
+}

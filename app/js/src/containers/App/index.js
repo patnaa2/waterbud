@@ -8,23 +8,15 @@ import './style.less';
 import profile from '../../assets/profile_pic.jpg';
 import logo from '../../assets/waterbud_logo.png';
 import * as actions from '../../actions/miscActions';
-
-
-/****************************************
-
-NOTE: Notification number is disabled with false flag in condition
-
-TODO: Setup ajax call on ComponentWillUnmount for LiveUsage to get notification
-TODO: Show notification number if variable in misc store is set true
-TODO: Setup click event to open notification in modal window?? Needs Clarification
-
-****************************************/
+import Notification from '../../components/Notifications';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.onMenuItemClick = this.onMenuItemClick.bind(this);
     this.isMenuOpen = this.isMenuOpen.bind(this);
+    this.onMenuItemClick = this.onMenuItemClick.bind(this);
+    this.openNotifications = this.openNotifications.bind(this);
+    this.closeNotifications = this.closeNotifications.bind(this);
   }
 
   onMenuItemClick() {
@@ -56,6 +48,16 @@ class App extends React.Component {
       default:
         return 'HOME';
     }
+  }
+
+  openNotifications(e) {
+    e.preventDefault();
+    this.props.actions.openNotifications();
+  }
+
+  closeNotifications(e) {
+    e.preventDefault();
+    this.props.actions.closeNotifications();
   }
 
   render() {
@@ -127,15 +129,21 @@ class App extends React.Component {
         <section style={{position: 'relative'}}>
           <img src={logo} className="logo" alt="Waterbud Logo" />
           <span className="pageHeader">{this.pageHeader()}</span>
-          <div className="notification">
+          <div onClick={this.openNotifications} className="notification_btn">
             <span className="fa fa-2x fa-bell-o" />
-            {false && <div className="fa fa-circle circle"><span className="number">1</span></div>}
+            {this.props.misc.getIn(['notifications','notifications']) > 0 && <span className="number">{this.props.misc.getIn(['notifications','notifications'])}</span>}
           </div>
           <img src={profile} className="img-circle profile" alt="Profile Picture" />
         </section>
         <main id="page-wrap">
           {this.props.children}
         </main>
+        <Notification
+          isOpen={this.props.misc.get('notificationsOpen')}
+          handleModalCloseRequest={this.closeNotifications}
+          newNotifications={this.props.misc.getIn(['notifications', 'new_msgs'])}
+          recentNotifications={this.props.misc.getIn(['notifications', 'recent_msgs'])}
+        />
       </div>
     );
   }

@@ -6,9 +6,11 @@ const Modal = (props) => {
 
   const {
     children,
+    closeText,
     isOpen,
     handleModalCloseRequest,
     handleSaveClicked,
+    okText,
     title
   } = props;
 
@@ -25,26 +27,43 @@ const Modal = (props) => {
             <span aria-hidden="true">&times;</span>
             <span className="sr-only">Close</span>
           </button>
-          <h4 className="modal-title">{title}</h4>
+          <h4 className={props.titleClassName}>{title}</h4>
         </div>
-        <div className="modal-body">
+        <div className={props.bodyClassName}>
           {children}
         </div>
-        <div className="modal-footer">
-          <button type="button" className="btn btn-default" onClick={handleModalCloseRequest}>Close</button>
-          <button type="button" className="btn btn-primary" onClick={handleSaveClicked}>Save changes</button>
-        </div>
+        {
+          props.showFooter &&
+          <div className="modal-footer">
+            <button type="button" className="btn btn-default" onClick={handleModalCloseRequest}>{closeText}</button>
+            <button type="button" className={props.okClassName} onClick={handleSaveClicked}>{okText}</button>
+          </div>
+        }
       </div>
     </ReactModal>
   );
 };
 
+Modal.defaultProps = {
+  bodyClassName: 'modal-body',
+  closeText: 'Close',
+  okClassName: 'btn btn-success',
+  okText: 'Save Changes',
+  showFooter: true,
+  titleClassName: 'modal-title'
+};
+
 Modal.propTypes = {
+  bodyClassName: PropTypes.string,
   children: PropTypes.element,
   isOpen: PropTypes.bool,
   handleModalCloseRequest: PropTypes.func,
   handleSaveClicked: PropTypes.func,
-  title: PropTypes.string
+  okClassName: PropTypes.string,
+  okText: PropTypes.string,
+  showFooter: PropTypes.bool,
+  title: PropTypes.string,
+  titleClassName: PropTypes.string
 };
 
 export default Modal;

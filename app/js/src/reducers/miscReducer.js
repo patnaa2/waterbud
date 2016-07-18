@@ -1,8 +1,21 @@
-import { MENU_CLICK, SAVE_SETTINGS, UPDATE_THRESHOLD } from '../constants/actionTypes';
+import {
+  CLOSE_NOTIFICATIONS,
+  MENU_CLICK,
+  OPEN_NOTIFICATIONS,
+  RETRIEVE_NOTIFICATIONS,
+  SAVE_SETTINGS,
+  UPDATE_THRESHOLD
+} from '../constants/actionTypes';
 import Immutable from 'immutable';
 
 const initialState = Immutable.fromJS({
   isOpen: false,
+  notifications: {
+    notifications: 0,
+    new_msgs: [],
+    recent_msgs: []
+  },
+  notificationsOpen: false,
   threshold: 0
 });
 
@@ -16,6 +29,23 @@ export default function tipReducer(state = initialState, action) {
 
     case SAVE_SETTINGS:
       return state;
+
+    case RETRIEVE_NOTIFICATIONS:
+      return state.set('notifications', Immutable.fromJS(action.notifications));
+
+    case OPEN_NOTIFICATIONS:
+      return state.set('notificationsOpen', true);
+
+    case CLOSE_NOTIFICATIONS:
+      if(!state.getIn(['notifications', 'notifications'])) {
+        return state.set('notificationsOpen', false);
+      }
+      return state.updateIn(['notifications', 'recent_msgs'],
+                          (list) => state.getIn(['notifications', 'new_msgs']).concat(list))
+                  .setIn(['notifications', 'new_msgs'], Immutable.fromJS([]))
+                  .setIn(['notifications', 'notifications'], 0)
+                  .set('notificationsOpen', false);
+
 
     default:
       return state;
