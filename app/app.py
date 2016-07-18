@@ -167,7 +167,7 @@ class Notifications(Resource):
         mock_msg_new.append({"date": "07/16 14:16:12",
                              "msg":"It's only %s of %b, and you have spent 76% of your"\
                                    " total monthly budget. You're on track to spend $210(110%"\
-                                   " of allocated budget."})
+                                   " of allocated budget)."})
         mock_msg_new.append({"date": "07/16 14:10:12",
                              "msg" : "CRITICAL Leak detected in kitchen sink."})
         

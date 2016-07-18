@@ -6,7 +6,7 @@ import os
 import pymongo
 
 WEBSOCKET = '127.0.0.1:8888'
-db = pymongo.MongoClient('localhost', 27017)['waterbud']
+db = pymongo.MongoClient('localhost', 27017)['test']
 
 class WSLocation(Resource):
     def get(self):
@@ -43,7 +43,7 @@ class AddSensor(Resource):
                 "location": location}
         db['add_sensor'].insert_one(data)
 
-        return location, 201
+        return json.dumps(data), 201
     
     def delete(self):
         # we can't delete from a capped collection in mongo
@@ -85,47 +85,56 @@ class SensorData(Resource):
 class Threshold(Resource):
     threshold_parser = reqparse.RequestParser()
     threshold_parser.add_argument('val', type=int)
-    threshold_parser.add_argument('location')
+    threshold_parser.add_argument('month')
 
     def get(self):
         args = self.threshold_parser.parse_args()
-        loc = args['location']
+        month = args['month']
+        if month:
+            month = datetime.strptime(month, "%m/%Y")
+        else:
+            month = datetime.datetime.now().replace(day=1, 
+                                                    minute=0, 
+                                                    second=0,
+                                                    microsecond=0)
+        
+        print month
+        data = db['monthly_summary'].find_one({"month": month})
 
-        if not loc:
-            loc = db['add_sensor'].find_one({}).get('location', None)
+        if not data:
+            data = {"Error" : "Month not found. Try again."}
+            return json.dumps(data), 400
 
-        # 0 - no
-        # 1 - yes
-        desired = db['thresholds'].find_one({"location":loc})['limit']
-        current = db['monthly_summary'].find_one({})['dollar_spent']
-        return val, 200
+        del data['_id']
+        return json.dumps(data), 200
 
     def post(self):
-        # add logic to add sensor --> Mocked for MVP
+        '''
+            month will take the form of mon/year where mon and year are intengers
+        '''
         args = self.threshold_parser.parse_args()
         val = args['val']
-        loc = args['location']
+        month = args['month']
 
-        if not loc:
-            loc = db['thresholds'].find_one({}).get('location', None)
-        data = {"location" : loc,
-                "limit" : val}
-        if not val:
-            val = 150
+        if month:
+            month = datetime.strptime(month, "%m/%Y")
+        else:
+            month = datetime.datetime.now().replace(day=1, 
+                                                    minute=0, 
+                                                    second=0,
+                                                    microsecond=0)
 
-        try:
-            db['thresholds'].insert_one(data)
-        except DuplicateKeyError:
-            # thresholds collection has a unique index on location
-            # if same location is specified we need to do an update
-            db['thresholds'].update_one({"location":loc}, 
-                                        {
-                                            "$set":{
-                                                "limit": val
-                                            },
-                                        })
+        ret = db['monthly_summary'].update_one({"month": month}, 
+                                                  {
+                                                      "$set": {
+                                                          "limit": val
+                                                      },
+                                                  }, upsert=True)
+        
+        data = {"month": month.strftime("%m/%Y"),
+                "limit": val}
 
-        return "%s: %s" %(loc, val), 201
+        return json.dumps(data), 201
 
 API_MAPPINGS = {WSLocation : "/ws_location",
 		AddSensor : "/add_sensor",
