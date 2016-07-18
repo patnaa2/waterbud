@@ -104,8 +104,10 @@ class DailySensorData(Resource):
         days = (end - start).days + 1 # 1 to be inclusive
         data = [ [ dt_to_epoch(start + datetime.timedelta(days=i)), 
                    npy_rand.randint(500, 750) ] for i in xrange(days)]
-        data = {"data": data}
-        print json.dumps(data)
+        total_consumed = sum(x[1] for x in data)
+
+        data = {"data": data,
+                "total_consumed": total_consumed}
 	return json.dumps(data), 200 
 
 class HourlySensorData(Resource):
@@ -130,7 +132,10 @@ class HourlySensorData(Resource):
         hours = int((end - start).total_seconds() / 3600) + 1 # +1 to be inclusive
         data = [ [ dt_to_epoch((start + datetime.timedelta(seconds=i*3600))), 
                    npy_rand.randint(20, 33) ] for i in xrange(hours)]
-        data = {"data": data}
+        total_consumed = sum(x[1] for x in data)
+        
+        data = {"data": data,
+                "total_consumed": total_consumed}
 
         return json.dumps(data), 200 
 
@@ -195,19 +200,34 @@ class Notifications(Resource):
 
 class Mock_Tips(Resource):
     def get(self):
-	new_msgs = []
-	recent_msgs = []
+	mock_msg_new = []
+	mock_msg_recent = []
 
-	new_msgs.append("Garden Hose sensor was on while it was raining.")
-	new_msgs.append("Kitchen sink was in use for 3.5 minutes continuously, during lunch prep."\
-			"It is recommended to only use 500ml amount for washing vegetables."\
-			"Consider washing vegetables in a large bowl of water.")
-	
-	recent_msgs.append("Garden hose was turned on while it was raining.")
-	recent_msgs.append("After showering, the water was left running for 10 mins. If shaving, "\
-			   "try to reuse water, by blocking the sink.")
+        mock_msg_new.append({"date": "07/16 14:16:12",
+                             "msg":"The temperature is expected to reduce by 3 degrees in the"\
+                                   " the next two hours. Water plants when the temperature is"\
+                                   " cooler.",
+                            "location": "garden"})
+        mock_msg_new.append({"date": "07/16 14:10:12",
+                             "msg" : "Excceded amount of water used to wash dishes.",
+                             "location": "kitchen sink"})
+        
+        mock_msg_recent.append({"date": "07/15 14:16:12",
+                                "msg": "Exceeded amount of water used to prep vegetables."\
+                                       " Consider washing vegetables in a bowls of water.",
+                                "location": "kitchen sink"})
+        mock_msg_recent.append({"date": "07/15 14:16:12",
+                                "msg": "Temperature is expected to reduce by 2 degrees in the"\
+                                       " next two hours.",
+                                "location":"garden"})
+        
+        short_msgs = ["Water plants in the garden when it is cooler outside.",
+                      "Limit the amount of water used when washing dishes by "\
+                      "bathing and rinsing in two distinct steps."] 
+
         data = {"new":new_msgs, 
-                "recent":recent_msgs}
+                "recent":recent_msgs,
+                "short": short_msgs}
         return json.dumps(data), 200
 
     def post(self):
