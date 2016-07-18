@@ -168,10 +168,12 @@ class DailySensorData(Resource):
                                                     {"$lte" : end, "$gte" : start}})
         data = [[x["timestamp"], x["flow_ml"]/1000] for x in res]
         
+        total_consumed = sum([point[1] for point in data])
+
         data = pad_data(data, start, end, table_type="daily")
         data = [[dt_to_epoch(x[0]), x[1]] for x in data]
         
-        return json.dumps({"data": data}), 200 
+        return json.dumps({"data": data, "total_consumed":total_consumed}), 200 
 
 class HourlySensorData(Resource):
     '''
@@ -194,11 +196,13 @@ class HourlySensorData(Resource):
 	res = db['%s_by_hour' %(location)].find({"timestamp" :
 					    {"$lte" : end, "$gte" : start}})
         data = [[x["timestamp"], x["flow_ml"]/1000] for x in res]
-        
+            
+        total_consumed = sum([point[1] for point in data])
+
         data = pad_data(data, start, end, table_type="hourly")
         data = [[dt_to_epoch(x[0]), x[1]] for x in data]
 
-        return json.dumps({"data": data}), 200 
+        return json.dumps({"data": data, "total_consumed": total_consumed}), 200 
 
 class Notifications(Resource):
     RECENT_LIMIT = 4
