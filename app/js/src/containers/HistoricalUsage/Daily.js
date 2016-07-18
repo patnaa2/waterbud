@@ -8,6 +8,7 @@ import Chart from '../../components/Chart';
 import SpecificLocation from '../../components/RoomSelect/SpecificLocation';
 
 import * as actions from '../../actions/sensorsActions';
+import * as miscActions from '../../actions/miscActions';
 import DatePicker from 'react-datepicker';
 
 class HistoricalDailyUsage extends React.Component {
@@ -27,6 +28,7 @@ class HistoricalDailyUsage extends React.Component {
 
   componentWillUnmount() {
     this.props.actions.resetHistoricalDates();
+    this.props.actions.retrieveNotifications();
   }
 
   formatDate(date) {
@@ -143,7 +145,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(actions, dispatch)
+    actions: bindActionCreators(Object.assign({}, actions, miscActions), dispatch)
   };
 }
 

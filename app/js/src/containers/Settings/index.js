@@ -12,6 +12,10 @@ class Settings extends React.Component {
     this.saveSettings = this.saveSettings.bind(this);
   }
 
+  componentWillUnmount() {
+    this.props.actions.retrieveNotifications();
+  }
+
   saveSettings() {
     this.props.actions.saveSettings(this.props.threshold);
   }

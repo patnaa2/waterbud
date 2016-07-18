@@ -3,7 +3,8 @@ import React, {PropTypes} from 'react';
 const NotificationItem = (props) => {
   return (
     <div className={props.className}>
-      {props.message}
+      <div className="message">{props.message}</div>
+      <div className="date">{props.date}</div>
     </div>
   );
 };

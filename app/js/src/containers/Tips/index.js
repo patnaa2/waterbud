@@ -2,6 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as actions from '../../actions/tipsActions';
+import * as miscActions from '../../actions/miscActions';
 import Card from '../../components/Card/tipCard';
 import './style.less';
 
@@ -10,6 +11,10 @@ class Tips extends React.Component {
     super(props);
     this.showBack = this.showBack.bind(this);
     this.showFront = this.showFront.bind(this);
+  }
+
+  componentWillUnmount() {
+    this.props.actions.retrieveNotifications();
   }
 
   showBack(index) {
@@ -52,7 +57,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(actions, dispatch)
+    actions: bindActionCreators(Object.assign({}, actions, miscActions), dispatch)
   };
 }
 

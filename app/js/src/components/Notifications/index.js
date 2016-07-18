@@ -17,14 +17,16 @@ const Notifications = (props) => {
         <NotificationItem
           key={index}
           className="notification_item new"
-          message={element}
+          date={element.get('date')}
+          message={element.get('msg')}
         />
       )}
       {recentNotifications.size > 0 && recentNotifications.map((element, index) =>
         <NotificationItem
           key={index}
           className="notification_item recent"
-          message={element}
+          date={element.get('date')}
+          message={element.get('msg')}
         />
       )}
     </Modal>

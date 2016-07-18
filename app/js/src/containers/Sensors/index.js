@@ -7,6 +7,7 @@ import RoomSelect from '../../components/RoomSelect';
 import AddSensor from '../../components/Sensors/addSensor';
 
 import * as actions from '../../actions/sensorsActions';
+import * as miscActions from '../../actions/miscActions';
 import * as constants from '../../constants/viewConstants';
 import * as Helper from '../../helpers/roomHelpers';
 import './style.less';
@@ -20,6 +21,10 @@ class Sensors extends React.Component {
     this.onSubmit = this.onSubmit.bind(this);
     this.removeSensor = this.removeSensor.bind(this);
     this.onSensorFilter = this.onSensorFilter.bind(this);
+  }
+
+  componentWillUnmount() {
+    this.props.actions.retrieveNotifications();
   }
 
   handleModalCloseRequest(e) {
@@ -107,7 +112,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(actions, dispatch)
+    actions: bindActionCreators(Object.assign({}, actions, miscActions), dispatch)
   };
 }
 

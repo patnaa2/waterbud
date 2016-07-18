@@ -8,6 +8,7 @@ import Chart from '../../components/Chart';
 import SpecificLocation from '../../components/RoomSelect/SpecificLocation';
 
 import * as actions from '../../actions/sensorsActions';
+import * as miscActions from '../../actions/miscActions';
 import DatePicker from 'react-datepicker';
 
 class HistoricalHourlyUsage extends React.Component {
@@ -23,6 +24,10 @@ class HistoricalHourlyUsage extends React.Component {
     this.props.actions.fetchHourlyHistoricalData('total',
                                                 this.formatDate(moment().subtract(1, 'months')),
                                                 this.formatDate(moment()));
+  }
+
+  componentWillUnmount() {
+    this.props.actions.retrieveNotifications();
   }
 
   formatDate(date) {
@@ -140,7 +145,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(actions, dispatch)
+    actions: bindActionCreators(Object.assign({}, actions, miscActions), dispatch)
   };
 }
 
