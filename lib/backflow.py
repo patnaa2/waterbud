@@ -39,7 +39,7 @@ locations = {
         "occurences": (0, 1),
         "timings": [(18,21)],
         "duration": (30, 90), 
-        "rate":21
+        "rate": 3785 # 25-foot hose, 40psi, 24gpm
     },
     "shower":{
         "occurences": (0, 1), 
@@ -296,6 +296,7 @@ def fill_minute_coll(data, location):
     data = [{"timestamp": x[0], "flow_ml" : x[1]} for x in data]
     db['%s_by_minute' %(location)].insert_many(data)
 
+
 def fill_hourly_coll(data, location):
     '''
         inserts data into hourly table
@@ -316,14 +317,17 @@ def fill_hourly_coll(data, location):
     db['%s_by_hour' %(location)].insert_many(db_data)
     fill_daily_coll(data, location)
 
+
 def fill_daily_coll(data, location):
     '''
         inserts data into a daily table
         take in fake data per hour for one day 
     '''
     # just sum all the data points, gauranteed to only get one data point
-    data = {"timestamp" : data[0][0].replace(hour=0), "flow_ml": sum(x[1] for x in data)}
+    data = {"timestamp" : data[0][0].replace(hour=0), 
+            "flow_ml": sum(x[1] for x in data)}
     db['%s_by_day' %(location)].insert_one(data)
+
 
 if __name__ == '__main__':
     generate(100)
