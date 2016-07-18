@@ -27,25 +27,25 @@ locations = {
         "occurences": (8,12),
         "timings": [(7,9), (12,15), (18,21)],
         "duration": (1, 3),
-        "rate": 4540
+        "rate": 7003
     },
     "kitchen_sink":{
         "occurences":(10,15),
         "timings": [(7,23)],
         "duration": (1, 5),
-        "rate": 4540
+        "rate": 7003
     },
     "garden":{
         "occurences": (0, 1),
         "timings": [(18,21)],
         "duration": (30, 90), 
-        "rate": 3785 # 25-foot hose, 40psi, 24gpm
+        "rate": 94635 # 25-foot hose, 40psi, 24gpm
     },
     "shower":{
         "occurences": (0, 1), 
         "timings": [(7,9), (18,20)],
         "duration": (17, 18),
-        "rate": 5658 # 1.75 gpm (6.6 lpm)
+        "rate": 9464 # 2.5 gpm
     }
 }
 
