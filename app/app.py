@@ -8,9 +8,7 @@ import os
 import pymongo
 import sys
 
-PY_PATH = os.path.join(os.path.expanduser("~"), "waterbud")
-sys.path.insert(0, PY_PATH)
-from lib.api_helpers import convert_datetime_to_epoch as dt_to_epoch
+from api_helpers import convert_datetime_to_epoch as dt_to_epoch
 
 WEBSOCKET = '127.0.0.1:8888'
 
