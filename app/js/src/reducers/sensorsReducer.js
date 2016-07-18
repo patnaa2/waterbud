@@ -11,13 +11,15 @@ import {
   RESET_LIVE_DATA,
   SAVE_SENSOR,
   CLOSE_MODAL,
-  FILTER_SENSORS
+  FILTER_SENSORS,
+  UPDATE_START_DATE,
+  UPDATE_END_DATE
 } from '../constants/actionTypes';
 import {CARD} from '../constants/viewConstants';
 import Immutable from 'immutable';
+import moment from 'moment';
 
 import * as SensorLocation from '../constants/sensorLocations';
-
 
 const newSensor = Immutable.fromJS({
   id: 0,
@@ -47,6 +49,8 @@ const initialState = Immutable.fromJS({
   editView: false,
   filter: [],
   isAddingSensor: false,
+  historicalStart: moment().subtract(1, 'month'),
+  historicalEnd: moment(),
   historicalData: [],
   liveData: {
     time: [],
@@ -112,6 +116,7 @@ export default function tipReducer(state = initialState, action) {
       return state.set('loading', action.status);
 
     case RECEIVED_HISTORICAL_DATA:
+      console.log('action', action.data);
       return state.set('loading', false).set('historicalData', Immutable.fromJS(action.data));
 
     case RESET_LIVE_DATA:
@@ -124,6 +129,12 @@ export default function tipReducer(state = initialState, action) {
 
     case RESET_HISTORICAL_DATA:
       return state.set('historicalData', Immutable.fromJS([]));
+
+    case UPDATE_START_DATE:
+      return state.set('historicalStart', action.date);
+
+    case UPDATE_END_DATE:
+      return state.set('historicalEnd', action.date);
 
     default:
       return state;

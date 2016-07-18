@@ -46,10 +46,24 @@ export function closeModal() {
   return {type: types.CLOSE_MODAL};
 }
 
-export function fetchHistoricalData() {
+export function fetchDailyHistoricalData(location, start, end) {
+  return (dispatch) => {
+    dispatch({type: types.LOADING_HISTORICAL_DATA, status: true});
+    return fetch('http://localhost:5000/data/daily?location=' + location + '&start=' + start + '&end=' + end, {
+      method: 'GET'
+    }).then(response => response.json())
+      .then(json => dispatch({
+          type: types.RECEIVED_HISTORICAL_DATA,
+          data: JSON.parse(json).data
+        })
+      );
+  };
+}
+
+export function fetchHourlyHistoricalData(location, start, end) {
   return dispatch => {
     dispatch({type: types.LOADING_HISTORICAL_DATA, status: true});
-    return fetch('HISTORICAL_DATA_ENDPOINT')
+    return fetch('http://localhost:5000/data/hourly?location=' + location + '&start=' + start + '&end=' + end)
       .then(response => response.json())
       .then(json =>
         dispatch({
@@ -66,4 +80,12 @@ export function fetchHistoricalData() {
 export function filterSensors(val) {
   const value = (val === null) ? "" : val;
   return {type: types.FILTER_SENSORS, value};
+}
+
+export function handleStartDate(date) {
+  return {type: types.UPDATE_START_DATE, date};
+}
+
+export function handleEndDate(date) {
+  return {type: types.UPDATE_END_DATE, date};
 }
