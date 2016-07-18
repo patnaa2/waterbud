@@ -1,15 +1,17 @@
-## SENSOR STUFF
-- [ ] Finish pi sensor.py script
-    - [ ] Test all 4 states
-    - [ ] Finish coding the remaining logic for the states
-    - [ ] Test with pi
-    - [ ] Figure out /etc/init.d/ stuff to have sensor.py work automatically
-
 ## BACKEND FOR CLIENT
-- [ ] Write connect_to_server script from client side
-    - [ ] Create network and what not from there
+- [x] Write connect_to_server script from client side
+    - [x] Create network and what not from there
 - [ ] Work on api endpoints on flask
-- [ ] Setup mongo/some db to store all this data in a clean way
+    - [ ] Historical Data 
+    - [x] Thresholds
+    - [x] Websockets 
+- [x] Setup mongo/some db to store all this data in a clean way
+- [ ] Generate Tips async
+- [ ] Notifications async
+- [ ] Update db with correct values async
+- [ ] cron to generate monthly data
+- [ ] pricing 
+- [ ] weather stuff 
 
 ## FRONTEND FOR CLIENT
 - [ ] HighCharts Integration
