@@ -7,7 +7,7 @@ import sys
 class Summarizer(object):
     PRICE_PER_LITRE = 1.51 / 1000
     MONGO_LOCATION = '127.0.0.1:27017'
-    DB = 'test'
+    DB = 'waterbud'
 
     def __init__(self):
 	self._db = None
