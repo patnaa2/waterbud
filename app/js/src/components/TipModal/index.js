@@ -1,4 +1,5 @@
 import React, {PropTypes} from 'react';
+import {retrieveTipImage} from '../../helpers/tipHelpers';
 import Modal from '../Modal';
 
 import lightbulb from '../../assets/new.png';
@@ -15,9 +16,6 @@ const TipModal = (props) => {
     title,
     tip
   } = props;
-  if(tip) {
-    console.log('tip', tip.toJS());
-  }
   return (
     <Modal
       isOpen={isOpen}
@@ -32,7 +30,7 @@ const TipModal = (props) => {
     >
       <div className="container-fluid">
         <div className="col-md-4">
-          <span>{tip.get('image')}</span>
+          <img className="tip_image" src={retrieveTipImage(tip.get('image'))} />
         </div>
         <div className="col-md-8">
           <div className="row tip_title">

@@ -133,7 +133,7 @@ class App extends React.Component {
           </div>
           <div className="footer">
               <img className="menu_logo" src={logo} />
-              <h2 className="logo_header">Waterbud</h2>
+              <h2 className="logo_header">WaterBud</h2>
               <h4 className="logo_slogan">Helping you and the Environment</h4>
           </div>
         </Menu>

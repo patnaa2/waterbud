@@ -44,34 +44,34 @@ const initialState = Immutable.fromJS({
   },
   bathroom_sink: {
     msg: [{
-      short: 'Hello',
+      short: 'Reduce water consumption while shaving',
       read: 1,
-      image: '',
-      msg: 'My name is what?',
+      image: 'shaving',
+      msg: 'You can reduce your water waste by plugging the sink as you shave.',
       location: 'bathroom_sink',
       date: '07/16 14:16:12'
     }, {
-      short: 'What up',
+      short: 'Low-flow faucet aerators',
       read: 1,
-      image: '',
-      msg: 'How are you?',
+      image: 'faucet_aerator',
+      msg: 'Reduces overall water usage by changing the flow structure',
       location: 'bathroom_sink',
       date: '07/16 14:16:12'
    }]
   },
   garden: {
     msg: [{
-      short: 'Hello',
+      short: 'Spray Nozzle',
       read: 1,
-      image: '',
-      msg: 'My name is what?',
+      image: 'nozzle',
+      msg: 'By installing a spray nozzle, you can control the water flow by pressing the trigger.',
       location: 'garden',
       date: '07/16 14:16:12'
     }, {
-      short: 'What up',
+      short: 'Soil Moisture Meter',
       read: 1,
-      image: '',
-      msg: 'How are you?',
+      image: 'moisture_meter',
+      msg: 'The soil moisture meter will help you identify good times to water your garden.',
       location: 'garden',
       date: '07/16 14:16:12'
    }]

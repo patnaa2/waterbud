@@ -19,7 +19,7 @@ class Home extends React.Component {
     return (
       <div className="container-fluid home">
         <img className="home_logo" src={logo} />
-        <h1 className="logo_header">Waterbud</h1>
+        <h1 className="logo_header">WaterBud</h1>
         <h2 className="logo_slogan">Helping you and the Environment</h2>
         <div className="row about_us">
           <h4>Company Description goes here!!!</h4>
