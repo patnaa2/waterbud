@@ -22,7 +22,8 @@ class Home extends React.Component {
         <h1 className="logo_header">WaterBud</h1>
         <h2 className="logo_slogan">Helping you and the Environment</h2>
         <div className="row about_us">
-          <h4>Company Description goes here!!!</h4>
+          <h4>Group of young professionals working towards building an innovative product for measuring water consumption and mitigating water waste in a household.</h4>
+          <h2 className="coming_soon">Coming soon to retailers near you!</h2>
         </div>
       </div>
     );
