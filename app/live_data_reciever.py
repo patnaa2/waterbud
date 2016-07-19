@@ -1,4 +1,4 @@
-from notifications import Notifications
+from tips import Tips
 import argparse
 import datetime
 import pymongo
@@ -21,7 +21,10 @@ class Receiever(object):
         
         # Block until we get a persistent connection to websocket
         self.init_ws()
-    
+        
+        # Encapsulate the tips class
+        self.tips = Tips()
+
     @property
     def sensor_location(self):
         return self._db.add_sensor.find_one({}).get('location', None)
@@ -56,9 +59,16 @@ class Receiever(object):
         flow_ml = 0
         current = datetime.datetime.now().replace(second=0,
                                                   microsecond=0)
-        
+        data_analysis_time = datetime.datetime.now()
+        kitchen_data = []
+
         while not self.sensor_location:
             time.sleep(1)
+        
+        # after a switch of sensor we come back here
+        # set to false so we can send tips or not
+        first_time = True
+        self.tips_sent = False
 
         while True:
             try:
@@ -68,23 +78,75 @@ class Receiever(object):
                                           "%H:%M:%S").replace(year=current.year,
                                                               month=current.month,
                                                               day=current.day)
+                flow_last_second = False
+                
+                ######
+                ### Tips
+                ######
 
+                # This 100% should be threaded/subprocessed but okay for MVP
+                ## short circuit ehre if we have already sent a tip
+                if data['flow_ml'] and not self.tips.tips_sent: 
+                    flow_last_second = True
+
+                    if first_time:
+                        data_analysis_time = datetime.datetime.now()
+                        first_time = False
+                    
+                    if self.sensor_location == "garden" and not self.tips_sent:
+                        print "garden"
+                        # wait atleast 10 seconds from first turning on 
+                        if (datetime.datetime.now() - 
+                                data_analysis_time).total_seconds > 10:
+                            self.tips.garden_tips()
+                    elif self.sensor_location == "kitchen_sink":
+                        # build up the ktchen data 
+                        kitchen_data.append(data['flow_ml'])
+                    elif self.sensor_location == "bathroom_sink":
+                        # show leak after 15 seconds 
+                        if (datetime.datetime.now() - 
+                                data_analysis_time).total_seconds > 15:
+                            self.tips.bathroom_tips()
+                    else:
+                        continue
+
+                else:  ## if we don't have data
+                    flow_last_second = False
+                
+                # if flow has stopped or we have 60 data points for kitchen
+                # send tips for kitchen
+                if (kitchen_data and not flow_last_second) or \
+                        (len(kitchen_data) > 60):
+                    self.kitchen_sink_tips(kitchen_data)
+                    kitchen_data = []
+
+                ######
+                ### End Tips
+                ######
+                
+
+                ######
+                ### Data to DB
+                ######
                 # we are going to store directly to minute table for MVP
                 # it doesnt make any sense to store per second and
                 # have another 3 processes summarizing the data to 
                 # hourly and historical data
-                if current.minute == data['timestamp'].minute:
-                    flow_ml += data['flow_ml']
-                    print data['timestamp']
-                    continue
-                else:
-                    if flow_ml:
-                        db_data = {"timestamp": current, 
-                                   "flow_ml" : flow_ml}
-                        print "%s -- %s" %(current, flow_ml)
-                        self._db[self.sensor_location].insert_one(db_data)
-                        current = datetime.datetime.now().replace(second=0,
-                                                                  microsecond=0)
+                #if current.minute == data['timestamp'].minute:
+                #    flow_ml += data['flow_ml']
+                #    print data['flow_ml']
+                #else:
+                #    if flow_ml:
+                #        db_data = {"timestamp": current, 
+                #                   "flow_ml" : flow_ml}
+                #        print "Saving %s -- %s" %(current, flow_ml)
+                #        self._db[self.sensor_location].insert_one(db_data)
+                #        current = datetime.datetime.now().replace(second=0,
+                #                                                  microsecond=0)
+                ######
+                ### End data to DB
+                ######
+
             except KeyError:
                 msg = "Expecting a time field, with appropraite string format"
                 self.epic_failure(msg)
