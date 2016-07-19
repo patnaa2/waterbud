@@ -41,18 +41,19 @@ class AddSensor(Resource):
         if not val:
             val = ''
 
-        return val, 200
+        return json.dumps({"location": val}), 200
 
     def post(self):
         # add logic to add sensor --> Mocked for MVP
         args = self.add_sensor_parser.parse_args()
         location = args['location']
         
-        data = {"time_inserted" : datetime.datetime.now(),
+        data = {"timestamp" : datetime.datetime.now(),
                 "success" : True,
                 "location": location}
         db['add_sensor'].insert_one(data)
-
+        
+        data = {"location": location}
         return json.dumps(data), 201
     
     def delete(self):
@@ -73,7 +74,7 @@ class AddSensor(Resource):
             data['location'] = None 
         else:
             # if someone calls a delete when there is no data
-            data = {"time_inserted": datetime.datetime.now(),
+            data = {"timestamp": datetime.datetime.now(),
                     "success" : False,
                     "location" : None }
 

@@ -13,22 +13,18 @@ class Receiever(object):
 
     def __init__(self, ws_ip, ws_port):
         self.ws_location = "ws://%s:%s/ws" %(ws_ip, ws_port)
-        self.location = None
         self._ws = None
         self._db = None
                      
         # Try connecting to db, if failure (break)
         self.connect_to_db()
         
-        # encapsulate notifcations object here
-        self.notifications(db=self._db)
-
         # Block until we get a persistent connection to websocket
         self.init_ws()
     
     @property
     def sensor_location(self):
-        return db.add_sensor.find_one({}).get('location', None)
+        return self._db.add_sensor.find_one({}).get('location', None)
 
     def init_ws(self, sleep=2):
         '''
@@ -58,29 +54,37 @@ class Receiever(object):
 
     def run(self):
         flow_ml = 0
-        current = datetime.datetime.now().replace(seconds=0,
-                                                  microseconds=0)
+        current = datetime.datetime.now().replace(second=0,
+                                                  microsecond=0)
         
-        while not sensor_location:
+        while not self.sensor_location:
             time.sleep(1)
 
         while True:
             try:
                 data = self._ws.recv()
                 data = json.loads(data)
-                data['timestamp'] = datetime.datetime.strptime(data['time'],
-                                                          "%Y-%m-%d %H:%M:%S")
+                data['timestamp'] = datetime.datetime.strptime(data['timestamp'],
+                                          "%H:%M:%S").replace(year=current.year,
+                                                              month=current.month,
+                                                              day=current.day)
+
                 # we are going to store directly to minute table for MVP
                 # it doesnt make any sense to store per second and
                 # have another 3 processes summarizing the data to 
                 # hourly and historical data
-                if current == data['time'].minute:
+                if current.minute == data['timestamp'].minute:
                     flow_ml += data['flow_ml']
+                    print data['timestamp']
                     continue
-                elif flow_ml:
-                    db_data = {"timestamp": current, 
-                               "flow_ml" : flow_ml}
-                    self._db[self.location].insert_one(db_data)
+                else:
+                    if flow_ml:
+                        db_data = {"timestamp": current, 
+                                   "flow_ml" : flow_ml}
+                        print "%s -- %s" %(current, flow_ml)
+                        self._db[self.sensor_location].insert_one(db_data)
+                        current = datetime.datetime.now().replace(second=0,
+                                                                  microsecond=0)
             except KeyError:
                 msg = "Expecting a time field, with appropraite string format"
                 self.epic_failure(msg)
@@ -104,5 +108,5 @@ if __name__ == '__main__':
                         default=8888)
     args = parser.parse_args()
    
-    mf = MongoFiller(args.ws_host, args.port)
-    mf.run()
+    mr = Receiever(args.ws_host, args.port)
+    mr.run()
