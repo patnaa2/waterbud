@@ -225,8 +225,8 @@ class Mock_Tips(Resource):
                       "Limit the amount of water used when washing dishes by "\
                       "bathing and rinsing in two distinct steps."] 
 
-        data = {"new":new_msgs, 
-                "recent":recent_msgs,
+        data = {"new":mock_msg_new, 
+                "recent":mock_msg_recent,
                 "short": short_msgs}
         return json.dumps(data), 200
 
