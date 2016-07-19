@@ -208,7 +208,7 @@ class Mock_Tips(Resource):
                                " cooler.",
                         "short" : "Garden when it is cooler.",
                         "location": "garden",
-                        "iamge": "garden",
+                        "image": "garden",
                         "read": 0})
         mock_msg.append({"date": "07/16 14:10:12",
                          "msg" : "Excceded amount of water used to wash dishes.",
