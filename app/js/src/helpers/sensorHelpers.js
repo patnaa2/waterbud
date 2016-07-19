@@ -3,6 +3,7 @@ import shower from '../assets/shower_head.jpg';
 import bathroomSink from '../assets/bathroom_sink.jpg';
 import kitchenSink from '../assets/kitchen_sink.jpg';
 import garden from '../assets/garden.jpg';
+import history from '../assets/history.png';
 
 
 export function retreiveFriendlyLocationName(location) {
@@ -28,6 +29,8 @@ export function retrieveClassName(location) {
       return 'kitchen_sink';
     case SensorLocation.SHOWER:
       return 'shower';
+    default:
+      return 'recent';
   }
 }
 
@@ -42,6 +45,8 @@ export function retrieveImage(location) {
       return kitchenSink;
     case SensorLocation.SHOWER:
       return shower;
+    default:
+      return history;
   }
 }
 
@@ -54,5 +59,7 @@ export function retrieveGeneralLocation(location) {
       return 'Garden';
     case SensorLocation.KITCHEN_SINK:
       return 'Kitchen';
+    default:
+      return 'Recent';
   }
 }

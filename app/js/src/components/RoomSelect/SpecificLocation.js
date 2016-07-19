@@ -40,7 +40,10 @@ const SpecificLocationSelect = (props) => {
 SpecificLocationSelect.propTypes = {
   className: PropTypes.string,
   onChange: PropTypes.func,
-  value: PropTypes.number
+  value: React.PropTypes.oneOfType([
+    React.PropTypes.string,
+    React.PropTypes.number
+  ])
 };
 
 export default SpecificLocationSelect;

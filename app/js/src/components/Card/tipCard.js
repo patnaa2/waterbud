@@ -3,8 +3,21 @@ import FlipCard from './index.js';
 import * as Helper from '../../helpers/sensorHelpers';
 
 const TipCard = (props) => {
-  const {benefit, description, location, showBack, showFront, ...others} = props;
-  console.log(benefit, description);
+  const {location, showBack, showFront, shortMessages, seeMoreClick, ...others} = props;
+  function renderShortMessages() {
+    if (shortMessages && shortMessages.size > 0) {
+      return shortMessages.map((element, index) =>
+        <div key={index} className="back_tip_row spacing">
+          <div className="col-xs-2">
+            <span className="tipNumber">{index + 1}</span>
+          </div>
+          <div className="col-xs-10">
+            {element}
+          </div>
+        </div>
+      );
+    }
+  }
   return (
     <FlipCard {...others} showFront={showFront}>
       <div className={Helper.retrieveGeneralLocation(location).toLowerCase()} >
@@ -17,7 +30,6 @@ const TipCard = (props) => {
         </button>
         <span className="location">{Helper.retrieveGeneralLocation(location)}</span>
         <img className="image" src={Helper.retrieveImage(location)}/>
-        <span className="name">{name}</span>
       </div>
       <div className={Helper.retrieveGeneralLocation(location).toLowerCase()}>
         <button
@@ -28,7 +40,18 @@ const TipCard = (props) => {
           <span className="fa fa-reply" />
         </button>
         <div className="back_container">
-          <div className="back_row spacing">Description</div>
+          <div className="back_row spacing">
+            {renderShortMessages()}
+          </div>
+          <div className="back_row tip_button">
+            <button
+              type="button"
+              className="btn btn-success"
+              onClick={seeMoreClick.bind(this, location)}
+            >
+              See More
+            </button>
+          </div>
         </div>
       </div>
     </FlipCard>

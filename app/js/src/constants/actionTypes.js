@@ -1,5 +1,9 @@
 //TIPS
 export const FLIP_TIP_CARD = 'FLIP_TIP_CARD';
+export const LOADING_TIPS = 'LOADING_TIPS';
+export const RECEIVED_TIPS = 'RECEIVED_TIPS';
+export const OPEN_TIPS_MODAL = 'OPEN_TIPS_MODAL';
+export const CLOSE_TIPS_MODAL = 'CLOSE_TIPS_MODAL';
 
 //MISC
 export const MENU_CLICK = 'MENU_CLICK';

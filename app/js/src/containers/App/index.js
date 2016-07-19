@@ -130,7 +130,7 @@ class App extends React.Component {
             <span>Settings</span>
           </Link>
         </Menu>
-        <section style={{position: 'relative'}}>
+        <section className="section">
           <img src={logo} className="logo" alt="Waterbud Logo" />
           <span className="pageHeader">{this.pageHeader()}</span>
           <div onClick={this.openNotifications} className="notification_btn">
