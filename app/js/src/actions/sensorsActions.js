@@ -54,7 +54,7 @@ export function fetchDailyHistoricalData(location, start, end) {
     }).then(response => response.json())
       .then(json => dispatch({
           type: types.RECEIVED_HISTORICAL_DATA,
-          data: JSON.parse(json).data
+          data: JSON.parse(json)
         })
       );
   };
@@ -68,7 +68,7 @@ export function fetchHourlyHistoricalData(location, start, end) {
       .then(json =>
         dispatch({
           type: types.RECEIVED_HISTORICAL_DATA,
-          data: JSON.parse(json).data
+          data: JSON.parse(json)
         })
       );
   };

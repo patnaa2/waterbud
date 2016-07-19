@@ -6,6 +6,7 @@ import moment from 'moment';
 
 import Chart from '../../components/Chart';
 import SpecificLocation from '../../components/RoomSelect/SpecificLocation';
+import RelativeGraph from '../../components/RelativeGraph';
 
 import * as actions from '../../actions/sensorsActions';
 import * as miscActions from '../../actions/miscActions';
@@ -168,6 +169,7 @@ class HistoricalUsage extends React.Component {
           options={options}
           modules={[Highmaps]}
         />
+        <RelativeGraph consumed={this.props.historicalConsumption} />
       </div>
     );
   }
@@ -186,6 +188,7 @@ function mapStateToProps(state) {
     historicalStart: state.sensors.get('historicalStart'),
     historicalEnd: state.sensors.get('historicalEnd'),
     historicalResolution: state.sensors.get('historicalResolution'),
+    historicalConsumption: state.sensors.get('historicalConsumption'),
     loading: state.sensors.get('loading')
   };
 }

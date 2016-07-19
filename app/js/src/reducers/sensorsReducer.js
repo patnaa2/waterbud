@@ -53,13 +53,12 @@ const initialState = Immutable.fromJS({
   editView: false,
   filter: [],
   isAddingSensor: false,
-  historicalStart: moment().subtract(1, 'month'),
-  historicalEnd: moment(),
-  historicalHourlyStart: moment().subtract(1, 'month'),
-  historicalHourlyEnd: moment(),
+  historicalConsumption: 0,
   historicalData: [],
   historicalLocation: 'total',
   historicalResolution: Constants.DAILY,
+  historicalStart: moment().subtract(1, 'month'),
+  historicalEnd: moment(),
   liveData: {
     time: [],
     flow_ml: [],
@@ -124,7 +123,9 @@ export default function tipReducer(state = initialState, action) {
       return state.set('loading', action.status);
 
     case RECEIVED_HISTORICAL_DATA:
-      return state.set('loading', false).set('historicalData', Immutable.fromJS(action.data));
+      return state.set('loading', false)
+                  .set('historicalData', Immutable.fromJS(action.data.data))
+                  .set('historicalConsumption', action.data.total_consumed);
 
     case RESET_LIVE_DATA:
       return state.set('liveData', Immutable.fromJS({
