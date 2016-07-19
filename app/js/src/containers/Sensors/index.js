@@ -67,8 +67,6 @@ class Sensors extends React.Component {
             value={this.props.sensors.get('filter').toJS()}
             onChange={this.onSensorFilter}
           />
-          <span className="fa fa-2x fa-th" />
-          <span className="fa fa-2x fa-list" />
           <button
             type="button"
             className="btn btn-success"

@@ -75,64 +75,73 @@ class App extends React.Component {
           isOpen={this.props.misc.get('isOpen')}
           onStateChange={this.isMenuOpen}
         >
-          <Link
-            activeClassName="active"
-            className="block"
-            to="/"
-            onClick={this.onMenuItemClick}
-          >
-            <i className="fa fa-home fa-fw" aria-hidden="true" />
-            <span>Home</span>
-          </Link>
-          <Link
-            activeClassName="active"
-            className="block"
-            to="/sensors"
-            onClick={this.onMenuItemClick}
-          >
-            <i className="fa fa-server fa-fw" aria-hidden="true" />
-            <span>Sensors</span>
-          </Link>
-          <Link
-            activeClassName="active"
-            className="block"
-            to="/live"
-            onClick={this.onMenuItemClick}
-          >
-            <i className="fa fa-line-chart fa-fw" aria-hidden="true" />
-            <span>Live Usage</span>
-          </Link>
-          <Link
-            activeClassName="active"
-            className="block"
-            to="/history"
-            onClick={this.onMenuItemClick}
-          >
-            <i className="fa fa-history fa-fw" aria-hidden="true" />
-            <span>Historical Usage</span>
-          </Link>
-          <Link
-            activeClassName="active"
-            className="block"
-            to="/tips"
-            onClick={this.onMenuItemClick}
-          >
-            <i className="fa fa-lightbulb-o fa-fw" aria-hidden="true" />
-            <span>Tips</span>
-          </Link>
-          <Link
-            activeClassName="active"
-            className="block"
-            to="/settings"
-            onClick={this.onMenuItemClick}
-          >
-            <i className="fa fa-cog fa-fw" aria-hidden="true" />
-            <span>Settings</span>
-          </Link>
+          <div>
+            <Link
+              activeClassName="active"
+              className="block"
+              to="/"
+              onClick={this.onMenuItemClick}
+            >
+              <i className="fa fa-home fa-fw" aria-hidden="true" />
+              <span>Home</span>
+            </Link>
+            <Link
+              activeClassName="active"
+              className="block"
+              to="/sensors"
+              onClick={this.onMenuItemClick}
+            >
+              <i className="fa fa-server fa-fw" aria-hidden="true" />
+              <span>Sensors</span>
+            </Link>
+            <Link
+              activeClassName="active"
+              className="block"
+              to="/live"
+              onClick={this.onMenuItemClick}
+            >
+              <i className="fa fa-line-chart fa-fw" aria-hidden="true" />
+              <span>Live Usage</span>
+            </Link>
+            <Link
+              activeClassName="active"
+              className="block"
+              to="/history"
+              onClick={this.onMenuItemClick}
+            >
+              <i className="fa fa-history fa-fw" aria-hidden="true" />
+              <span>Historical Usage</span>
+            </Link>
+            <Link
+              activeClassName="active"
+              className="block"
+              to="/tips"
+              onClick={this.onMenuItemClick}
+            >
+              <i className="fa fa-lightbulb-o fa-fw" aria-hidden="true" />
+              <span>Tips</span>
+            </Link>
+            <Link
+              activeClassName="active"
+              className="block"
+              to="/settings"
+              onClick={this.onMenuItemClick}
+            >
+              <i className="fa fa-cog fa-fw" aria-hidden="true" />
+              <span>Settings</span>
+            </Link>
+          </div>
+          <div className="footer">
+              <img className="menu_logo" src={logo} />
+              <h2 className="menu_header">Waterbud</h2>
+              <h4 className="menu_slogan">Helping you and the Environment</h4>
+          </div>
         </Menu>
         <section className="section">
-          <img src={logo} className="logo" alt="Waterbud Logo" />
-          <span className="pageHeader">{this.pageHeader()}</span>
+          <div className="pageHeader">
+            <img src={logo} className="logo" alt="Waterbud Logo" />
+            <span>{this.pageHeader()}</span>
+          </div>
           <div onClick={this.openNotifications} className="notification_btn">
             <span className="fa fa-2x fa-bell-o" />
             {this.props.misc.getIn(['notifications','notifications']) > 0 && <span className="number">{this.props.misc.getIn(['notifications','notifications'])}</span>}

@@ -48,7 +48,7 @@ class LiveUsage extends React.Component {
       <div className="center-block">
         <h2 className="header">Water Consumed (mL) over Time</h2>
         <h4 className="y_axis">Water Consumed (mL)</h4>
-        <Line className="center-block" data={chartData} width={window.innerWidth * 0.96} height="450"/>
+        <Line className="center-block" data={chartData} width={window.innerWidth * 0.96} height="345"/>
         <h4 className="x_axis">Time</h4>
         <RelativeGraph consumed={this.props.liveData.get('total_flow_ml')} />
       </div>
