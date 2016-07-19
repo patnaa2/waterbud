@@ -120,7 +120,7 @@ class Receiever(object):
                 # if flow has stopped or we have 60 data points for kitchen
                 # send tips for kitchen
                 if (kitchen_data and not flow_last_second) or \
-                        (len(kitchen_data) > 60):
+                        (len(kitchen_data) > 20):
                     self.tips.kitchen_sink_tips(kitchen_data)
                     kitchen_data = []
 
@@ -137,6 +137,7 @@ class Receiever(object):
                 # hourly and historical data
                 if current.minute == data['timestamp'].minute:
                     flow_ml += data['flow_ml']
+                    print flow_ml
                 else:
                     if flow_ml:
                         db_data = {"timestamp": current, 

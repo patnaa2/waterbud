@@ -106,7 +106,8 @@ class Summarizer(object):
                 print "Keyboard Interrupt detected. Ending."
                 sys.exit(1)
             # HACK - if there is a random error.. continue
-            except:
+            except Exception as e:
+                print e
                 continue
 
 if __name__ == "__main__":

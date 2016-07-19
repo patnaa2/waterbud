@@ -15,7 +15,7 @@ sys.path.insert(0, PY_PATH)
 from lib.api_helpers import convert_datetime_to_epoch as dt_to_epoch
 from lib.api_helpers import pad_data_with_zeroes as pad_data
 
-WEBSOCKET = '127.0.0.1:8888'
+WEBSOCKET = '172.20.10.6:8888'
 db = pymongo.MongoClient('localhost', 27017)['waterbud']
 
 class WSLocation(Resource):
@@ -282,7 +282,7 @@ class Tips(Resource):
         return json.dumps({"notifications_read":ret.modified_count}), 201
 
 
-API_MAPPINGS = {WSLocation : "/ws_location",
+API_MAPPINGS = {WSLocation : "/ws",
 		AddSensor : "/add_sensor",
 		DailySensorData : "/data/daily",
 		HourlySensorData : "/data/hourly",

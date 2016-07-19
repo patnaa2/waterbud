@@ -37,6 +37,7 @@ class Tips(Notifications):
         
         # data analysis
         total_consumed = sum(data)
+        print total_consumed
         threshold = 1203
         if total_consumed > threshold:
             raise_alert = True
