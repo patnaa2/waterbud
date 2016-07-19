@@ -42,7 +42,7 @@ class Receiever(object):
 
     def connect_to_db(self):
         try:
-            self._db = pymongo.MongoClient(self.MONGO_LOCATION)['test']
+            self._db = pymongo.MongoClient(self.MONGO_LOCATION)[self.DB]
         except:
             # treat any exception as a failure
             msg = "Unable to connect to database"
