@@ -2,7 +2,9 @@ import {
   CLOSE_TIPS_MODAL,
   FLIP_TIP_CARD,
   LOADING_TIPS,
+  NEXT_TIP,
   OPEN_TIPS_MODAL,
+  PREV_TIP,
   RECEIVED_TIPS,
   RESET
 } from '../constants/actionTypes';
@@ -23,30 +25,62 @@ const initialState = Immutable.fromJS({
       title: SensorLocation.BATHROOM_SINK,
       isFlipped: false
   }],
-  kitchen_sink: [{
+  kitchen_sink: {
+    msg: [{
       short: 'Hello',
-      msg: 'My name is what?'
+      read: 1,
+      image: '',
+      msg: 'My name is what?',
+      location: 'kitchen',
+      date: '07/16 14:16:12'
     }, {
       short: 'What up',
-      msg: 'How are you?'
-  }],
-  bathroom_sink: [{
+      read: 1,
+      image: '',
+      msg: 'How are you?',
+      location: 'kitchen',
+      date: '07/16 14:16:12'
+   }]
+  },
+  bathroom_sink: {
+    msg: [{
       short: 'Hello',
-      msg: 'My name is what?'
+      read: 1,
+      image: '',
+      msg: 'My name is what?',
+      location: 'bathroom_sink',
+      date: '07/16 14:16:12'
     }, {
       short: 'What up',
-      msg: 'How are you?'
-  }],
-  garden: [{
+      read: 1,
+      image: '',
+      msg: 'How are you?',
+      location: 'bathroom_sink',
+      date: '07/16 14:16:12'
+   }]
+  },
+  garden: {
+    msg: [{
       short: 'Hello',
-      msg: 'My name is what?'
+      read: 1,
+      image: '',
+      msg: 'My name is what?',
+      location: 'garden',
+      date: '07/16 14:16:12'
     }, {
       short: 'What up',
-      msg: 'How are you?'
-  }],
+      read: 1,
+      image: '',
+      msg: 'How are you?',
+      location: 'garden',
+      date: '07/16 14:16:12'
+   }]
+  },
+  recent: [],
   loading: false,
   isOpen: false,
-  tipsToShow: ''
+  tipLocationToShow: 'kitchen_sink',
+  tipNumber: 0
 });
 
 export default function tipReducer(state = initialState, action) {
@@ -64,10 +98,18 @@ export default function tipReducer(state = initialState, action) {
       return state.set('loading', false).set('recent', Immutable.fromJS(action.data));
 
     case OPEN_TIPS_MODAL:
-      return state.set('isOpen', true).set('tipsToShow', action.tipsToShow);
+      return state.set('isOpen', true).set('tipLocationToShow', action.tipsToShow);
 
     case CLOSE_TIPS_MODAL:
-      return state.set('isOpen', false);
+      return state.updateIn([state.get('tipLocationToShow').toLowerCase(), 'msg'], (element) => element.map(item => item.set('read', 1)))
+                  .set('isOpen', false).set('tipNumber', 0);
+
+    case PREV_TIP:
+      return state.update('tipNumber', (tip) => tip - 1);
+
+    case NEXT_TIP:
+      return state.update('tipNumber', (tip) => tip + 1);
+
     default:
       return state;
   }

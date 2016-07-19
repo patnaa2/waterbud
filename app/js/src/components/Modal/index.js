@@ -39,6 +39,7 @@ const Modal = (props) => {
             <button type="button" className={props.okClassName} onClick={handleSaveClicked}>{okText}</button>
           </div>
         }
+        {props.footer}
       </div>
     </ReactModal>
   );

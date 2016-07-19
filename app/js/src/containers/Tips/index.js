@@ -15,6 +15,8 @@ class Tips extends React.Component {
     this.showFront = this.showFront.bind(this);
     this.openTipModal = this.openTipModal.bind(this);
     this.closeTipModal = this.closeTipModal.bind(this);
+    this.onNext = this.onNext.bind(this);
+    this.onPrev = this.onPrev.bind(this);
   }
 
   componentWillMount() {
@@ -37,7 +39,7 @@ class Tips extends React.Component {
     if(index === 0) {
       return this.props.tips.getIn([element.get('title').toLowerCase(), 'short']);
     } else {
-      return this.props.tips.get(element.get('title')).map((element) => element.get('short'));
+      return this.props.tips.getIn([element.get('title'), 'msg']).map((element) => element.get('short'));
     }
   }
 
@@ -49,9 +51,20 @@ class Tips extends React.Component {
     this.props.actions.closeTipsModal();
   }
 
+  onNext() {
+    if (this.props.tips.get('tipNumber') < this.props.tips.getIn([this.props.tips.get('tipLocationToShow').toLowerCase(), 'msg']).size -1) {
+      this.props.actions.nextTip();
+    }
+  }
+
+  onPrev() {
+    if (this.props.tips.get('tipNumber') > 0) {
+      this.props.actions.prevTip();
+    }
+  }
+
   render() {
     console.log('tips', this.props.tips.toJS());
-    //this.props.tips.getIn([element.get('title'), 'short'])
     return (
       <div>
         <div className="container-fluid">
@@ -69,11 +82,13 @@ class Tips extends React.Component {
           )}
         </div>
         <TipModal
-          tips={this.props.tips.get(this.props.tips.get('tipsToShow').toLowerCase())}
-          title={Helper.retrieveGeneralLocation(this.props.tips.get('tipsToShow'))}
+          tip={this.props.tips.getIn([this.props.tips.get('tipLocationToShow').toLowerCase(), 'msg', this.props.tips.get('tipNumber')])}
+          title={Helper.retrieveGeneralLocation(this.props.tips.get('tipLocationToShow'))}
           handleModalCloseRequest={this.closeTipModal}
           handleNextClicked={this.onNext}
           handlePrevClicked={this.onPrev}
+          showNext={this.props.tips.get('tipNumber') < this.props.tips.getIn([this.props.tips.get('tipLocationToShow').toLowerCase(), 'msg']).size - 1}
+          showPrev={this.props.tips.get('tipNumber') > 0}
           isOpen={this.props.tips.get('isOpen')}
         />
       </div>

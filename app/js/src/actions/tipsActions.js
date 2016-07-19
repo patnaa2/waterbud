@@ -25,3 +25,11 @@ export function openTipsModal(tipsToShow) {
 export function closeTipsModal() {
   return {type: types.CLOSE_TIPS_MODAL};
 }
+
+export function nextTip() {
+  return {type: types.NEXT_TIP};
+}
+
+export function prevTip() {
+  return {type: types.PREV_TIP};
+}

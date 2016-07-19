@@ -4,6 +4,8 @@ export const LOADING_TIPS = 'LOADING_TIPS';
 export const RECEIVED_TIPS = 'RECEIVED_TIPS';
 export const OPEN_TIPS_MODAL = 'OPEN_TIPS_MODAL';
 export const CLOSE_TIPS_MODAL = 'CLOSE_TIPS_MODAL';
+export const NEXT_TIP = 'NEXT_TIP';
+export const PREV_TIP = 'PREV_TIP';
 
 //MISC
 export const MENU_CLICK = 'MENU_CLICK';
