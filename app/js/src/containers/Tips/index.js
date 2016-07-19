@@ -64,7 +64,6 @@ class Tips extends React.Component {
   }
 
   render() {
-    console.log('tips', this.props.tips.toJS());
     return (
       <div>
         <div className="container-fluid">

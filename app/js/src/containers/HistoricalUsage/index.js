@@ -4,6 +4,8 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import moment from 'moment';
 
+import DatePicker from 'react-datepicker';
+import Spinner from 'react-spinkit';
 import Chart from '../../components/Chart';
 import SpecificLocation from '../../components/RoomSelect/SpecificLocation';
 import RelativeGraph from '../../components/RelativeGraph';
@@ -11,7 +13,7 @@ import RelativeGraph from '../../components/RelativeGraph';
 import * as actions from '../../actions/sensorsActions';
 import * as miscActions from '../../actions/miscActions';
 import * as Constants from '../../constants/viewConstants';
-import DatePicker from 'react-datepicker';
+
 import './style.less';
 
 class HistoricalUsage extends React.Component {
@@ -82,9 +84,13 @@ class HistoricalUsage extends React.Component {
   render() {
     if(this.props.historicalData.size === 0) {
       if (this.props.loading) {
-        return <div>LOADING DATA!!!</div>;
+        return <Spinner spinnerName="double-bounce" />;
       }
-      return <div>NO DATA!</div>;
+      return (
+        <div className="container-fluid">
+          <h2 className="header">No Data</h2>
+        </div>
+      );
     }
     const options = {
       rangeSelector: {

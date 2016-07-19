@@ -12,7 +12,9 @@ const Notifications = (props) => {
       title="Notifications"
       showFooter={false}
     >
-      {!recentNotifications.size && !newNotifications.size && <h3>None!!!</h3>}
+      {!recentNotifications.size && !newNotifications.size &&
+        <h4 className="no_notifications">No Notification</h4>
+      }
       {newNotifications.size > 0 && newNotifications.map((element, index) =>
         <NotificationItem
           key={index}

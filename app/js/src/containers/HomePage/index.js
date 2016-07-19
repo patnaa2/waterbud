@@ -3,6 +3,9 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as actions from '../../actions/miscActions';
 
+import logo from '../../assets/waterbud_logo.png';
+import './style.less';
+
 class Home extends React.Component {
   constructor() {
     super();
@@ -13,7 +16,16 @@ class Home extends React.Component {
   }
 
   render() {
-    return <div>Home Page</div>;
+    return (
+      <div className="container-fluid home">
+        <img className="home_logo" src={logo} />
+        <h1 className="logo_header">Waterbud</h1>
+        <h2 className="logo_slogan">Helping you and the Environment</h2>
+        <div className="row about_us">
+          <h4>Company Description goes here!!!</h4>
+        </div>
+      </div>
+    );
   }
 }
 
