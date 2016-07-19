@@ -102,7 +102,7 @@ class Receiever(object):
                             self.tips.garden_tips()
                     elif self.sensor_location == "kitchen_sink":
                         # build up the ktchen data 
-                        # print "kitchen_sink"
+                        print "kitchen_sink"
                         kitchen_data.append(data['flow_ml'])
                     elif self.sensor_location == "bathroom_sink":
                         # show leak after 15 seconds 
@@ -120,7 +120,7 @@ class Receiever(object):
                 # if flow has stopped or we have 60 data points for kitchen
                 # send tips for kitchen
                 if (kitchen_data and not flow_last_second) or \
-                        (len(kitchen_data) > 60):
+                        (len(kitchen_data) > 5):
                     self.tips.kitchen_sink_tips(kitchen_data)
                     kitchen_data = []
 

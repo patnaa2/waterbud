@@ -240,25 +240,33 @@ class Notifications(Resource):
         return json.dumps({"notifications_read":ret.modified_count}), 201
 
 class Tips(Resource):
-    RECENT_LIMIT = 4
+    LIMIT = 5
+    SHORT_LIMIT = 2
 
     def get(self):
-        # boolean to show whether to show limit or not
         new = []
         recent = []
+        msgs = []
+        
+        # HACK
+        # Shitty stuff but i am going to assume that sorting by the date
+        # is good enough to show all the unread ones first
+        res = db['tips'].find({}).sort([
+                            ("timestamp", 1)]).limit(self.LIMIT)
+        for msg in res:
+            msgs.append({"date": msg['timestamp'],
+                         "location": msg['location'],
+                         "image": msg['image'],
+                         "read" : msg['read'],
+                         "msg": msg['long_msg'],
+                         "short": msg['short_msg']})
+        
+        short = [x['short'] for x in sorted(msgs, 
+                    key=lambda x: (x['read'], x['date']))[0:self.SHORT_LIMIT]] 
 
-        unread = db['tips'].find({"read":False})
-        read = db['tips'].find({"read":True}).sort([
-                            ("timestamp", 1)]).limit(self.RECENT_LIMIT)
-
-        new = [{"date": x["timestamp"].strftime("%Y-%m-%d %H:%M:%S"),
-                "msg" : x["msg"]} for x in unread]
-        recent = [{"date": x["timestamp"].strftime("%Y-%m-%d %H:%M:%S"),
-                "msg" : x["msg"]} for x in read]
-
-        data = {"notifications" : len(new),
-                "new_msgs" : new,
-                "recent_msgs": recent}
+        data = {"unread" : len([x['read'] for x in msgs if not x['read']]),
+                "msg" : msgs,
+                "short": short}
 
         # save to db here, since we are just about to return
         return json.dumps(data), 200

@@ -18,7 +18,7 @@ class Tips(Notifications):
         short_msg = "Garden when it is cooler."
         long_msg = "Temperature is expected to cool by 3 degrees in the next "\
                    "2 hours. Consider watering during cooler times."
-        data = {"date" : datetime.datetime.now().strftime("%m/%d %H:%M:%S"),
+        data = {"timestamp" : datetime.datetime.now().strftime("%m/%d %H:%M:%S"),
                 "short_msg": short_msg,
                 "long_msg" : long_msg,
                 "location" : "garden",
@@ -46,13 +46,13 @@ class Tips(Notifications):
 	if raise_alert:
             now = datetime.datetime.now()
 	    if now.hour > 14:
-		data = {"date" : now.strftime("%m/%d %H:%M:%S"),
+		data = {"timestamp" : now.strftime("%m/%d %H:%M:%S"),
 			"short_msg": short_prep_msg,
 			"long_msg" : long_prep_msg,
 			"location" : "kitchen sink",
 			"image" : "prep" }
             else:
-                data = {"date" : now.strftime("%m/%d %H:%M:%S"),
+                data = {"timestamp" : now.strftime("%m/%d %H:%M:%S"),
                         "short_msg": short_dishes_msg,
                         "long_msg" : long_dishes_msg,
                         "location" : "kitchen",
@@ -65,6 +65,7 @@ class Tips(Notifications):
         self.alert_leak("bathroom_sink")
 
     def update_db(self, data):
+        data['read'] = False
         print "Saving data to db:"
         print data
         self._db[self.coll].insert_one(data)
