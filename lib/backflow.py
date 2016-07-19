@@ -50,7 +50,7 @@ locations = {
 }
 
 # make db connection global
-db = pymongo.MongoClient('localhost', 27017)['test']
+db = pymongo.MongoClient('localhost', 27017)['waterbud']
 
 # HELPERS
 def gen_time_occurences(timings, occurences):

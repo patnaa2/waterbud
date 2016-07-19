@@ -16,7 +16,7 @@ from lib.api_helpers import convert_datetime_to_epoch as dt_to_epoch
 from lib.api_helpers import pad_data_with_zeroes as pad_data
 
 WEBSOCKET = '127.0.0.1:8888'
-db = pymongo.MongoClient('localhost', 27017)['test']
+db = pymongo.MongoClient('localhost', 27017)['waterbud']
 
 class WSLocation(Resource):
     def get(self):

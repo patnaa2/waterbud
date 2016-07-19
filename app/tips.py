@@ -41,7 +41,6 @@ class Tips(Notifications):
         if total_consumed > threshold:
             raise_alert = True
         
-        raise_alert = True
         # assume before 2 is prep
 	if raise_alert:
             now = datetime.datetime.now()

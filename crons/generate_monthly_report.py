@@ -5,7 +5,7 @@ import pymongo
 PRICE_PER_LITRE = 1.51 / 1000
 SPENDING_LIMIT = 190 
 
-db = pymongo.MongoClient()['test']
+db = pymongo.MongoClient()['waterbud']
 
 def report_total_monthly_usage(month):
     start = datetime.datetime.strptime(month, "%Y/%m").replace(day=1, 

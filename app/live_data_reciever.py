@@ -9,7 +9,7 @@ import websocket
 
 class Receiever(object):
     MONGO_LOCATION = "127.0.0.1:27017"
-    DB = "test"
+    DB = "waterbud"
 
     def __init__(self, ws_ip, ws_port):
         self.ws_location = "ws://%s:%s/ws" %(ws_ip, ws_port)
@@ -120,7 +120,7 @@ class Receiever(object):
                 # if flow has stopped or we have 60 data points for kitchen
                 # send tips for kitchen
                 if (kitchen_data and not flow_last_second) or \
-                        (len(kitchen_data) > 5):
+                        (len(kitchen_data) > 60):
                     self.tips.kitchen_sink_tips(kitchen_data)
                     kitchen_data = []
 
