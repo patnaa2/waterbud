@@ -61,17 +61,18 @@ class Receiever(object):
                                                   microsecond=0)
         data_analysis_time = None 
         kitchen_data = []
-
-        while not self.sensor_location:
-            time.sleep(1)
-        
-        # after a switch of sensor we come back here
-        # set to false so we can send tips or not
         first_time = True
-        self.tips.tips_sent = False
 
         while True:
             try:
+                while not self.sensor_location:
+                    # after a switch of sensor we come back here
+                    # set to false so we can send tips or not
+                    print "waiting for sensor"
+                    time.sleep(2)
+                    first_time = True
+                    self.tips.tips_sent = False
+
                 data = self._ws.recv()
                 data = json.loads(data)
                 data['timestamp'] = datetime.datetime.strptime(data['timestamp'],
@@ -94,16 +95,18 @@ class Receiever(object):
                         first_time = False
 
                     if self.sensor_location == "garden":
-                        print "garden"
                         # wait atleast 10 seconds from first turning on 
+                        print "garden"
                         if (datetime.datetime.now() - 
                                 data_analysis_time).total_seconds() > 10:
                             self.tips.garden_tips()
                     elif self.sensor_location == "kitchen_sink":
                         # build up the ktchen data 
+                        # print "kitchen_sink"
                         kitchen_data.append(data['flow_ml'])
                     elif self.sensor_location == "bathroom_sink":
                         # show leak after 15 seconds 
+                        # print "bathroom_sink"
                         if (datetime.datetime.now() - 
                                 data_analysis_time).total_seconds() > 15:
                             self.tips.bathroom_tips()
@@ -118,7 +121,7 @@ class Receiever(object):
                 # send tips for kitchen
                 if (kitchen_data and not flow_last_second) or \
                         (len(kitchen_data) > 60):
-                    self.kitchen_sink_tips(kitchen_data)
+                    self.tips.kitchen_sink_tips(kitchen_data)
                     kitchen_data = []
 
                 ######
@@ -128,14 +131,12 @@ class Receiever(object):
                 ######
                 ### Data to DB
                 ######
-
                 # we are going to store directly to minute table for MVP
                 # it doesnt make any sense to store per second and
                 # have another 3 processes summarizing the data to 
                 # hourly and historical data
                 if current.minute == data['timestamp'].minute:
                     flow_ml += data['flow_ml']
-                    print data['flow_ml']
                 else:
                     if flow_ml:
                         db_data = {"timestamp": current, 
@@ -152,9 +153,12 @@ class Receiever(object):
             except KeyError:
                 msg = "Expecting a time field, with appropraite string format"
                 self.epic_failure(msg)
-            except TypeError:
+
+            except TypeError as e:
+                print e
                 msg = "Invalid data format"
                 self.epic_failure(msg)
+
             except KeyboardInterrupt:
                 try:
                     self._ws.close()
