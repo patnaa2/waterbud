@@ -6,7 +6,7 @@ import sys
 
 class Notifications(object):
     MONGO_LOCATION = "127.0.0.1:27017"
-    DB = "test"
+    DB = "waterbud"
 
     def __init__(self, db=None):
         self._db = db 
