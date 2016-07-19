@@ -1,1 +1,0 @@
-{"options":{},"indexes":[{"v":1,"key":{"_id":1},"name":"_id_","ns":"waterbud.total_by_day"},{"v":1,"unique":true,"key":{"timestamp":1.0},"name":"timestamp_1","ns":"waterbud.total_by_day"}]}
