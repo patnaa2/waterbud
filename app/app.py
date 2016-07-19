@@ -234,7 +234,8 @@ class Mock_Tips(Resource):
 
         data = {"new":mock_msg_new, 
                 "recent":mock_msg_recent,
-                "short": short_msgs}
+                "short": short_msgs,
+                "unread": 2}
         return json.dumps(data), 200
 
     def post(self):

@@ -22,7 +22,8 @@ class Tips(Notifications):
         data = {"date" : datetime.datetime.now().strftime("%m/%d %H:%M:%S"),
                 "short_msg": short_msg,
                 "long_msg" : long_msg,
-                "location" : "garden"}
+                "location" : "garden",
+		"image" : "garden"}
     
     def kitchen_sink_tips(self, data):
         short_dishes_msg = "Consder washing dishes in two seperate cycles."
@@ -41,13 +42,24 @@ class Tips(Notifications):
 	if raise_alert:
 	    if datetime.dateime.now().hour > 14:
 		data = {"date" : datetime.datetime.now().strftime("%m/%d %H:%M:%S"),
-			"short_msg": short_msg,
-			"long_msg" : long_msg,
-			"location" : "kitchen"}
-  
+			"short_msg": short_prep_msg,
+			"long_msg" : long_prep_msg,
+			"location" : "kitchen sink",
+			"image" : "prep" }
+            else:
+                data = {"date" : datetime.datetime.now().strftime("%m/%d %H:%M:%S"),
+                        "short_msg": short_dishes_msg,
+                        "long_msg" : long_dishes_msg,
+                        "location" : "kitchen",
+			"image" : "dishes"}
+
     # Leak detection
     def bathroom_sink(self, data):
+	MOCK = True
         pass
+    
+    def update_db(self, data):
+        self._db[self.coll].insert_one(data)
 
     def run(self):
         while True:
