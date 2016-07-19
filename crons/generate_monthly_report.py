@@ -8,7 +8,11 @@ SPENDING_LIMIT = 190
 db = pymongo.MongoClient()['test']
 
 def report_total_monthly_usage(month):
-    start = datetime.datetime.strptime(month, "%Y/%m")
+    start = datetime.datetime.strptime(month, "%Y/%m").replace(day=1, 
+                                                               hour=0,
+                                                               minute=0,
+                                                               second=0,
+                                                               microsecond=0)
     end = start.replace(month=start.month + 1)
     
     res = db['total_by_day'].find({"timestamp": 

@@ -307,7 +307,7 @@ def fill_hourly_coll(data, location):
     # there, remove minute/second resolution here
     current_date = data[0][0]
     
-    data = [(current_date.replace(hour=k, minute=0, second=0), 
+    data = [(current_date.replace(hour=k, minute=0, second=0, microsecond=0), 
                 sum(x[1] for x in v)) 
             for k, v in groupby(data, key=lambda x: x[0].hour)]
 
@@ -324,7 +324,8 @@ def fill_daily_coll(data, location):
         take in fake data per hour for one day 
     '''
     # just sum all the data points, gauranteed to only get one data point
-    data = {"timestamp" : data[0][0].replace(hour=0), 
+    data = {"timestamp" : data[0][0].replace(hour=0, minute=0, 
+                                             second=0, microsecond=0), 
             "flow_ml": sum(x[1] for x in data)}
     db['%s_by_day' %(location)].insert_one(data)
 
