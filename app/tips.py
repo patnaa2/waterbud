@@ -15,17 +15,38 @@ class Tips(Notifications):
         self.coll = 'tips'
         self.sleep = 1
 
-    @property
-    def sensor_location(self):
-        return db['add_sensor'].find_one({}).get('location', None)
-
     def garden_tips(self):
-        pass
+        short_msg = "Garden when it is cooler."
+        long_msg = "Temperature is expected to cool by 3 degrees in the next "\
+                   "2 hours. Consider watering during cooler times."
+        data = {"date" : datetime.datetime.now().strftime("%m/%d %H:%M:%S"),
+                "short_msg": short_msg,
+                "long_msg" : long_msg,
+                "location" : "garden"}
     
-    def kitchen_tips(self):
-        pass
+    def kitchen_sink_tips(self, data):
+        short_dishes_msg = "Consder washing dishes in two seperate cycles."
+        long_dishes_msg = "It is better to lather all the dishes and then rinse "\
+                          "the dishes."
 
-    def bathroom_tips(self):
+        short_prep_msg = "Consider washing vegetables in a large bowl."
+        long_prep_msg = "It is recommended to wash the vegetables in a large "\
+                        "bowl, or to not open the tap fully."
+
+        raise_alert = False
+
+        # data analysis
+
+        # assume before 2 is prep
+	if raise_alert:
+	    if datetime.dateime.now().hour > 14:
+		data = {"date" : datetime.datetime.now().strftime("%m/%d %H:%M:%S"),
+			"short_msg": short_msg,
+			"long_msg" : long_msg,
+			"location" : "kitchen"}
+  
+    # Leak detection
+    def bathroom_sink(self, data):
         pass
 
     def run(self):
@@ -41,4 +62,3 @@ class Tips(Notifications):
 if __name__ == '__main__':
     t = Tips()
     t.run()
-

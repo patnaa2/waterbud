@@ -207,19 +207,26 @@ class Mock_Tips(Resource):
                              "msg":"The temperature is expected to reduce by 3 degrees in the"\
                                    " the next two hours. Water plants when the temperature is"\
                                    " cooler.",
-                            "location": "garden"})
+                            "short" : "Garden when it is cooler.",
+                            "location": "garden",
+                            "iamge": "garden"})
         mock_msg_new.append({"date": "07/16 14:10:12",
                              "msg" : "Excceded amount of water used to wash dishes.",
-                             "location": "kitchen sink"})
-        
+                             "short": "Consder washing dishes in two seperate cycles.",
+                             "location": "kitchen sink",
+                             "image": "dishes"})
+
         mock_msg_recent.append({"date": "07/15 14:16:12",
                                 "msg": "Exceeded amount of water used to prep vegetables."\
                                        " Consider washing vegetables in a bowls of water.",
-                                "location": "kitchen sink"})
+                                "location": "kitchen sink",
+                                "image": "prep"})
         mock_msg_recent.append({"date": "07/15 14:16:12",
                                 "msg": "Temperature is expected to reduce by 2 degrees in the"\
                                        " next two hours.",
-                                "location":"garden"})
+                                "short": "Garden when it is cooler.",
+                                "location":"garden",
+                                "image": "garden"})
         
         short_msgs = ["Water plants in the garden when it is cooler outside.",
                       "Limit the amount of water used when washing dishes by "\
