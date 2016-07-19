@@ -59,7 +59,7 @@ class Receiever(object):
         flow_ml = 0
         current = datetime.datetime.now().replace(second=0,
                                                   microsecond=0)
-        data_analysis_time = datetime.datetime.now()
+        data_analysis_time = None 
         kitchen_data = []
 
         while not self.sensor_location:
@@ -68,7 +68,7 @@ class Receiever(object):
         # after a switch of sensor we come back here
         # set to false so we can send tips or not
         first_time = True
-        self.tips_sent = False
+        self.tips.tips_sent = False
 
         while True:
             try:
@@ -92,12 +92,12 @@ class Receiever(object):
                     if first_time:
                         data_analysis_time = datetime.datetime.now()
                         first_time = False
-                    
-                    if self.sensor_location == "garden" and not self.tips_sent:
+
+                    if self.sensor_location == "garden":
                         print "garden"
                         # wait atleast 10 seconds from first turning on 
                         if (datetime.datetime.now() - 
-                                data_analysis_time).total_seconds > 10:
+                                data_analysis_time).total_seconds() > 10:
                             self.tips.garden_tips()
                     elif self.sensor_location == "kitchen_sink":
                         # build up the ktchen data 
@@ -105,12 +105,13 @@ class Receiever(object):
                     elif self.sensor_location == "bathroom_sink":
                         # show leak after 15 seconds 
                         if (datetime.datetime.now() - 
-                                data_analysis_time).total_seconds > 15:
+                                data_analysis_time).total_seconds() > 15:
                             self.tips.bathroom_tips()
                     else:
                         continue
 
-                else:  ## if we don't have data
+                else:  ## if we don't have data ie. tap is off
+                    first_time = True
                     flow_last_second = False
                 
                 # if flow has stopped or we have 60 data points for kitchen
@@ -123,26 +124,27 @@ class Receiever(object):
                 ######
                 ### End Tips
                 ######
-                
 
                 ######
                 ### Data to DB
                 ######
+
                 # we are going to store directly to minute table for MVP
                 # it doesnt make any sense to store per second and
                 # have another 3 processes summarizing the data to 
                 # hourly and historical data
-                #if current.minute == data['timestamp'].minute:
-                #    flow_ml += data['flow_ml']
-                #    print data['flow_ml']
-                #else:
-                #    if flow_ml:
-                #        db_data = {"timestamp": current, 
-                #                   "flow_ml" : flow_ml}
-                #        print "Saving %s -- %s" %(current, flow_ml)
-                #        self._db[self.sensor_location].insert_one(db_data)
-                #        current = datetime.datetime.now().replace(second=0,
-                #                                                  microsecond=0)
+                if current.minute == data['timestamp'].minute:
+                    flow_ml += data['flow_ml']
+                    print data['flow_ml']
+                else:
+                    if flow_ml:
+                        db_data = {"timestamp": current, 
+                                   "flow_ml" : flow_ml}
+                        print "Saving %s -- %s" %(current, flow_ml)
+                        self._db[self.sensor_location].insert_one(db_data)
+                        current = datetime.datetime.now().replace(second=0,
+                                                                  microsecond=0)
+
                 ######
                 ### End data to DB
                 ######

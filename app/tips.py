@@ -23,7 +23,6 @@ class Tips(Notifications):
                 "long_msg" : long_msg,
                 "location" : "garden",
 		"image" : "garden"}
-        print data
         self.notify_and_tips(data)
 
     def kitchen_sink_tips(self, data):
@@ -59,15 +58,16 @@ class Tips(Notifications):
             self.update_db(data)
 
     # Leak detection
-    def bathroom_sink(self, data):
-	MOCK = True
-        # this will only be an alert, i can't think of a good tip for this
-    
+    def bathroom_sink_tips(self):
+        ### MOCKED AF
+        self.alert_leak("bathroom_sink")
+
     def update_db(self, data):
         self._db[self.coll].insert_one(data)
+        self.tips_sent = True
     
     def notify_and_tips(self, data):
-        # push to notificatiosn first
+        # push to notifications first
         msg = data['short_msg']
         self.coll = 'notifications'
         self.general_alert(msg)
@@ -78,4 +78,4 @@ class Tips(Notifications):
 
 if __name__ == '__main__':
     print "This is just a helper class library. Don't call with main"
-    sys.exit(1)      
+    sys.exit(1)
