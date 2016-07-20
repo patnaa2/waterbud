@@ -9694,7 +9694,7 @@ a:focus {
   border: 1px solid #ccc;
 }
 .ReactFlipCard__Front .recent {
-  background-color: #EFC94C;
+  background-color: rgba(52, 152, 219, 0.5);
   border-radius: 10px;
   border: 1px solid #ccc;
 }
@@ -9714,7 +9714,7 @@ a:focus {
   border: 1px solid #ccc;
 }
 .ReactFlipCard__Back .recent {
-  background-color: #EFC94C;
+  background-color: rgba(52, 152, 219, 0.5);
   border-radius: 10px;
   border: 1px solid #ccc;
 }
