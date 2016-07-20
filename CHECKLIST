@@ -7,7 +7,8 @@ Pi Stuff
    [ ] Run sensor_mvp.py on pi
 
 Local host stuff
-   [ ] Run live_data_reciver.py
+   [ ] Update location of pi as needed in (api_endpoints)
+   [ ] Run live_data_reciver.py -w websocket_location
    [ ] Run summarize_minutes_to_hours.py
    [ ] Ensure mongo is running
    [ ] Run app_db.py
