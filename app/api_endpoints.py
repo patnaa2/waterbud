@@ -39,8 +39,6 @@ class AddSensor(Resource):
             val = db['add_sensor'].find_one({}).get('location', None)
         except:
             val = None
-        if not val:
-            val = ''
 
         return json.dumps({"location": val}), 200
 
