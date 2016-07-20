@@ -1,0 +1,14 @@
+Things to do for Demo
+
+Pi Stuff
+   [ ] Get ip of pi
+   [ ] Check date on the pi 
+   [ ] Start Websocket on pi
+   [ ] Run sensor_mvp.py on pi
+
+Local host stuff
+   [ ] Run live_data_reciver.py
+   [ ] Run summarize_minutes_to_hours.py
+   [ ] Ensure mongo is running
+   [ ] Run app_db.py
+   [ ] Run on incognito
