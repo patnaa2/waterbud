@@ -12,8 +12,13 @@ export function saveSettings(threshold) {
   return (dispatch) => {
     fetch('http://localhost:5000/threshold?val=' + threshold, {
       method: 'POST'
-    }).then(() => {
+    }).then((response) => response.json())
+    .then(() => {
       dispatch({type: types.SAVE_SETTINGS});
+    }).then(() => fetch('http://localhost:5000/notifications'))
+    .then(response => response.json())
+    .then((json) => {
+      dispatch({type: types.RETRIEVE_NOTIFICATIONS, notifications: JSON.parse(json)});
     });
   };
 }

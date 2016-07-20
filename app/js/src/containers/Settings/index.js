@@ -37,7 +37,7 @@ class Settings extends React.Component {
           </button>
         </div>
         <div className="row center-block">
-          <div className="col-md-6 well">
+          <div className="col-md-6 well setting_well">
             <h4>User Info</h4>
             <div className="row">
               <div className="col-xs-2">Name:</div>
@@ -52,11 +52,11 @@ class Settings extends React.Component {
               <div className="col-xs-10">(519) 888-4567</div>
             </div>
           </div>
-          <div className="col-md-6 well">
+          <div className="col-md-6 well setting_well">
             <h4>Application Settings</h4>
-            <form className="form">
+            <form className="form-inline">
               <div className="form-group">
-                <label forHtml="threshold">Threshold: </label>
+                <label className="threshold" forHtml="threshold">Monthly Consumption Goal:</label>
                 <input
                   id="threshold"
                   type="number"
