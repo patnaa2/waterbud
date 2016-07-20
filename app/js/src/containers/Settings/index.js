@@ -83,15 +83,15 @@ class Settings extends React.Component {
                 <tbody>
                   <tr>
                     <th>April</th>
-                    <th>$174.45</th>
+                    <th>$175.45</th>
                   </tr>
                   <tr>
                     <th>May</th>
-                    <th>$268.80</th>
+                    <th>$266.80</th>
                   </tr>
                   <tr>
                     <th>June</th>
-                    <th>$213.36</th>
+                    <th>$213.37</th>
                   </tr>
                 </tbody>
               </table>

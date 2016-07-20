@@ -23,7 +23,9 @@ class Sensors extends React.Component {
   }
 
   componentWillMount() {
-    this.props.actions.retrieveSensors();
+    if (!this.props.sensors.get('retrievedSensors')) {
+      this.props.actions.retrieveSensors();
+    }
   }
 
   componentWillUnmount() {

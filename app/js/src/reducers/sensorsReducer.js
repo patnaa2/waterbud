@@ -69,7 +69,8 @@ const initialState = Immutable.fromJS({
   },
   timeStamp: null,
   viewMode: Constants.CARD,
-  loading: false
+  loading: false,
+  retrievedSensors: false
 });
 
 export default function tipReducer(state = initialState, action) {
@@ -78,13 +79,16 @@ export default function tipReducer(state = initialState, action) {
       return state.set('loading', true);
 
     case RECEIVED_SENSORS:
-      return state.update('sensors', (list) => list.push(Immutable.fromJS({
-        id: 3,
-        name: 'Sensor',
-        location: action.data.location,
-        installDate: 'July 20, 2016',
-        isFlipped: false
-      }))).set('loading', false);
+      if (action.data.location) {
+        return state.update('sensors', (list) => list.push(Immutable.fromJS({
+          id: 3,
+          name: 'Sensor',
+          location: action.data.location,
+          installDate: 'July 20, 2016',
+          isFlipped: false
+        }))).set('loading', false).set('retrievedSensors', true);
+      }
+      return state;
 
     case SAVE_SENSOR: {
       if (state.getIn(['editSensor', 'id']) === 0) {
@@ -98,7 +102,7 @@ export default function tipReducer(state = initialState, action) {
       return state.setIn(['sensors', index], state.get('editSensor').set('isFlipped', false)).set('editView', false);
     }
     case REMOVE_SENSOR:
-      return state.update('sensors', (list) => list.delete(list.findIndex((item) => item.get('id') === action.id)));
+      return state.update('sensors', (list) => list.delete(list.findIndex((item) => item.get('id') === action.id))).set('retrievedSensors', action.retrievedSensor);
 
     case VIEW_MODE:
       return state.set('viewMode', action.viewMode);

@@ -7,10 +7,9 @@ export function retrieveSensors() {
       method: 'GET'
     }).then(response => response.json())
       .then(json => dispatch({
-          type: types.RECEIVED_SENSORS,
-          data: JSON.parse(json)
-        })
-      );
+        type: types.RECEIVED_SENSORS,
+        data: JSON.parse(json)
+      }));
   };
 }
 
@@ -39,10 +38,10 @@ export function removeSensor(id, last) {
       fetch('http://localhost:5000/add_sensor', {
         method: 'DELETE'
       }).then(() => {
-        dispatch({type: types.REMOVE_SENSOR, id});
+        dispatch({type: types.REMOVE_SENSOR, id, retrievedSensors: false});
       });
     } else {
-      dispatch({type: types.REMOVE_SENSOR, id});
+      dispatch({type: types.REMOVE_SENSOR, id, retrievedSensors: true});
     }
   };
 }

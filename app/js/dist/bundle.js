@@ -9883,10 +9883,10 @@
 	      fetch('http://localhost:5000/add_sensor', {
 	        method: 'DELETE'
 	      }).then(function () {
-	        dispatch({ type: types.REMOVE_SENSOR, id: id });
+	        dispatch({ type: types.REMOVE_SENSOR, id: id, retrievedSensors: false });
 	      });
 	    } else {
-	      dispatch({ type: types.REMOVE_SENSOR, id: id });
+	      dispatch({ type: types.REMOVE_SENSOR, id: id, retrievedSensors: true });
 	    }
 	  };
 	}
@@ -39023,7 +39023,9 @@
 	  _createClass(Sensors, [{
 	    key: 'componentWillMount',
 	    value: function componentWillMount() {
-	      this.props.actions.retrieveSensors();
+	      if (!this.props.sensors.get('retrievedSensors')) {
+	        this.props.actions.retrieveSensors();
+	      }
 	    }
 	  }, {
 	    key: 'componentWillUnmount',
@@ -39344,7 +39346,7 @@
 	                    _react2.default.createElement(
 	                      'th',
 	                      null,
-	                      '$174.45'
+	                      '$175.45'
 	                    )
 	                  ),
 	                  _react2.default.createElement(
@@ -39358,7 +39360,7 @@
 	                    _react2.default.createElement(
 	                      'th',
 	                      null,
-	                      '$268.80'
+	                      '$266.80'
 	                    )
 	                  ),
 	                  _react2.default.createElement(
@@ -39372,7 +39374,7 @@
 	                    _react2.default.createElement(
 	                      'th',
 	                      null,
-	                      '$213.36'
+	                      '$213.37'
 	                    )
 	                  )
 	                )
@@ -39856,7 +39858,8 @@
 	  },
 	  timeStamp: null,
 	  viewMode: Constants.CARD,
-	  loading: false
+	  loading: false,
+	  retrievedSensors: false
 	});
 	
 	function tipReducer() {
@@ -39868,15 +39871,18 @@
 	      return state.set('loading', true);
 	
 	    case _actionTypes.RECEIVED_SENSORS:
-	      return state.update('sensors', function (list) {
-	        return list.push(_immutable2.default.fromJS({
-	          id: 3,
-	          name: 'Sensor',
-	          location: action.data.location,
-	          installDate: 'July 20, 2016',
-	          isFlipped: false
-	        }));
-	      }).set('loading', false);
+	      if (action.data.location) {
+	        return state.update('sensors', function (list) {
+	          return list.push(_immutable2.default.fromJS({
+	            id: 3,
+	            name: 'Sensor',
+	            location: action.data.location,
+	            installDate: 'July 20, 2016',
+	            isFlipped: false
+	          }));
+	        }).set('loading', false).set('retrievedSensors', true);
+	      }
+	      return state;
 	
 	    case _actionTypes.SAVE_SENSOR:
 	      {
@@ -39893,7 +39899,7 @@
 	        return list.delete(list.findIndex(function (item) {
 	          return item.get('id') === action.id;
 	        }));
-	      });
+	      }).set('retrievedSensors', action.retrievedSensor);
 	
 	    case _actionTypes.VIEW_MODE:
 	      return state.set('viewMode', action.viewMode);
