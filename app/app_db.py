@@ -35,4 +35,4 @@ for api_handler, url in API_MAPPINGS.iteritems():
     api.add_resource(api_handler, url)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
