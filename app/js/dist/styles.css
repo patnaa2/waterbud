@@ -9509,13 +9509,17 @@ a:focus {
 }
 .home_logo {
   display: block;
+  width: 415px;
   margin: 0 auto;
+}
+.home_logo img {
+  width: 415px;
 }
 .about_us {
   text-align: center;
   margin-top: 40px;
 }
-.about_us h4 {
+.about_us h4:first-child {
   width: 800px;
   text-align: center;
   font-size: 18px;
@@ -9790,6 +9794,10 @@ a:focus {
 .threshold {
   margin-right: 15px;
 }
+thead {
+  background-color: #2C3E50;
+  color: #ECF0F1;
+}
 .tip_lightbulb {
   width: 35px;
   position: absolute;
@@ -9805,10 +9813,18 @@ a:focus {
   margin-bottom: 15px;
 }
 .tip_more_info {
+  margin-top: 15px;
+}
+.tip_more_info a {
   color: #2980B9;
 }
-.tip_more_info :hover {
+.tip_more_info a:hover {
   color: #3498DB;
+}
+.tip_date {
+  margin-bottom: 15px;
+  text-align: center;
+  color: #999;
 }
 
 /*# sourceMappingURL=styles.css.map*/

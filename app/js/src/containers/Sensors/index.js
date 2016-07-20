@@ -8,7 +8,6 @@ import AddSensor from '../../components/Sensors/addSensor';
 
 import * as actions from '../../actions/sensorsActions';
 import * as miscActions from '../../actions/miscActions';
-import * as constants from '../../constants/viewConstants';
 import * as Helper from '../../helpers/roomHelpers';
 import './style.less';
 
@@ -21,6 +20,10 @@ class Sensors extends React.Component {
     this.onSubmit = this.onSubmit.bind(this);
     this.removeSensor = this.removeSensor.bind(this);
     this.onSensorFilter = this.onSensorFilter.bind(this);
+  }
+
+  componentWillMount() {
+    this.props.actions.retrieveSensors();
   }
 
   componentWillUnmount() {
@@ -51,9 +54,8 @@ class Sensors extends React.Component {
     this.props.actions.filterSensors(val);
   }
 
-  removeSensor(index, e) {
-    e.preventDefault();
-    this.props.actions.removeSensor(index);
+  removeSensor(index) {
+    this.props.actions.removeSensor(index, this.props.sensors.get('sensors').size);
   }
 
   render() {
@@ -75,16 +77,12 @@ class Sensors extends React.Component {
           Add Sensor
           </button>
         </div>
-        {
-          this.props.sensors.get('viewMode') === constants.CARD ?
-          <GridLayout
-            actions={this.props.actions}
-            loadSensor={this.loadSensor}
-            removeSensor={this.removeSensor}
-            sensors={sensors}
-          /> :
-          <div>TABLE VIEW</div>
-        }
+        <GridLayout
+          actions={this.props.actions}
+          loadSensor={this.loadSensor}
+          removeSensor={this.removeSensor}
+          sensors={sensors}
+        />
         <AddSensor
           element={this.props.sensors.get('editSensor')}
           handleModalCloseRequest={this.handleModalCloseRequest}

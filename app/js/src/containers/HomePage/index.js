@@ -18,12 +18,14 @@ class Home extends React.Component {
   render() {
     return (
       <div className="container-fluid home">
-        <img className="home_logo" src={logo} />
+        <a className="home_logo" href="https://www.youtube.com/watch?v=esiiBljmMzM" target="_blank">
+          <img src={logo} />
+        </a>
         <h1 className="logo_header">WaterBud</h1>
         <h2 className="logo_slogan">Helping you and the Environment</h2>
         <div className="row about_us">
           <h4>Group of young professionals working towards building an innovative product for measuring water consumption and mitigating water waste in a household.</h4>
-          <h2 className="coming_soon">Coming soon to retailers near you!</h2>
+          <h4 className="coming_soon">Coming soon to retailers near you!</h4>
         </div>
       </div>
     );

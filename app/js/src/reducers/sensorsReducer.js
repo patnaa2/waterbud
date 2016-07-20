@@ -16,7 +16,9 @@ import {
   UPDATE_END_DATE,
   RESET_HISTORICAL_DATES,
   UPDATE_HISTORICAL_LOCAITON,
-  UPDATE_HISTORICAL_RESOLUTION
+  UPDATE_HISTORICAL_RESOLUTION,
+  LOADING_SENSORS,
+  RECEIVED_SENSORS
 } from '../constants/actionTypes';
 import * as Constants from '../constants/viewConstants';
 import Immutable from 'immutable';
@@ -72,6 +74,18 @@ const initialState = Immutable.fromJS({
 
 export default function tipReducer(state = initialState, action) {
   switch (action.type) {
+    case LOADING_SENSORS:
+      return state.set('loading', true);
+
+    case RECEIVED_SENSORS:
+      return state.update('sensors', (list) => list.push(Immutable.fromJS({
+        id: 3,
+        name: 'Sensor',
+        location: action.data.location,
+        installDate: 'July 20, 2016',
+        isFlipped: false
+      }))).set('loading', false);
+
     case SAVE_SENSOR: {
       if (state.getIn(['editSensor', 'id']) === 0) {
         return state.setIn(['sensors', state.get('sensors').size],

@@ -24,7 +24,7 @@ class GridLayout extends React.Component {
   }
 
   onRemove(id) {
-    this.props.actions.removeSensor(id);
+    this.props.removeSensor(id);
   }
 
   render() {

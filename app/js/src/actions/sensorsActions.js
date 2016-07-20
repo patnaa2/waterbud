@@ -1,5 +1,19 @@
 import * as types from '../constants/actionTypes';
 
+export function retrieveSensors() {
+  return (dispatch) => {
+    dispatch({type: types.LOADING_SENSORS, status: true});
+    return fetch('http://localhost:5000/add_sensor', {
+      method: 'GET'
+    }).then(response => response.json())
+      .then(json => dispatch({
+          type: types.RECEIVED_SENSORS,
+          data: JSON.parse(json)
+        })
+      );
+  };
+}
+
 export function updateSensor(key, value) {
   return {type: types.UPDATE_SENSOR, key, value};
 }
@@ -18,8 +32,19 @@ export function saveSensor(id, location) {
   };
 }
 
-export function removeSensor(id) {
-  return {type: types.REMOVE_SENSOR, id};
+export function removeSensor(id, last) {
+  return (dispatch) => {
+    console.log('id', id, last);
+    if (id === last) {
+      fetch('http://localhost:5000/add_sensor', {
+        method: 'DELETE'
+      }).then(() => {
+        dispatch({type: types.REMOVE_SENSOR, id});
+      });
+    } else {
+      dispatch({type: types.REMOVE_SENSOR, id});
+    }
+  };
 }
 
 export function viewMode(viewMode) {

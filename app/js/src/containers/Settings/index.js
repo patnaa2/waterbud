@@ -49,7 +49,7 @@ class Settings extends React.Component {
             </div>
             <div className="row">
               <div className="col-xs-2">Phone No:</div>
-              <div className="col-xs-10">(519) 888-4567</div>
+              <div className="col-xs-10">(647) 609-9168</div>
             </div>
           </div>
           <div className="col-md-6 well setting_well">
@@ -67,6 +67,35 @@ class Settings extends React.Component {
                 />
               </div>
             </form>
+          </div>
+        </div>
+        <div className="row center-block">
+          <div className="col-md-12 well">
+            <h4 className="title">Progession</h4>
+            <div className="table-responsive">
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Month</th>
+                    <th>Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>April</th>
+                    <th>$174.45</th>
+                  </tr>
+                  <tr>
+                    <th>May</th>
+                    <th>$268.80</th>
+                  </tr>
+                  <tr>
+                    <th>June</th>
+                    <th>$213.36</th>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>

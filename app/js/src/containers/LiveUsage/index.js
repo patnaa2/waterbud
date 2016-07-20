@@ -18,10 +18,14 @@ class LiveUsage extends React.Component {
       console.log('data', data, data.timestamp, data.flow_ml);
       this.props.actions.receiveLiveData(data.timestamp, data.flow_ml);
     };
+    this.checkNotifications = setInterval(() => {
+      this.props.actions.retrieveNotifications();
+    }, 2000)
   }
 
   componentWillUnmount() {
     this.socket.close();
+    clearInterval(this.checkNotifications);
     this.props.actions.resetLiveData();
     this.props.actions.retrieveNotifications();
   }
