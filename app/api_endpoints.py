@@ -215,12 +215,12 @@ class Notifications(Resource):
         
         unread = db['notifications'].find({"read":False})
         read = db['notifications'].find({"read":True}).sort([
-                            ("timestamp", 1)]).limit(self.RECENT_LIMIT)
+                            ("timestamp", -1)]).limit(self.RECENT_LIMIT)
         
         new = [{"date": x["timestamp"].strftime("%Y-%m-%d %H:%M:%S"), 
                 "msg" : x["msg"]} for x in unread]
         recent = [{"date": x["timestamp"].strftime("%Y-%m-%d %H:%M:%S"),
-                "msg" : x["msg"]} for x in read]
+            "msg" : x["msg"]} for x in read]
 
         data = {"notifications" : len(new),
                 "new_msgs" : new,
@@ -252,7 +252,7 @@ class Tips(Resource):
         # Shitty stuff but i am going to assume that sorting by the date
         # is good enough to show all the unread ones first
         res = db['tips'].find({}).sort([
-                            ("timestamp", 1)]).limit(self.LIMIT)
+                            ("timestamp", -1)]).limit(self.LIMIT)
         for msg in res:
             msgs.append({"date": msg['timestamp'],
                          "location": msg['location'],
