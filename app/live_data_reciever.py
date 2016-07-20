@@ -57,8 +57,6 @@ class Receiever(object):
 
     def run(self):
         flow_ml = 0
-        current = datetime.datetime.now().replace(second=0,
-                                                  microsecond=0)
         data_analysis_time = None 
         kitchen_data = []
         first_time = True
@@ -72,6 +70,9 @@ class Receiever(object):
                     time.sleep(2)
                     first_time = True
                     self.tips.tips_sent = False
+
+                current = datetime.datetime.now().replace(second=0,
+                                                      microsecond=0)
 
                 data = self._ws.recv()
                 data = json.loads(data)
@@ -106,10 +107,10 @@ class Receiever(object):
                         kitchen_data.append(data['flow_ml'])
                     elif self.sensor_location == "bathroom_sink":
                         # show leak after 15 seconds 
-                        # print "bathroom_sink"
+                        print "bathroom_sink"
                         if (datetime.datetime.now() - 
                                 data_analysis_time).total_seconds() > 15:
-                            self.tips.bathroom_tips()
+                            self.tips.bathroom_sink_tips()
                     else:
                         continue
 
@@ -120,7 +121,7 @@ class Receiever(object):
                 # if flow has stopped or we have 60 data points for kitchen
                 # send tips for kitchen
                 if (kitchen_data and not flow_last_second) or \
-                        (len(kitchen_data) > 20):
+                        (len(kitchen_data) > 60):
                     self.tips.kitchen_sink_tips(kitchen_data)
                     kitchen_data = []
 
@@ -137,15 +138,14 @@ class Receiever(object):
                 # hourly and historical data
                 if current.minute == data['timestamp'].minute:
                     flow_ml += data['flow_ml']
-                    print flow_ml
                 else:
                     if flow_ml:
                         db_data = {"timestamp": current, 
                                    "flow_ml" : flow_ml}
                         print "Saving %s -- %s" %(current, flow_ml)
-                        self._db[self.sensor_location].insert_one(db_data)
-                        current = datetime.datetime.now().replace(second=0,
-                                                                  microsecond=0)
+                        coll_name = "%s_by_minute" %(self.sensor_location)
+                        self._db[coll_name].insert_one(db_data)
+                        flow_ml = 0
 
                 ######
                 ### End data to DB

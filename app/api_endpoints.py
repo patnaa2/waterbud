@@ -262,7 +262,9 @@ class Tips(Resource):
                          "short": msg['short_msg']})
         
         short = [x['short'] for x in sorted(msgs, 
-                    key=lambda x: (x['read'], x['date']))[0:self.SHORT_LIMIT]] 
+                    key=lambda x: (x['date']),
+                    reverse=True)[0:self.SHORT_LIMIT]] 
+
 
         data = {"unread" : len([x['read'] for x in msgs if not x['read']]),
                 "msg" : msgs,
