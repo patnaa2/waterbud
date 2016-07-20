@@ -44,12 +44,14 @@ class Summarizer(object):
                 coll_name = '%s_by_minute' %(self.sensor_location)
                 hour_coll_name = '%s_by_hour' %(self.sensor_location)
                 daily_coll_name = '%s_by_day' %(self.sensor_location)
-
+                
+                self.last_processed = self.last_processed.replace(second=0,
+                                                             microsecond=0)
                 res = self._db[coll_name].find(
-                                {"timestamp": {"$gt": self.last_processed}})
+                                {"timestamp": {"$gte": self.last_processed}})
                 data = [(x["timestamp"], x["flow_ml"]) for x in res]
 		self.last_processed = datetime.datetime.now()
- 
+                
                 if data: 
                     for k, v in groupby(data, lambda x:x[0].hour):
 			vals = list(v)
@@ -61,6 +63,7 @@ class Summarizer(object):
                         daily_timestamp = hour_timestamp.replace(hour=0)
 			month_timestamp = daily_timestamp.replace(day=1)
                         # update location hourly
+                        print "updating location by hour"
 			ret = self._db[hour_coll_name].update_one({"timestamp": hour_timestamp},
 								  {
 								      "$inc": {
@@ -69,6 +72,7 @@ class Summarizer(object):
 								  }, upsert=True)
 
                         # update total hourly
+                        print "updating total by hour"
                         ret = self._db['total_by_hour'].update_one({"timestamp": hour_timestamp},
                                                                   {
                                                                       "$inc": {
@@ -77,6 +81,7 @@ class Summarizer(object):
                                                                   }, upsert=True)
 
                         # update location daily
+                        print "updating location by day"
                         ret = self._db[daily_coll_name].update_one({"timestamp": daily_timestamp},
                                                                   {
                                                                       "$inc": {
@@ -85,7 +90,8 @@ class Summarizer(object):
                                                                   }, upsert=True)
 
                         ## update total daily 
-                        ret = self._db['total_by_daily'].update_one({"timestamp": daily_timestamp},
+                        print "updating total by day"
+                        ret = self._db['total_by_day'].update_one({"timestamp": daily_timestamp},
                                                                   {
                                                                       "$inc": {
                                                                           "flow_ml": total 

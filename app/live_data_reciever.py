@@ -142,8 +142,9 @@ class Receiever(object):
                     if flow_ml:
                         db_data = {"timestamp": current, 
                                    "flow_ml" : flow_ml}
-                        print "Saving %s -- %s" %(current, flow_ml)
                         coll_name = "%s_by_minute" %(self.sensor_location)
+                        print "Saving %s -- %s to %s" %(current, flow_ml,
+                                                        coll_name)
                         self._db[coll_name].insert_one(db_data)
                         flow_ml = 0
 

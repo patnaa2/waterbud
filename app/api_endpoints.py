@@ -15,7 +15,8 @@ sys.path.insert(0, PY_PATH)
 from lib.api_helpers import convert_datetime_to_epoch as dt_to_epoch
 from lib.api_helpers import pad_data_with_zeroes as pad_data
 
-WEBSOCKET = '172.20.10.6:8888'
+#WEBSOCKET = '172.20.10.6:8888'
+WEBSOCKET = '127.0.0.1:8888'
 db = pymongo.MongoClient('localhost', 27017)['waterbud']
 
 class WSLocation(Resource):
@@ -143,7 +144,6 @@ class Threshold(Resource):
         
         data = {"month": month.strftime("%m/%Y"),
                 "limit": val}
-
 
         return json.dumps(data), 201
 

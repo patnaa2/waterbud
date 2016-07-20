@@ -62,8 +62,13 @@ class Tips(Notifications):
 
     # Leak detection
     def bathroom_sink_tips(self):
-        ### MOCKED AF
-        self.alert_leak("bathroom_sink")
+	short_msg = "Leak detected in the bathroom sink."
+        long_msg = "There was a leak detected. Remeber to turn off tap, after use, or consider installing timed water tap sensors."
+        data = {"timestamp" : datetime.datetime.now().strftime("%m/%d %H:%M:%S"),
+                "short_msg": short_msg,
+                "long_msg" : long_msg,
+                "location" : "kitchen_sink",
+                "image" : "tap"}
 
     def update_db(self, data):
         data['read'] = False
