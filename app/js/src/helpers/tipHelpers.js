@@ -4,7 +4,9 @@ import gardenBed from '../assets/garden_bed.jpg';
 import moistureMeter from '../assets/moisture_meter.jpg';
 import nozzle from '../assets/nozzle.png';
 import razor from '../assets/razor.jpg';
+import shower from '../assets/shower_head.jpg';
 import tap from '../assets/bathroom_sink.jpg';
+import vegetableBrush from '../assets/vegetable_brush.jpg';
 import veggiePrep from '../assets/veggie_prep.jpg';
 
 import logo from '../assets/waterbud_logo.png';
@@ -27,6 +29,10 @@ export function retrieveTipImage(image) {
       return veggiePrep;
     case 'tap':
       return tap;
+    case 'shower_head':
+      return shower;
+    case 'vegetable_brush':
+      return vegetableBrush;
     default:
     return logo;
   }

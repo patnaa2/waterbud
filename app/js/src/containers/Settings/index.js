@@ -71,7 +71,7 @@ class Settings extends React.Component {
         </div>
         <div className="row center-block">
           <div className="col-md-12 well">
-            <h4 className="title">Progession</h4>
+            <h4 className="title">Monthly Consumption</h4>
             <div className="table-responsive">
               <table className="table">
                 <thead>

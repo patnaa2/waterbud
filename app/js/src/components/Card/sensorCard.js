@@ -38,7 +38,6 @@ const SensorCard = (props) => {
         </button>
         <div className="back_container">
           <div className="back_row spacing">Install Date: {installDate}</div>
-          <div className="back_row spacing">Total Consumed: {consumed}mL</div>
           <div className="back_row spacing actions">
             <button
               className="btn btn-danger"
