@@ -60,6 +60,7 @@ class Receiever(object):
         data_analysis_time = None 
         kitchen_data = []
         first_time = True
+        self.tips.tips_sent = False
 
         while True:
             try:
