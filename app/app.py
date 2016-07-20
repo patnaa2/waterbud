@@ -56,7 +56,7 @@ class AddSensor(Resource):
             val = 'testing'
  
         if not val:
-            data = {"val": "testing"}
+            data = {"val": None}
 
         return json.dumps(data), 200
 
