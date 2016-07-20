@@ -32,14 +32,16 @@ const initialState = Immutable.fromJS({
       image: '',
       msg: 'My name is what?',
       location: 'kitchen',
-      date: '07/16 14:16:12'
+      date: '07/16 14:16:12',
+      moreInfo: 'https://www.google.ca/'
     }, {
       short: 'What up',
       read: 1,
       image: '',
       msg: 'How are you?',
       location: 'kitchen',
-      date: '07/16 14:16:12'
+      date: '07/16 14:16:12',
+      moreInfo: 'https://www.google.ca/'
    }]
   },
   bathroom_sink: {
@@ -49,14 +51,16 @@ const initialState = Immutable.fromJS({
       image: 'shaving',
       msg: 'You can reduce your water waste by plugging the sink as you shave.',
       location: 'bathroom_sink',
-      date: '07/16 14:16:12'
+      date: '07/16 14:16:12',
+      moreInfo: 'https://www.google.ca/'
     }, {
       short: 'Low-flow faucet aerators',
       read: 1,
       image: 'faucet_aerator',
       msg: 'Reduces overall water usage by changing the flow structure',
       location: 'bathroom_sink',
-      date: '07/16 14:16:12'
+      date: '07/16 14:16:12',
+      moreInfo: 'https://www.google.ca/'
    }]
   },
   garden: {
@@ -66,14 +70,16 @@ const initialState = Immutable.fromJS({
       image: 'nozzle',
       msg: 'By installing a spray nozzle, you can control the water flow by pressing the trigger.',
       location: 'garden',
-      date: '07/16 14:16:12'
+      date: '07/16 14:16:12',
+      moreInfo: 'https://www.google.ca/'
     }, {
       short: 'Soil Moisture Meter',
       read: 1,
       image: 'moisture_meter',
       msg: 'The soil moisture meter will help you identify good times to water your garden.',
       location: 'garden',
-      date: '07/16 14:16:12'
+      date: '07/16 14:16:12',
+      moreInfo: 'https://www.google.ca/'
    }]
   },
   recent: [],

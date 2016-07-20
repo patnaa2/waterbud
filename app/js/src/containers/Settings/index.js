@@ -56,7 +56,7 @@ class Settings extends React.Component {
             <h4>Application Settings</h4>
             <form className="form-inline">
               <div className="form-group">
-                <label className="threshold" forHtml="threshold">Monthly Consumption Goal:</label>
+                <label className="threshold" forHtml="threshold">Monthly Consumption Goal ($):</label>
                 <input
                   id="threshold"
                   type="number"

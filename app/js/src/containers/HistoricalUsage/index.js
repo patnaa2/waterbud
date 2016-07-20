@@ -104,7 +104,7 @@ class HistoricalUsage extends React.Component {
         }
       },
       title: {
-        text: 'Water Consumption'
+        text: 'Water Consumption (L) over Time'
       },
       tooltip: {
         style: {
@@ -177,7 +177,7 @@ class HistoricalUsage extends React.Component {
           options={options}
           modules={[Highmaps]}
         />
-        <RelativeGraph consumed={this.props.historicalConsumption} />
+        <RelativeGraph consumed={this.props.historicalConsumption} units="L" />
       </div>
     );
   }

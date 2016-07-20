@@ -31,6 +31,15 @@ const TipModal = (props) => {
       <div className="container-fluid">
         <div className="col-md-4">
           <img className="tip_image" src={retrieveTipImage(tip.get('image'))} />
+          {tip.get('moreInfo') &&
+            <a
+              className="tip_more_info"
+              href={tip.get('moreInfo')}
+              target="_blank"
+            >
+              Click Here for More Info
+            </a>
+          }
         </div>
         <div className="col-md-8">
           <div className="row tip_title">
