@@ -38,7 +38,7 @@ class Tips(Notifications):
         # data analysis
         total_consumed = sum(data)
         print total_consumed
-        threshold = 5000
+        threshold = 3500
         
         if total_consumed > threshold:
             raise_alert = True
@@ -46,7 +46,7 @@ class Tips(Notifications):
         # assume before 2 is prep
 	if raise_alert:
             now = datetime.datetime.now()
-	    if now.hour > 14:
+	    if now.hour < 14:
 		data = {"timestamp" : now.strftime("%m/%d %H:%M:%S"),
 			"short_msg": short_prep_msg,
 			"long_msg" : long_prep_msg,
@@ -62,7 +62,7 @@ class Tips(Notifications):
 
     # Leak detection
     def bathroom_sink_tips(self):
-        msg = "CRITICAL: Leak detected in the bathroom sink."
+        msg = "CRITICAL: Tap left running in the bathroom sink."
         self.coll = 'notifications'
         self.general_alert(msg)
 
