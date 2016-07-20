@@ -12,6 +12,7 @@
   -ms-user-select: none;       /* Internet Explorer/Edge */
   user-select: none;           /* Non-prefixed version, currently
                                   not supported by any browser */
+  z-index: 2 !important;
 }
 
 /* Color/shape of burger icon bars */
@@ -42,6 +43,17 @@
   }
 }
 
+.bm-menu-wrap {
+  z-index: 3 !important;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  -khtml-user-select: none;    /* Konqueror */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* Internet Explorer/Edge */
+  user-select: none;           /* Non-prefixed version, currently
+                                  not supported by any browser */
+}
+
 /* Wrapper for item list */
 .bm-item-list {
   color: #b8b7ad;
@@ -70,6 +82,7 @@
 
 /* Styling of overlay */
 .bm-overlay {
+  z-index: 2 !important;
   background: rgba(44, 62, 80, 0.3) !important;
 }
 
@@ -165,6 +178,7 @@ a {
   -ms-user-select: none;       /* Internet Explorer/Edge */
   user-select: none;           /* Non-prefixed version, currently
                                   not supported by any browser */
+  z-index: 1;
 }
 
 .logo_header {

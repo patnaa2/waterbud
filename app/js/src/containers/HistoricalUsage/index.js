@@ -27,8 +27,6 @@ class HistoricalUsage extends React.Component {
   }
 
   componentWillMount() {
-    console.clear();
-    console.log('mounting', this.props);
     if(this.props.historicalResolution === Constants.DAILY) {
       this.props.actions.fetchDailyHistoricalData('total',
                                                 this.formatDate(this.props.historicalStart),
@@ -84,7 +82,6 @@ class HistoricalUsage extends React.Component {
   }
 
   render() {
-    console.log('rendering props', this.props);
     if(this.props.historicalData.size === 0) {
       if (this.props.loading) {
         return (

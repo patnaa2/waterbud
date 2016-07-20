@@ -51,18 +51,12 @@ export function fetchDailyHistoricalData(location, start, end) {
     dispatch({type: types.LOADING_HISTORICAL_DATA, status: true});
     return fetch('http://localhost:5000/data/daily?location=' + location + '&start=' + start + '&end=' + end, {
       method: 'GET'
-    }).then(response => {
-      const json = response.json();
-      console.log('json response', json);
-      return json;
-    })
-      .then(json => {
-        console.log('response', json);
-        dispatch({
+    }).then(response => response.json())
+      .then(json => dispatch({
           type: types.RECEIVED_HISTORICAL_DATA,
           data: JSON.parse(json)
-        });
-      });
+        })
+      );
   };
 }
 
