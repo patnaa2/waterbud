@@ -62,7 +62,7 @@ class Tips(Notifications):
 
     # Leak detection
     def bathroom_sink_tips(self):
-        short_msg = "CRITICAL: Leak detected in the bathroom sink."
+        msg = "CRITICAL: Leak detected in the bathroom sink."
         self.coll = 'notifications'
         self.general_alert(msg)
 
