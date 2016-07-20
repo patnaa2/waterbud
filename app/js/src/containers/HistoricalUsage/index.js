@@ -5,7 +5,7 @@ import {bindActionCreators} from 'redux';
 import moment from 'moment';
 
 import DatePicker from 'react-datepicker';
-import Spinner from 'react-spinkit';
+import Spinner from '../../components/Spinner';
 import Chart from '../../components/Chart';
 import SpecificLocation from '../../components/RoomSelect/SpecificLocation';
 import RelativeGraph from '../../components/RelativeGraph';
@@ -27,6 +27,8 @@ class HistoricalUsage extends React.Component {
   }
 
   componentWillMount() {
+    console.clear();
+    console.log('mounting', this.props);
     if(this.props.historicalResolution === Constants.DAILY) {
       this.props.actions.fetchDailyHistoricalData('total',
                                                 this.formatDate(this.props.historicalStart),
@@ -82,9 +84,12 @@ class HistoricalUsage extends React.Component {
   }
 
   render() {
+    console.log('rendering props', this.props);
     if(this.props.historicalData.size === 0) {
       if (this.props.loading) {
-        return <Spinner spinnerName="double-bounce" />;
+        return (
+          <Spinner />
+        );
       }
       return (
         <div className="container-fluid">
