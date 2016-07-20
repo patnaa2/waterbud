@@ -19830,7 +19830,7 @@
 	  if (units === 'L') {
 	    return round(value / 18.9);
 	  }
-	  return round(value * 1000 / 18.9);
+	  return round(value / 1000 / 18.9);
 	};
 	
 	var round = function round(value) {

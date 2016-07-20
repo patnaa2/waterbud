@@ -14,7 +14,7 @@ const numDispensers = (value, units) => {
   if (units === 'L') {
     return round(value / 18.9);
   }
-  return round((value * 1000) / 18.9);
+  return round((value / 1000) / 18.9);
 };
 
 const round = (value) => Math.round(value * 100) / 100;
