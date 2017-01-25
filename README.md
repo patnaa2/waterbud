@@ -20,8 +20,14 @@ This repository contains the following:
 
 ###BackEnd
 - Python
+- Mongodb
 - Tornado
 
+##How To Run
+**Note: This will generate fake live data**
+python app/app.py
+python pi/scripts/sensor_websocket.py
+python pi/scripts/sensor_poc.py
 
 ##Screenshots
 ![alt text](screenshots/HistoricalUsage.png "Historical Water Usage")
