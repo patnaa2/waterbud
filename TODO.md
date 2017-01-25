@@ -2,9 +2,9 @@
 - [x] Write connect_to_server script from client side
     - [x] Create network and what not from there
 - [ ] Work on api endpoints on flask
-    - [ ] Historical Data 
+    - [ ] Historical Data
     - [x] Thresholds
-    - [x] Websockets 
+    - [x] Websockets
     - [x] Add new sensors
     - [ ] Notifications
     - [ ] Tips
@@ -13,22 +13,22 @@
 - [ ] Notifications async
 - [ ] Update db with correct values async
 - [ ] cron to generate monthly data
-- [ ] pricing 
-- [ ] weather stuff 
+- [ ] pricing
+- [ ] weather stuff
 
 ## FRONTEND FOR CLIENT
-- [ ] HighCharts Integration
-- [ ] Historical Usage View
-- [ ] Live Usage View
-- [ ] Websockets for Live Data
-- [ ] Sensor Screens
-  - [ ] Add Sensor
-  - [ ] Display all Sensors
-  - [ ] Remove Sensors
-  - [ ] Edit Sensors??
-- [ ] Tips
-  - [ ] Layout
-  - [ ] Info for Tips: Image, Description, Benefit(Back)
-- [ ] Setting Threshold Screen
-- [ ] Home Screen Layout
-- [ ] User Profile Details
+- [x] HighCharts Integration
+- [x] Historical Usage View
+- [x] Live Usage View
+- [x] Websockets for Live Data
+- [x] Sensor Screens
+  - [x] Add Sensor
+  - [x] Display all Sensors
+  - [x] Remove Sensors
+  - [x] Edit Sensors??
+- [x] Tips
+  - [x] Layout
+  - [x] Info for Tips: Image, Description, Benefit(Back)
+- [x] Setting Threshold Screen
+- [x] Home Screen Layout
+- [x] User Profile Details

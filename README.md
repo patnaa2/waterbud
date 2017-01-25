@@ -24,3 +24,10 @@ This repository contains the following:
 
 
 ##Screenshots
+![alt text](screenshots/HistoricalUsage.png "Historical Water Usage")
+![alt text](screenshots/LiveUsage.png "Live Water Usage")
+![alt text](screenshots/Sensors.png "Sensors")
+![alt text](screenshots/Tips.png "Tips")
+![alt text](screenshots/TipsExpanded.png "Tips Expanded")
+![alt text](screenshots/Notifications.png "Notifications")
+![alt text](screenshots/Settings.png "Settings")
