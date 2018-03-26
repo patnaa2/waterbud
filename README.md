@@ -10,26 +10,26 @@ This repository contains the following:
 - Tips and Recommendation to reduce Water waste
 - User defined threshold (expressed in Dollars)
 
-##Tech Stack:
+## Tech Stack:
 
-###FrontEnd
+### FrontEnd
 - React
 - Redux
 - Bootstrap
 - Less
 
-###BackEnd
+### BackEnd
 - Python
 - Mongodb
 - Tornado
 
-##How To Run
+## How To Run
 **Note: This will generate fake live data**
 python app/app.py
 python pi/scripts/sensor_websocket.py
 python pi/scripts/sensor_poc.py
 
-##Screenshots
+## Screenshots
 ![alt text](screenshots/HistoricalUsage.png "Historical Water Usage")
 ![alt text](screenshots/LiveUsage.png "Live Water Usage")
 ![alt text](screenshots/Sensors.png "Sensors")
